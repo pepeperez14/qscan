@@ -1,0 +1,137 @@
+name: Escaneo diario
+
+on:
+  schedule:
+    # 22:30 UTC de lunes a viernes: cierre de EE.UU. ya consolidado.
+    # GitHub retrasa los cron en horas punta; no cuentes con el minuto exacto.
+    - cron: "30 22 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      rebuild_universe:
+        description: "Reconstruir el universo de activos"
+        type: boolean
+        default: false
+      limit:
+        description: "Limitar nº de símbolos (0 = todos)"
+        default: "0"
+
+permissions:
+  contents: write      # necesario para el desempaquetado inicial desde qscan.zip
+  pages: write
+  id-token: write
+
+concurrency:
+  group: scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330      # el límite duro de un job es 6 h
+    steps:
+      - uses: actions/checkout@v4
+
+      # Arranque desde el móvil: si el repositorio sólo contiene qscan.zip, se
+      # desempaqueta y se commitea el código. A partir de ahí este paso no hace
+      # nada. Se excluye .github/ a propósito: el GITHUB_TOKEN no puede escribir
+      # ficheros de workflow, así que ese lo creas tú a mano una sola vez.
+      - name: Desempaquetar el código la primera vez
+        run: |
+          if [ ! -d src ] && [ -f qscan.zip ]; then
+            echo "primer arranque: desempaquetando qscan.zip"
+            unzip -q -o qscan.zip -d _unpack
+            rm -rf _unpack/.github
+            cp -r _unpack/. .
+            rm -rf _unpack
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "Desempaquetar qscan desde el zip" || true
+            git push || echo "aviso: no se pudo commitear; se sigue con los ficheros en disco"
+          else
+            echo "el código ya está en el repositorio"
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # El almacén de precios vive en la caché, no en el repo: son cientos de MB
+      # que no tiene sentido versionar. La clave rota a diario y se restaura
+      # desde la más reciente disponible, de modo que la descarga es incremental.
+      - name: Restaurar almacén de precios
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: data
+          key: qscan-store-${{ github.run_id }}
+          restore-keys: |
+            qscan-store-
+
+      - name: Construir universo
+        if: inputs.rebuild_universe || steps.cache.outputs.cache-matched-key == ''
+        run: python -m qscan.cli universe --out data/universe.csv
+        env:
+          PYTHONPATH: src
+
+      # El límite se puede fijar de tres formas, por orden de prioridad:
+      #   1. el campo del formulario al lanzar el workflow a mano
+      #   2. la variable de repositorio QSCAN_LIMIT (Settings -> Variables)
+      #   3. 0 = universo completo
+      # La variable existe para poder hacer la primera prueba desde el móvil sin
+      # pelearse con el formulario de inputs, que es incómodo en pantalla pequeña.
+      - name: Actualizar cotizaciones
+        run: python -m qscan.cli update --years 8 --limit ${{ inputs.limit || vars.QSCAN_LIMIT || 0 }}
+        env:
+          PYTHONPATH: src
+
+      - name: Calcular features y scores
+        run: python -m qscan.cli scan --freq ME --history-months 96
+        env:
+          PYTHONPATH: src
+
+      - name: Validación walk-forward
+        run: python -m qscan.cli validate --cost-bps 10
+        env:
+          PYTHONPATH: src
+
+      # La capa de comentario usa la API de Anthropic si existe el secreto
+      # ANTHROPIC_API_KEY. Sin él, el informe sale igual con textos deterministas:
+      # es una comodidad, no una dependencia.
+      - name: Generar informe
+        run: python -m qscan.cli report --top 40 --comment-top 15
+        env:
+          PYTHONPATH: src
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Guardar almacén actualizado
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data
+          key: qscan-store-${{ github.run_id }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: resultados
+          path: |
+            out/*.parquet
+            out/verdict.csv
+          retention-days: 30
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  publish:
+    needs: scan
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
