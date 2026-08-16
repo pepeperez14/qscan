@@ -16,7 +16,7 @@ on:
         default: "0"
 
 permissions:
-  contents: write      # necesario para el desempaquetado inicial desde qscan.zip
+  contents: write      # necesario para desempaquetar el código desde el zip
   pages: write
   id-token: write
 
@@ -31,29 +31,42 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Arranque y actualización desde el móvil: se compara el hash del zip con
-      # el de la última vez. Si cambió, se desempaqueta y se commitea. Así, para
-      # actualizar el sistema basta con subir un qscan.zip nuevo encima.
+      # Se admite CUALQUIER fichero qscan*.zip en la raíz y gana el que lleve el
+      # número de VERSION más alto. El nombre deja de importar: subir
+      # qscan-v3.zip junto al viejo qscan.zip funciona, y un zip antiguo no puede
+      # pisar a uno nuevo aunque se suba después. Antes, con el nombre fijo
+      # qscan.zip, era imposible distinguir versiones desde el móvil.
       # Se excluye .github/ a propósito: el GITHUB_TOKEN no puede escribir
       # ficheros de workflow, así que este fichero lo mantienes tú a mano.
-      - name: Desempaquetar el código si el zip ha cambiado
+      - name: Desempaquetar la versión más reciente
         run: |
-          NEW=$( [ -f qscan.zip ] && sha256sum qscan.zip | cut -d' ' -f1 || echo none )
-          OLD=$( [ -f .qscan_zip_sha ] && cat .qscan_zip_sha || echo ninguno )
-          if [ "$NEW" != none ] && [ "$NEW" != "$OLD" ]; then
-            echo "zip nuevo o modificado: desempaquetando"
-            unzip -q -o qscan.zip -d _unpack
+          BEST=""; BESTV=-1
+          for z in qscan*.zip; do
+            [ -e "$z" ] || continue
+            v=$(unzip -p "$z" VERSION 2>/dev/null | tr -dc '0-9')
+            v=${v:-0}
+            echo "  encontrado $z -> VERSION ${v}"
+            if [ "$v" -gt "$BESTV" ]; then BESTV=$v; BEST=$z; fi
+          done
+          CUR=$( [ -f .qscan_version ] && cat .qscan_version || echo 0 )
+          echo "versión instalada: $CUR · mejor disponible: $BESTV ($BEST)"
+          if [ -n "$BEST" ] && [ "$BESTV" -gt "$CUR" ]; then
+            echo "actualizando a la versión $BESTV desde $BEST"
+            unzip -q -o "$BEST" -d _unpack
             rm -rf _unpack/.github
             cp -r _unpack/. .
             rm -rf _unpack
-            echo "$NEW" > .qscan_zip_sha
+            echo "$BESTV" > .qscan_version
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add -A
-            git commit -m "Actualizar qscan desde el zip" || true
+            git commit -m "Actualizar qscan a la versión $BESTV" || true
             git push || echo "aviso: no se pudo commitear; se sigue con los ficheros en disco"
+          elif [ -z "$BEST" ]; then
+            echo "ERROR: no hay ningún qscan*.zip en la raíz del repositorio" >&2
+            exit 1
           else
-            echo "el código está al día"
+            echo "el código ya está en la versión $CUR"
           fi
 
       - uses: actions/setup-python@v5
@@ -137,4 +150,3 @@ jobs:
     steps:
       - id: deploy
         uses: actions/deploy-pages@v4
-
