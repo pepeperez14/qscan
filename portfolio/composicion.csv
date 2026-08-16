@@ -1,0 +1,5 @@
+escenario,symbol,nombre,grupo,valor_eur,coste_eur,peso_pct,plusvalia_eur,plusvalia_pct
+corto,· efectivo,sin invertir,,40000.0,,100.0,,
+medio,· efectivo,sin invertir,,40000.0,,100.0,,
+largo,· efectivo,sin invertir,,40000.0,,100.0,,
+combinada,· efectivo,sin invertir,,40000.0,,100.0,,

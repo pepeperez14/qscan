@@ -1,0 +1,857 @@
+{
+ "capital_inicial": 40000.0,
+ "inicio": "2026-08-14",
+ "ultima_fecha": "2026-08-14",
+ "escenarios": {
+  "corto": {
+   "ultimo_rebalanceo": "2026-08-14",
+   "pesos_evidencia": null,
+   "brokers": {
+    "trade_republic": {
+     "efectivo": 40000.0,
+     "posiciones": {},
+     "costes_acumulados": 0.0,
+     "ordenes_pendientes": [
+      {
+       "symbol": "ASTY",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      },
+      {
+       "symbol": "BXC",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      },
+      {
+       "symbol": "AYA",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      },
+      {
+       "symbol": "LOFF",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      },
+      {
+       "symbol": "BWX",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      },
+      {
+       "symbol": "GC=F",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      },
+      {
+       "symbol": "PAXG/USD",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      },
+      {
+       "symbol": "USDTRY=X",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      },
+      {
+       "symbol": "^STOXX",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      },
+      {
+       "symbol": "MATV",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      },
+      {
+       "symbol": "LIFE",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      },
+      {
+       "symbol": "APPS",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      },
+      {
+       "symbol": "RCEL",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      },
+      {
+       "symbol": "SNOU",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      },
+      {
+       "symbol": "HNST",
+       "lado": "compra",
+       "importe_eur": 2666.67
+      }
+     ],
+     "creadas_el": "2026-08-14"
+    },
+    "etoro": {
+     "efectivo": 39800.0,
+     "posiciones": {},
+     "costes_acumulados": 200.0,
+     "ordenes_pendientes": [
+      {
+       "symbol": "ASTY",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      },
+      {
+       "symbol": "BXC",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      },
+      {
+       "symbol": "AYA",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      },
+      {
+       "symbol": "LOFF",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      },
+      {
+       "symbol": "BWX",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      },
+      {
+       "symbol": "GC=F",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      },
+      {
+       "symbol": "PAXG/USD",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      },
+      {
+       "symbol": "USDTRY=X",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      },
+      {
+       "symbol": "^STOXX",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      },
+      {
+       "symbol": "MATV",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      },
+      {
+       "symbol": "LIFE",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      },
+      {
+       "symbol": "APPS",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      },
+      {
+       "symbol": "RCEL",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      },
+      {
+       "symbol": "SNOU",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      },
+      {
+       "symbol": "HNST",
+       "lado": "compra",
+       "importe_eur": 2653.33
+      }
+     ],
+     "creadas_el": "2026-08-14"
+    }
+   }
+  },
+  "medio": {
+   "ultimo_rebalanceo": "2026-08-14",
+   "pesos_evidencia": null,
+   "brokers": {
+    "trade_republic": {
+     "efectivo": 40000.0,
+     "posiciones": {},
+     "costes_acumulados": 0.0,
+     "ordenes_pendientes": [
+      {
+       "symbol": "ALOT",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "PLSE",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "BWET",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "ANGL",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "USDCHF=X",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "SB=F",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "HYPE/USD",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "^IBEX",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "CBRL",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "ORKA",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "TXG",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "COAG",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "SNOY",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "BFLY",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "CDNA",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "CLYM",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "NTAP",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "CRWL",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "RRGB",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "PAYS",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      }
+     ],
+     "creadas_el": "2026-08-14"
+    },
+    "etoro": {
+     "efectivo": 39800.0,
+     "posiciones": {},
+     "costes_acumulados": 200.0,
+     "ordenes_pendientes": [
+      {
+       "symbol": "ALOT",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "PLSE",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "BWET",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "ANGL",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "USDCHF=X",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "SB=F",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "HYPE/USD",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "^IBEX",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "CBRL",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "ORKA",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "TXG",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "COAG",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "SNOY",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "BFLY",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "CDNA",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "CLYM",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "NTAP",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "CRWL",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "RRGB",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "PAYS",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      }
+     ],
+     "creadas_el": "2026-08-14"
+    }
+   }
+  },
+  "largo": {
+   "ultimo_rebalanceo": "2026-08-14",
+   "pesos_evidencia": null,
+   "brokers": {
+    "trade_republic": {
+     "efectivo": 40000.0,
+     "posiciones": {},
+     "costes_acumulados": 0.0,
+     "ordenes_pendientes": [
+      {
+       "symbol": "ATEX",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "SYRE",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "BWET",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "ZEC/USD",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "^N225",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "BIL",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "USO",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "USDJPY=X",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "DNTH",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "RVMD",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "NESR",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "CDNA",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "DLLL",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "CHPS",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "DFTX",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "TXG",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "ORKA",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "APGE",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "SPHR",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "TWST",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      }
+     ],
+     "creadas_el": "2026-08-14"
+    },
+    "etoro": {
+     "efectivo": 39800.0,
+     "posiciones": {},
+     "costes_acumulados": 200.0,
+     "ordenes_pendientes": [
+      {
+       "symbol": "ATEX",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "SYRE",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "BWET",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "ZEC/USD",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "^N225",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "BIL",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "USO",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "USDJPY=X",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "DNTH",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "RVMD",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "NESR",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "CDNA",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "DLLL",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "CHPS",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "DFTX",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "TXG",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "ORKA",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "APGE",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "SPHR",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "TWST",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      }
+     ],
+     "creadas_el": "2026-08-14"
+    }
+   }
+  },
+  "combinada": {
+   "ultimo_rebalanceo": "2026-08-14",
+   "pesos_evidencia": {
+    "pesos": {
+     "corto": 0.14261019878997408,
+     "medio": 0.08167675021607607,
+     "largo": 0.7757130509939498
+    },
+    "nota": "por evidencia de la validación (corto 14% · medio 8% · largo 78%)"
+   },
+   "brokers": {
+    "trade_republic": {
+     "efectivo": 40000.0,
+     "posiciones": {},
+     "costes_acumulados": 0.0,
+     "ordenes_pendientes": [
+      {
+       "symbol": "ATEX",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "SYRE",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "BWET",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "ZEC/USD",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "^N225",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "BIL",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "USO",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "USDJPY=X",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "DNTH",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "RVMD",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "NESR",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "CDNA",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "DLLL",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "CHPS",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "DFTX",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "TXG",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "ASTY",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "BXC",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "AYA",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      },
+      {
+       "symbol": "ALOT",
+       "lado": "compra",
+       "importe_eur": 2000.0
+      }
+     ],
+     "creadas_el": "2026-08-14"
+    },
+    "etoro": {
+     "efectivo": 39800.0,
+     "posiciones": {},
+     "costes_acumulados": 200.0,
+     "ordenes_pendientes": [
+      {
+       "symbol": "ATEX",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "SYRE",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "BWET",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "ZEC/USD",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "^N225",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "BIL",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "USO",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "USDJPY=X",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "DNTH",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "RVMD",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "NESR",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "CDNA",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "DLLL",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "CHPS",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "DFTX",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "TXG",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "ASTY",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "BXC",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "AYA",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      },
+      {
+       "symbol": "ALOT",
+       "lado": "compra",
+       "importe_eur": 1990.0
+      }
+     ],
+     "creadas_el": "2026-08-14"
+    }
+   }
+  }
+ },
+ "benchmark": {
+  "unidades": 0.0,
+  "invertido": 0.0,
+  "pendiente": "2026-08-14"
+ }
+}

@@ -1,0 +1,9 @@
+fecha,escenario,broker,valor_eur,efectivo_eur,posiciones,costes_acum_eur,rentabilidad_pct
+2026-08-14,corto,trade_republic,40000.0,40000.0,0,0.0,0.0
+2026-08-14,corto,etoro,39800.0,39800.0,0,200.0,-0.5
+2026-08-14,medio,trade_republic,40000.0,40000.0,0,0.0,0.0
+2026-08-14,medio,etoro,39800.0,39800.0,0,200.0,-0.5
+2026-08-14,largo,trade_republic,40000.0,40000.0,0,0.0,0.0
+2026-08-14,largo,etoro,39800.0,39800.0,0,200.0,-0.5
+2026-08-14,combinada,trade_republic,40000.0,40000.0,0,0.0,0.0
+2026-08-14,combinada,etoro,39800.0,39800.0,0,200.0,-0.5
