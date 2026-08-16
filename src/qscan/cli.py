@@ -86,6 +86,25 @@ def cmd_scan(a) -> None:
     scored = scoring.score_panel(panel)
     scored.to_parquet(Path(a.out_dir) / "scores.parquet", index=False)
 
+    # Embudo por grupo. Sin esto, un grupo que desaparece del ranking lo hace en
+    # silencio y no hay forma de saber si murió al descargar, al filtrar por
+    # liquidez o por no llegar al mínimo de comparables.
+    last = scored[scored.date == scored.date.max()]
+    funnel = pd.DataFrame({
+        "en_universo": groups.value_counts(),
+        "con_precios": groups[groups.index.isin(px["close"].columns)].value_counts(),
+        "en_panel": panel[panel.date == panel.date.max()].group.value_counts(),
+        "con_score": last[last.score_medio.notna()].group.value_counts(),
+    }).fillna(0).astype(int)
+    funnel["minimo_comparables"] = scoring.MIN_PEERS
+    print("\nEmbudo por grupo de activo:\n" + funnel.to_string())
+    funnel.to_csv(Path(a.out_dir) / "funnel.csv")
+    for g, r in funnel.iterrows():
+        if r["con_precios"] > 0 and r["con_score"] == 0:
+            log.warning("el grupo %s no llega al ranking (%d con precios, %d en panel): "
+                        "revisa liquidez mínima y MIN_PEERS", g, r["con_precios"],
+                        r["en_panel"])
+
     fwd = features.forward_returns(px["close"], panel)
     fwd.to_parquet(Path(a.out_dir) / "forward.parquet", index=False)
     print(f"panel: {len(panel):,} filas · {panel.symbol.nunique():,} activos · "

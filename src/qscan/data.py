@@ -112,11 +112,11 @@ def fetch_yahoo(symbols: list[str], start: str | pd.Timestamp,
 
 def fetch_crypto(symbols: list[str], start: pd.Timestamp, timeframe: str = "1d") -> pd.DataFrame:
     """OHLCV de cripto vía ccxt. Yahoo cubre mal el universo alt."""
-    try:
-        import ccxt
-    except ImportError:
+    from .universe import pick_venue
+
+    ex, _ = pick_venue()
+    if ex is None:
         return pd.DataFrame(columns=["symbol", "date"] + COLS)
-    ex = ccxt.binance({"enableRateLimit": True})
     since = int(pd.Timestamp(start).timestamp() * 1000)
     frames = []
     for sym in symbols:

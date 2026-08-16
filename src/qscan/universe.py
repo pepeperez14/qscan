@@ -36,17 +36,43 @@ EU_INDICES = [
 
 # Macro-activos con ticker directo en Yahoo. Cubren materias primas, divisas,
 # renta fija e índices: el contexto sin el que las señales de acciones no se leen.
+# Cada grupo debe superar scoring.MIN_PEERS (20) o su sección transversal se
+# descarta entera y el grupo desaparece del ranking sin previo aviso. Con las
+# listas cortas originales (12-15 símbolos) eso pasaba siempre: materias primas,
+# divisas, índices y renta fija nunca llegaban a puntuarse. Se amplían con ETFs
+# líquidos, que además tienen mejor calidad de dato que los futuros continuos.
 MACRO = {
-    "commodity": ["GC=F", "SI=F", "HG=F", "CL=F", "BZ=F", "NG=F", "ZC=F", "ZW=F",
-                  "ZS=F", "KC=F", "SB=F", "CT=F", "PL=F", "PA=F", "LE=F"],
-    "fx": ["EURUSD=X", "GBPUSD=X", "USDJPY=X", "USDCHF=X", "AUDUSD=X", "USDCAD=X",
-           "NZDUSD=X", "USDCNY=X", "USDMXN=X", "USDBRL=X", "EURGBP=X", "EURJPY=X",
-           "DX-Y.NYB"],
-    "index": ["^GSPC", "^NDX", "^DJI", "^RUT", "^VIX", "^STOXX50E", "^GDAXI",
-              "^FCHI", "^IBEX", "^FTSE", "^N225", "^HSI", "^BSESN", "^BVSP"],
-    "bond": ["^TNX", "^TYX", "^FVX", "^IRX", "TLT", "IEF", "SHY", "LQD", "HYG",
-             "EMB", "TIP", "BND"],
+    "commodity": [
+        "GC=F", "SI=F", "HG=F", "CL=F", "BZ=F", "NG=F", "ZC=F", "ZW=F", "ZS=F",
+        "KC=F", "SB=F", "CT=F", "PL=F", "PA=F", "LE=F", "HO=F", "RB=F", "OJ=F",
+        "GLD", "SLV", "IAU", "USO", "BNO", "UNG", "DBC", "DBA", "CORN", "WEAT",
+        "SOYB", "CANE", "PALL", "PPLT", "CPER", "URA", "GSG", "PDBC",
+    ],
+    "fx": [
+        "EURUSD=X", "GBPUSD=X", "USDJPY=X", "USDCHF=X", "AUDUSD=X", "USDCAD=X",
+        "NZDUSD=X", "USDCNY=X", "USDMXN=X", "USDBRL=X", "EURGBP=X", "EURJPY=X",
+        "EURCHF=X", "EURSEK=X", "EURNOK=X", "USDSEK=X", "USDNOK=X", "USDPLN=X",
+        "USDTRY=X", "USDZAR=X", "USDINR=X", "USDKRW=X", "USDSGD=X", "USDHKD=X",
+        "AUDJPY=X", "GBPJPY=X", "CADJPY=X", "NZDJPY=X", "EURAUD=X", "DX-Y.NYB",
+    ],
+    "index": [
+        "^GSPC", "^NDX", "^DJI", "^RUT", "^VIX", "^IXIC", "^NYA", "^MID", "^SML",
+        "^STOXX50E", "^STOXX", "^GDAXI", "^FCHI", "^IBEX", "^FTSE", "^AEX",
+        "^SSMI", "^OMX", "^BFX", "^ATX", "^N225", "^HSI", "^KS11", "^TWII",
+        "^AXJO", "^GSPTSE", "^MXX", "^BVSP", "^BSESN", "^JKSE",
+    ],
+    "bond": [
+        "^TNX", "^TYX", "^FVX", "^IRX", "TLT", "IEF", "SHY", "LQD", "HYG",
+        "EMB", "TIP", "BND", "AGG", "GOVT", "VGIT", "VGLT", "VCIT", "VCSH",
+        "MBB", "BIL", "SHV", "IGSB", "SPTL", "SCHO", "BWX", "IGOV", "PCY",
+        "FLOT", "SJNK", "ANGL", "JNK", "BSV",
+    ],
 }
+
+# Binance bloquea por geolocalización las IPs de EE.UU., que es justo donde
+# corren los runners de GitHub Actions: desde ahí devuelve 451 y el universo se
+# queda sin cripto en silencio. Se prueban varios mercados por orden.
+CRYPTO_VENUES = [("kraken", "USD"), ("coinbase", "USD"), ("binance", "USDT")]
 
 
 @dataclass(frozen=True)
@@ -124,28 +150,44 @@ def eu_indices() -> list[Asset]:
     return out
 
 
-def crypto(quote: str = "USDT", min_pairs: int = 400) -> list[Asset]:
-    """Pares de cripto con volumen real, vía ccxt sobre Binance."""
+def pick_venue():
+    """Primer mercado de cripto accesible desde esta máquina. Devuelve (ex, quote)."""
     try:
         import ccxt
     except ImportError:  # pragma: no cover
         log.warning("ccxt no instalado, se omite cripto")
+        return None, None
+    for name, quote in CRYPTO_VENUES:
+        try:
+            ex = getattr(ccxt, name)({"enableRateLimit": True})
+            ex.load_markets()
+            log.info("cripto: usando %s con cotización en %s", name, quote)
+            return ex, quote
+        except Exception as e:  # pragma: no cover - red
+            log.warning("cripto: %s no accesible (%s)", name, str(e)[:120])
+    log.warning("cripto: ningún mercado accesible; el universo se queda sin cripto")
+    return None, None
+
+
+def crypto(min_pairs: int = 300) -> list[Asset]:
+    """Pares de cripto con volumen real, probando varios mercados."""
+    ex, quote = pick_venue()
+    if ex is None:
         return []
     try:
-        ex = ccxt.binance()
-        markets = ex.load_markets()
         tickers = ex.fetch_tickers()
     except Exception as e:  # pragma: no cover - red
-        log.warning("binance no accesible: %s", e)
-        return []
+        log.warning("no se pudieron leer tickers de %s: %s", ex.id, e)
+        tickers = {}
     rows = []
-    for sym, m in markets.items():
-        if not m.get("spot") or not m.get("active") or m.get("quote") != quote:
+    for sym, m in ex.markets.items():
+        if not m.get("spot") or m.get("active") is False or m.get("quote") != quote:
             continue
         t = tickers.get(sym) or {}
         rows.append((sym, m.get("base", ""), t.get("quoteVolume") or 0.0))
     rows.sort(key=lambda r: r[2], reverse=True)
-    return [Asset(s, f"{b}/{quote}", "crypto", "BINANCE", quote) for s, b, _ in rows[:min_pairs]]
+    venue = ex.id.upper()
+    return [Asset(s, f"{b}/{quote}", "crypto", venue, quote) for s, b, _ in rows[:min_pairs]]
 
 
 def macro() -> list[Asset]:

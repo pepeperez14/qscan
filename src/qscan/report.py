@@ -114,6 +114,21 @@ def _histogram(values: pd.Series, title: str, bins: int = 24,
             f'</figure>')
 
 
+def _version() -> str:
+    """Versión del código, visible en el informe publicado.
+
+    Sirve para responder desde el navegador a "¿qué código generó esto?" sin
+    entrar en el repositorio ni en los logs.
+    """
+    from pathlib import Path
+    for p in (Path("VERSION"), Path(__file__).resolve().parents[2] / "VERSION"):
+        try:
+            return "v" + p.read_text().strip()
+        except OSError:
+            continue
+    return "(versión desconocida)"
+
+
 def _fmt(x, pct=False, dec=2):
     if x is None or (isinstance(x, float) and not np.isfinite(x)):
         return "—"
@@ -245,7 +260,7 @@ del ranking no se distingue del azar.</div>
 {"".join(panes)}
 {ver}
 {anom}
-<footer>Generado por qscan · datos ajustados por splits y dividendos ·
+<footer>Generado por qscan {_version()} · datos ajustados por splits y dividendos ·
 sin datos fundamentales ni de sentimiento: sólo precio y volumen.</footer>
 <script>
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{{
