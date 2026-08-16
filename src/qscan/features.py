@@ -25,6 +25,14 @@ log = logging.getLogger(__name__)
 HORIZON_DAYS = {"corto": 10, "medio": 63, "largo": 252}
 
 
+# Grupos sin volumen negociado publicado. Los pares de divisas y los índices
+# cotizan en Yahoo con volumen 0 o vacío: no es que sean ilíquidos, es que ese
+# dato no existe para ellos. Aplicarles un filtro de volumen en dólares los
+# elimina a todos, que es exactamente lo que pasaba: fx entraba con 30 series y
+# salía con 0. Es un error de categoría, no de umbral.
+SIN_VOLUMEN = {"fx", "index"}
+
+
 def _dollar_volume(close: pd.DataFrame, vol: pd.DataFrame, n: int = 63) -> pd.DataFrame:
     return (close * vol).rolling(n, min_periods=n // 3).median()
 
@@ -106,7 +114,8 @@ def sample_panel(fh: dict[str, pd.DataFrame], dates: pd.DatetimeIndex,
         row = pd.DataFrame({k: df.loc[d] for k, df in fh.items()})
         row["close"] = close.loc[d]
         row = row[row["close"].notna()]
-        row = row[row["dollar_vol"].fillna(0) >= min_dollar_vol]
+        exento = row.index.map(lambda s: groups.get(s) in SIN_VOLUMEN)
+        row = row[(row["dollar_vol"].fillna(0) >= min_dollar_vol) | exento]
         if row.empty:
             continue
         row.insert(0, "date", d)
