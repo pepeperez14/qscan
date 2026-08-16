@@ -61,9 +61,23 @@ python tests/demo_report.py      # informe de ejemplo con datos sintéticos
 3. *Actions → Escaneo diario → Run workflow* para la primera ejecución (la que
    construye el universo y descarga la historia completa; tarda bastante).
 
-A partir de ahí corre solo de lunes a viernes a las 22:30 UTC. El almacén de
-precios vive en la caché de Actions (límite 10 GB, de sobra), así que las
-ejecuciones siguientes solo descargan lo nuevo.
+A partir de ahí corre solo. Dos disparos programados, de martes a sábado en UTC
+(que es como se ven de lunes a viernes en hora local europea):
+
+- **01:00 UTC — principal.** No se lanza justo tras el cierre de EE.UU. a
+  propósito: Yahoo tarda un rato en consolidar los precios ajustados.
+- **05:00 UTC — reintento.** No es un segundo escaneo. Si el principal terminó
+  bien, se salta solo en segundos leyendo `.last_success`. Existe porque la
+  descarga depende de Yahoo, que limita el ritmo y falla de vez en cuando; sin
+  esa red, un fallo puntual te deja sin informe hasta el día siguiente.
+
+Lanzarlo más veces al día no aportaría nada y haría daño: el sistema usa velas
+diarias, y a media sesión la vela de hoy está incompleta. El cierre sería un
+precio de mediodía, el volumen una fracción del real, y `vol_surge` saldría
+artificialmente bajo en todo el universo.
+
+El almacén de precios vive en la caché de Actions (límite 10 GB, de sobra), así
+que las ejecuciones siguientes solo descargan lo nuevo.
 
 **Coste**: en un repo público los minutos de Actions son ilimitados. En uno
 privado el plan gratuito da 2.000 min/mes y una ejecución diaria completa se los
