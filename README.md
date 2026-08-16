@@ -212,6 +212,59 @@ las reglas de `WEIGHTS` funcionen en el mercado real: eso solo lo dice
 `validate` sobre datos reales, y es una pregunta abierta hasta que la respondas
 con varios años de historia.
 
+## Simulación de cartera: cuatro escenarios
+
+Cada día se simulan **cuatro carteras independientes, con 40.000 € cada una**,
+para que sean comparables entre sí y contra el índice:
+
+| Escenario | Posiciones | Rebalanceo | Idea |
+|---|---|---|---|
+| Corto | 15 | semanal | donde la validación encuentra mejor t-stat, al precio de rotar mucho |
+| Medio | 20 | mensual | mejor equilibrio entre señal y coste |
+| Largo | 20 | trimestral | costes mínimos; hoy sin evidencia de señal |
+| Combinada | 20 | mensual | reparto entre los tres según la evidencia medida |
+
+La **combinada** pondera cada horizonte por su t-stat por encima de 1: por debajo
+de ahí no hay nada que distinga la señal del azar y no merece capital. Si ningún
+horizonte llega, reparte a partes iguales y lo dice. Contrapartida honesta: los
+pesos salen de la misma validación que mide el sistema, así que hay algo de
+ajuste a los propios datos; se mitiga con un umbral duro en vez de optimizar
+libremente, pero no desaparece.
+
+Cinco decisiones la separan de un folleto:
+
+- **Ejecución a la apertura del día siguiente.** El ranking sale del cierre de
+  hoy y nadie puede comprar a ese precio. Ejecutar al precio con el que decides
+  es la forma más silenciosa de inflar un backtest.
+- **Comisión y horquilla.** La comisión se recuerda; la horquilla es la que se
+  come el resultado al rotar. El efecto se ve solo: en la prueba, el escenario
+  corto acumula 785 € de costes y el largo 79 € — diez veces más por rotar
+  semanalmente en vez de trimestralmente.
+- **Divisa.** Capital en euros, activos en dólares. En un año el euro-dólar se
+  mueve más que muchas de las señales que perseguimos.
+- **Índice de referencia.** Sin comparar contra comprar y esperar, un mercado
+  alcista hace que cualquier estrategia parezca buena. Lo que importa es la
+  columna *vs índice*, no la rentabilidad.
+- **El pasado no se reescribe.** Cada día añade filas a `portfolio/curva.csv` y
+  `portfolio/operaciones.csv`; nunca recalcula.
+
+El informe lleva un **selector de periodo** (1 semana, 1 mes, 3, 6 meses, 1 año,
+todo) que recalcula la rentabilidad acumulada de cada escenario en esa ventana y
+redibuja los gráficos. La base es el valor al inicio del periodo, no el capital
+inicial: si no, "3 meses" seguiría enseñando la rentabilidad desde el origen.
+Los datos van embebidos y el cálculo lo hace el navegador, que es la única forma
+de tener un selector real en una página estática.
+
+También muestra siempre la **composición de cada cartera**: cada posición con su
+valor, su peso y su plusvalía. Se enseña una sola composición porque ambos
+brókers compran exactamente los mismos activos —el objetivo lo fija la señal, no
+el bróker—; lo que cambia entre ellos es el coste.
+
+El informe incluye además el **parte de operaciones**: qué habría que comprar y
+vender en la próxima apertura, y qué se cruzó hoy con su comisión. En los días
+sin rebalanceo aparece vacío, que es lo correcto: no operar es la postura por
+defecto.
+
 ## Sesgo de supervivencia: lo único que hay que empezar hoy
 
 El universo se construye a partir de los valores que cotizan **hoy**. Cualquier

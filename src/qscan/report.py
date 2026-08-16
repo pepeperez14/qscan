@@ -17,18 +17,21 @@ CSS = """
 .viz-root{color-scheme:light;
   --surface-1:#fcfcfb; --surface-2:#f4f4f2; --border:#e2e2dd;
   --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#8a8981;
-  --series-1:#2a78d6; --good:#008300; --bad:#e34948; --warn:#eda100;
+  --series-1:#2a78d6; --series-2:#eb6834; --series-3:#1baf7a;
+  --good:#008300; --bad:#e34948; --warn:#eda100;
   background:var(--surface-1); color:var(--text-primary);
   font:14px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   margin:0;padding:24px;max-width:1180px;margin-inline:auto}
 @media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .viz-root{
   color-scheme:dark; --surface-1:#1a1a19; --surface-2:#242423; --border:#3a3a37;
   --text-primary:#fff; --text-secondary:#c3c2b7; --text-muted:#8f8e85;
-  --series-1:#3987e5; --good:#008300; --bad:#e66767; --warn:#c98500;}}
+  --series-1:#3987e5; --series-2:#d95926; --series-3:#199e70;
+  --good:#008300; --bad:#e66767; --warn:#c98500;}}
 :root[data-theme="dark"] .viz-root{color-scheme:dark;
   --surface-1:#1a1a19; --surface-2:#242423; --border:#3a3a37;
   --text-primary:#fff; --text-secondary:#c3c2b7; --text-muted:#8f8e85;
-  --series-1:#3987e5; --good:#008300; --bad:#e66767; --warn:#c98500;}
+  --series-1:#3987e5; --series-2:#d95926; --series-3:#199e70;
+  --good:#008300; --bad:#e66767; --warn:#c98500;}
 h1{font-size:22px;margin:0 0 2px} h2{font-size:15px;margin:32px 0 10px;font-weight:600}
 .sub{color:var(--text-secondary);font-size:13px;margin:0 0 20px}
 .tiles{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 4px}
@@ -52,6 +55,21 @@ tr.cmt td{color:var(--text-secondary);font-size:12.5px;padding-top:0;
 .tag{font-size:11px;color:var(--text-secondary);background:var(--surface-2);
   border:1px solid var(--border);border-radius:5px;padding:1px 6px}
 .pos{color:var(--good)} .neg{color:var(--bad)}
+.leyenda{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;font-size:12px;
+  color:var(--text-secondary)}
+.lg{display:inline-flex;align-items:center;gap:6px}
+.lg i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.lbl{font-size:11px;font-weight:600}
+.paneles{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:12px;margin-top:14px}
+.panel{background:var(--surface-2);border:1px solid var(--border);
+  border-radius:10px;padding:10px 12px}
+.panel .k{font-size:11px;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:4px}
+.comp details{border:1px solid var(--border);border-radius:10px;padding:10px 14px;
+  margin-bottom:10px;background:var(--surface-2)}
+.comp summary{cursor:pointer;font-size:13px;color:var(--text-secondary)}
+.comp table{margin-top:8px}
 .note{background:var(--surface-2);border:1px solid var(--border);border-left:3px solid var(--warn);
   border-radius:8px;padding:12px 14px;color:var(--text-secondary);font-size:13px;margin:18px 0}
 .hidden{display:none}
@@ -129,6 +147,295 @@ def _version() -> str:
     return "(versión desconocida)"
 
 
+SERIES = {  # slots 1-3 de la paleta: el único trío que valida en todos los pares
+    "trade_republic": ("Trade Republic", "var(--series-1)"),
+    "etoro": ("eToro", "var(--series-2)"),
+    "benchmark": ("Comprar y esperar", "var(--series-3)"),
+}
+ESC_ETIQUETA = {"corto": "Corto plazo", "medio": "Medio plazo",
+                "largo": "Largo plazo", "combinada": "Combinada"}
+ESC_DETALLE = {"corto": "15 posiciones · rebalanceo semanal",
+               "medio": "20 posiciones · rebalanceo mensual",
+               "largo": "20 posiciones · rebalanceo trimestral",
+               "combinada": "20 posiciones · reparto por evidencia"}
+PERIODOS = [("7", "1 semana"), ("30", "1 mes"), ("90", "3 meses"),
+            ("180", "6 meses"), ("365", "1 año"), ("0", "Todo")]
+MUTED = "color:var(--text-muted);font-size:11px"
+
+
+def _celda(txt: str, cls: str = "") -> str:
+    return '<td class="num %s">%s</td>' % (cls, txt)
+
+
+def _tabla_composicion(comp: pd.DataFrame) -> str:
+    """Qué hay dentro de cada cartera. Se enseña siempre, no bajo demanda: una
+    cartera cuyo contenido no ves es un número, no una decisión."""
+    if comp is None or comp.empty:
+        return ("<h2>Composición de las carteras</h2><p class='sub'>Todavía sin "
+                "posiciones: aparecerán tras el primer rebalanceo.</p>")
+    bloques = []
+    for e, etiqueta in ESC_ETIQUETA.items():
+        sub = comp[comp.escenario == e]
+        if sub.empty:
+            continue
+        sub = sub.sort_values("valor_eur", ascending=False)
+        filas = []
+        for r in sub.itertuples():
+            pl = getattr(r, "plusvalia_pct", None)
+            try:
+                pl_ok = pl is not None and np.isfinite(float(pl))
+            except (TypeError, ValueError):
+                pl_ok = False
+            if pl_ok:
+                cls = "pos" if float(pl) >= 0 else "neg"
+                pl_txt = "%+.2f%%" % float(pl)
+            else:
+                cls, pl_txt = "", "—"
+            grupo = str(getattr(r, "grupo", "") or "")
+            tag = "<span class='tag'>%s</span>" % html.escape(grupo) if grupo else ""
+            filas.append(
+                "<tr><td class='sym'>%s %s<br><span style='%s'>%s</span></td>%s%s%s</tr>"
+                % (html.escape(str(r.symbol)), tag, MUTED,
+                   html.escape(str(getattr(r, "nombre", "") or "")),
+                   _celda(format(float(r.valor_eur), ",.0f") + " €"),
+                   _celda("%.1f%%" % float(r.peso_pct)),
+                   _celda(pl_txt, cls)))
+        bloques.append(
+            "<details open><summary><b>%s</b> · %d posiciones · %s €</summary>"
+            "<table><thead><tr><th>Activo</th><th class='num'>Valor</th>"
+            "<th class='num'>Peso</th><th class='num'>Plusvalía</th></tr></thead>"
+            "<tbody>%s</tbody></table></details>"
+            % (html.escape(etiqueta), len(sub[sub.symbol != "· efectivo"]),
+               format(float(sub.valor_eur.sum()), ",.0f"), "".join(filas)))
+    return ("<h2>Composición de las carteras</h2>"
+            "<p class='sub'>Posiciones a cierre de hoy, valoradas en euros. Ambos "
+            "brókers compran exactamente los mismos activos —el objetivo lo fija la "
+            "señal, no el bróker—, así que se muestra una sola composición; lo que "
+            "cambia entre ellos es el coste.</p>"
+            "<div class='comp'>" + "".join(bloques) + "</div>")
+
+
+def _tabla_ops(ops, titulo: str, nota: str) -> str:
+    df = ops if isinstance(ops, pd.DataFrame) else pd.DataFrame(ops)
+    if df is None or df.empty:
+        return ("<h2>%s</h2><p class='sub'>%s Hoy no hay ninguna: cada cartera sólo "
+                "rota en su fecha de rebalanceo y entre medias se mantiene. No operar "
+                "es la postura por defecto, y es donde se ahorran las comisiones.</p>"
+                % (html.escape(titulo), html.escape(nota)))
+    df = df.sort_values(["escenario", "broker", "lado", "symbol"])
+    filas = []
+    for r in df.itertuples():
+        lado = str(r.lado)
+        cls = "pos" if lado == "compra" else "neg"
+        imp = getattr(r, "importe_eur", None)
+        try:
+            imp_txt = format(float(imp), ",.0f") + " €" if imp is not None \
+                and np.isfinite(float(imp)) else "toda la posición"
+        except (TypeError, ValueError):
+            imp_txt = "toda la posición"
+        coste = getattr(r, "coste_eur", None)
+        try:
+            coste_txt = format(float(coste), ",.2f") + " €" if coste is not None \
+                and np.isfinite(float(coste)) else "—"
+        except (TypeError, ValueError):
+            coste_txt = "—"
+        filas.append(
+            "<tr><td><span class='tag'>%s</span></td><td>%s</td>"
+            "<td class='sym'>%s</td><td class='%s'><b>%s</b></td>%s%s</tr>"
+            % (html.escape(ESC_ETIQUETA.get(str(r.escenario), str(r.escenario))),
+               html.escape(SERIES.get(str(r.broker), (str(r.broker), ""))[0]),
+               html.escape(str(r.symbol)), cls, lado.upper(),
+               _celda(imp_txt), _celda(coste_txt)))
+    return ("<h2>%s <span class='tag'>%d</span></h2><p class='sub'>%s</p>"
+            "<table><thead><tr><th>Escenario</th><th>Bróker</th><th>Activo</th>"
+            "<th>Operación</th><th class='num'>Importe</th>"
+            "<th class='num'>Comisión</th></tr></thead><tbody>%s</tbody></table>"
+            % (html.escape(titulo), len(df), html.escape(nota), "".join(filas)))
+
+
+def _bloque_cartera(curva: pd.DataFrame, estado: dict | None,
+                    comp: pd.DataFrame | None) -> str:
+    if curva is None or curva.empty or "escenario" not in curva.columns:
+        return ""
+
+    # Los datos van embebidos y el navegador recalcula al cambiar de periodo. Es
+    # la única forma de tener un selector real en una página estática: si el
+    # servidor precalculara los periodos, cada uno sería una página distinta.
+    datos = (curva[["fecha", "escenario", "broker", "valor_eur", "costes_acum_eur"]]
+             .to_dict(orient="records"))
+    payload = json.dumps({"curva": datos,
+                          "etiquetas": ESC_ETIQUETA,
+                          "detalles": ESC_DETALLE,
+                          "series": {k: v[1] for k, v in SERIES.items()},
+                          "nombres": {k: v[0] for k, v in SERIES.items()}},
+                         ensure_ascii=False)
+
+    botones = "".join(
+        '<button class="tab per" data-dias="%s" aria-selected="%s">%s</button>'
+        % (d, "true" if d == "0" else "false", html.escape(n)) for d, n in PERIODOS)
+
+    paneles = "".join(
+        '<div class="panel"><div class="k">%s</div>'
+        '<svg id="g-%s" width="100%%" viewBox="0 0 300 128" role="img" '
+        'aria-label="Evolución de %s"></svg></div>'
+        % (html.escape(et), e, html.escape(et)) for e, et in ESC_ETIQUETA.items())
+
+    n_dias = curva.fecha.nunique()
+    aviso = ""
+    if n_dias < 60:
+        aviso = ("<div class='note'><b>Llevas %d sesión%s de simulación.</b> A este "
+                 "plazo la diferencia con el índice es ruido. Y desconfía del "
+                 "escenario que vaya ganando ahora: con cuatro carteras compitiendo, "
+                 "que una destaque las primeras semanas es lo esperable aunque "
+                 "ninguna tenga ventaja real.</div>"
+                 % (n_dias, "es" if n_dias != 1 else ""))
+
+    nota_comb = ""
+    if estado:
+        pe = (estado.get("escenarios", {}).get("combinada") or {}).get("pesos_evidencia")
+        if pe and pe.get("nota"):
+            nota_comb = ("<p class='sub'>La cartera combinada reparte %s. Se recalcula "
+                         "en cada rebalanceo, así que sigue a la evidencia en lugar de "
+                         "quedarse fija en una corazonada. Contrapartida honesta: los "
+                         "pesos salen de la misma validación que mide el sistema, así "
+                         "que algo de ajuste a los propios datos hay.</p>"
+                         % html.escape(str(pe["nota"])))
+
+    leyenda = "".join('<span class="lg"><i style="background:%s"></i>%s</span>'
+                      % (c, n) for n, c in SERIES.values())
+    ops_hoy = (estado or {}).get("_ops_hoy") or []
+    pend = (estado or {}).get("_pendientes") or []
+
+    return ("<h2>Carteras simuladas · 40.000 € en cada escenario</h2>"
+            "<p class='sub'>Cuatro estrategias con el mismo capital, en paralelo con "
+            "los costes de Trade Republic y de eToro, contra comprar y esperar un ETF "
+            "del S&amp;P 500. Las órdenes se cruzan a la apertura del día siguiente al "
+            "de la señal, con comisión y horquilla aplicadas.</p>"
+            + aviso
+            + "<div class='tabs' role='group' aria-label='Periodo'>" + botones + "</div>"
+            + "<p class='sub' id='per-nota'></p>"
+            + "<table id='tabla-esc'><thead><tr><th>Escenario</th>"
+              "<th class='num'>TR</th><th class='num'>eToro</th>"
+              "<th class='num'>vs índice</th><th class='num'>Costes TR / eToro</th>"
+              "</tr></thead><tbody></tbody></table>"
+            + nota_comb
+            + "<div class='paneles'>" + paneles + "</div>"
+            + "<div class='leyenda'>" + leyenda + "</div>"
+            + _tabla_composicion(comp)
+            + _tabla_ops(pend, "Órdenes para la próxima apertura",
+                         "Esto es lo que habría que ejecutar mañana al abrir el mercado.")
+            + _tabla_ops(ops_hoy, "Ejecutado hoy",
+                         "Órdenes decididas ayer y cruzadas hoy a la apertura, ya con "
+                         "su coste aplicado.")
+            + "<script id='datos-cartera' type='application/json'>" + payload
+            + "</script>" + JS_CARTERA)
+
+
+JS_CARTERA = """<script>
+(function(){
+  const D = JSON.parse(document.getElementById('datos-cartera').textContent);
+  const fechas = [...new Set(D.curva.map(r=>r.fecha))].sort();
+  const clave = (e,b)=>e+'|'+b;
+  const mapa = {};
+  D.curva.forEach(r=>{ (mapa[clave(r.escenario,r.broker)] ||= {})[r.fecha] = r; });
+  const escenarios = Object.keys(D.etiquetas);
+  const eur = v => v.toLocaleString('es-ES',{maximumFractionDigits:0});
+
+  function ventana(dias){
+    if(!dias) return fechas;
+    const fin = new Date(fechas[fechas.length-1]);
+    const ini = new Date(fin); ini.setDate(ini.getDate()-dias);
+    const iso = ini.toISOString().slice(0,10);
+    const w = fechas.filter(f=>f>=iso);
+    return w.length>=2 ? w : fechas.slice(-2);
+  }
+  // Rentabilidad DEL PERIODO: primer valor de la ventana como base, no el capital
+  // inicial. Si no, "3 meses" seguiría mostrando la rentabilidad desde el origen.
+  function rent(e,b,w){
+    const s = mapa[clave(e,b)]; if(!s) return null;
+    const va = w.map(f=>s[f]).filter(Boolean);
+    if(va.length<2) return null;
+    const a = va[0].valor_eur, z = va[va.length-1].valor_eur;
+    return {pct:(z/a-1)*100, valor:z,
+            coste: va[va.length-1].costes_acum_eur - va[0].costes_acum_eur};
+  }
+  function dibujar(e,w){
+    const svg = document.getElementById('g-'+e); if(!svg) return;
+    const series = ['trade_republic','etoro'].map(b=>({b,s:mapa[clave(e,b)]}))
+      .filter(x=>x.s);
+    const bench = mapa[clave('benchmark','benchmark')];
+    if(bench) series.push({b:'benchmark',s:bench});
+    const W=300,H=128,pl=42,pr=8,pt=8,pb=16, iw=W-pl-pr, ih=H-pt-pb;
+    let vals=[];
+    series.forEach(x=>w.forEach(f=>{ if(x.s[f]) vals.push(x.s[f].valor_eur); }));
+    if(vals.length<2){ svg.innerHTML=''; return; }
+    let lo=Math.min(...vals), hi=Math.max(...vals);
+    const m=(hi-lo)*0.12 || Math.max(Math.abs(hi)*0.01,1); lo-=m; hi+=m;
+    const X=i=>pl+iw*i/Math.max(w.length-1,1);
+    const Y=v=>pt+ih-(v-lo)/(hi-lo)*ih;
+    let out='';
+    [0,1].forEach(fr=>{ const v=lo+(hi-lo)*fr, y=Y(v);
+      out+=`<line class="grid" x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}"/>`+
+           `<text class="axis" x="${pl-5}" y="${y+3}" text-anchor="end">${eur(v)}</text>`;});
+    series.forEach(x=>{
+      const pts=w.map((f,i)=>x.s[f]?`${X(i)},${Y(x.s[f].valor_eur)}`:null)
+                 .filter(Boolean).join(' ');
+      if(pts) out+=`<polyline points="${pts}" fill="none" stroke="${D.series[x.b]}" `+
+                   `stroke-width="${x.b==='benchmark'?1.5:2}" stroke-linejoin="round"/>`;
+    });
+    const bw=iw/Math.max(w.length-1,1);
+    w.forEach((f,i)=>{
+      const det=series.filter(x=>x.s[f])
+        .map(x=>`${D.nombres[x.b]}: ${eur(x.s[f].valor_eur)} €`).join(' · ');
+      out+=`<rect x="${X(i)-bw/2}" y="${pt}" width="${bw}" height="${ih}" `+
+           `fill="transparent"><title>${f} — ${det}</title></rect>`;
+    });
+    svg.innerHTML=out;
+  }
+  function pintar(dias){
+    const w = ventana(dias);
+    const bench = rent('benchmark','benchmark',w);
+    const tb = document.querySelector('#tabla-esc tbody'); tb.innerHTML='';
+    escenarios.forEach(e=>{
+      const tr = rent(e,'trade_republic',w), et = rent(e,'etoro',w);
+      if(!tr && !et) return;
+      const cel = r => r ? `<td class="num"><b class="${r.pct>=0?'pos':'neg'}">`+
+        `${r.pct>=0?'+':''}${r.pct.toFixed(2)}%</b><br>`+
+        `<span style="color:var(--text-muted);font-size:11px">${eur(r.valor)} €</span></td>`
+        : '<td class="num">—</td>';
+      let dif='<td class="num">—</td>';
+      if(tr && bench){ const d=tr.pct-bench.pct;
+        dif=`<td class="num ${d>=0?'pos':'neg'}"><b>${d>=0?'+':''}${d.toFixed(2)}</b></td>`; }
+      const costes = (tr&&et) ? `${eur(tr.coste)} € / ${eur(et.coste)} €` : '—';
+      tb.insertAdjacentHTML('beforeend',
+        `<tr><td><b>${D.etiquetas[e]}</b><br><span style="color:var(--text-muted);`+
+        `font-size:11px">${D.detalles[e]||''}</span></td>${cel(tr)}${cel(et)}${dif}`+
+        `<td class="num" style="font-size:12px">${costes}</td></tr>`);
+      dibujar(e,w);
+    });
+    if(bench){
+      tb.insertAdjacentHTML('beforeend',
+        `<tr><td><b>Comprar y esperar (SPY)</b><br><span style="color:var(--text-muted);`+
+        `font-size:11px">referencia</span></td><td class="num"><b class="`+
+        `${bench.pct>=0?'pos':'neg'}">${bench.pct>=0?'+':''}${bench.pct.toFixed(2)}%</b>`+
+        `<br><span style="color:var(--text-muted);font-size:11px">${eur(bench.valor)} €`+
+        `</span></td><td class="num">—</td><td class="num">—</td>`+
+        `<td class="num">—</td></tr>`);
+    }
+    document.getElementById('per-nota').textContent =
+      `Rentabilidad acumulada del ${w[0]} al ${w[w.length-1]} (${w.length} sesiones). `+
+      `La base es el valor al inicio del periodo, no el capital inicial.`;
+  }
+  document.querySelectorAll('.per').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.per').forEach(x=>x.setAttribute('aria-selected','false'));
+    b.setAttribute('aria-selected','true');
+    pintar(parseInt(b.dataset.dias,10));
+  }));
+  pintar(0);
+})();
+</script>"""
+
+
 def _fmt(x, pct=False, dec=2):
     if x is None or (isinstance(x, float) and not np.isfinite(x)):
         return "—"
@@ -179,7 +486,10 @@ def build_html(scored: pd.DataFrame, panel: pd.DataFrame, sparks: dict[str, np.n
                comments: dict[str, dict[str, str]] | None = None,
                anomalies: pd.DataFrame | None = None,
                quarantined: int = 0,
-               redundant: dict[str, dict[str, str]] | None = None) -> str:
+               redundant: dict[str, dict[str, str]] | None = None,
+               curva: pd.DataFrame | None = None,
+               estado_cartera: dict | None = None,
+               composicion: pd.DataFrame | None = None) -> str:
     comments = comments or {}
     redundant = redundant or {}
     asof = pd.to_datetime(scored.date.max())
@@ -258,6 +568,7 @@ Antes de usarlo, mira la tabla de validación: si el t-stat no supera 2, el orde
 del ranking no se distingue del azar.</div>
 <div class="tabs" role="tablist">{"".join(tabs)}</div>
 {"".join(panes)}
+{_bloque_cartera(curva, estado_cartera, composicion) if curva is not None else ""}
 {ver}
 {anom}
 <footer>Generado por qscan {_version()} · datos ajustados por splits y dividendos ·

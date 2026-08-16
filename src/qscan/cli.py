@@ -10,7 +10,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from . import anomalies, data, explain, features, report, scoring, universe, validate
+from . import (anomalies, data, explain, features, portfolio, report,
+               scoring, universe, validate)
 
 log = logging.getLogger("qscan")
 
@@ -158,12 +159,29 @@ def cmd_report(a) -> None:
             comments[h] = explain.annotate(scored, panel, h, syms[:a.comment_top],
                                            verdict, rep)
 
+    # Simulación de cartera. Va aquí y no en un paso propio del workflow para no
+    # obligar a tocar el YAML: este comando ya se ejecuta todos los días.
+    curva, estado_cartera, comp = None, None, None
+    if not a.no_portfolio:
+        px_full = _wide(data.PriceStore(a.store))
+        dir_cartera = Path(a.portfolio_dir)
+        try:
+            estado_cartera = portfolio.simular(scored, px_full, u, rep, verdict,
+                                              dir_cartera)
+            curva = portfolio.resumen(dir_cartera)
+            comp = portfolio.composicion(estado_cartera, px_full, u)
+            comp.to_csv(dir_cartera / "composicion.csv", index=False)
+            portfolio.commitear(dir_cartera)
+        except Exception as e:
+            log.warning("la simulación de cartera falló (%s); el informe sigue", e)
+
     html = report.build_html(scored, panel, sparks, names, verdict,
                              universe_size=len(u), top_n=a.top,
                              comments=comments,
                              anomalies=anomalies.summary(rep) if rep is not None else None,
                              quarantined=int(rep["cuarentena"].sum()) if rep is not None else 0,
-                             redundant=redundant)
+                             redundant=redundant, curva=curva,
+                             estado_cartera=estado_cartera, composicion=comp)
     dest = out / "index.html"
     dest.write_text(html, encoding="utf-8")
     print(f"informe -> {dest}")
@@ -195,6 +213,10 @@ def main(argv=None) -> None:
     r = sub.add_parser("report"); r.add_argument("--top", type=int, default=30)
     r.add_argument("--no-comments", action="store_true",
                    help="omite la capa de comentario")
+    r.add_argument("--no-portfolio", action="store_true",
+                   help="omite la simulación de cartera")
+    r.add_argument("--portfolio-dir", default="portfolio",
+                   help="dónde vive el estado de la simulación")
     r.add_argument("--max-corr", type=float, default=0.80,
                    help="umbral para marcar activos redundantes entre sí")
     r.add_argument("--comment-top", type=int, default=12,
