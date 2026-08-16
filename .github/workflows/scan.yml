@@ -2,9 +2,17 @@ name: Escaneo diario
 
 on:
   schedule:
-    # 22:30 UTC de lunes a viernes: cierre de EE.UU. ya consolidado.
-    # GitHub retrasa los cron en horas punta; no cuentes con el minuto exacto.
-    - cron: "30 22 * * 1-5"
+    # Principal: 01:00 UTC de martes a sábado. Ojo con los días: en UTC, el
+    # cierre del lunes cae ya en la madrugada del martes, así que la ventana
+    # 2-6 (mar-sáb) es la que cubre las sesiones de lunes a viernes.
+    # Se elige esta hora y no justo tras el cierre para que Yahoo haya
+    # consolidado los precios ajustados, que tardan un rato en asentarse.
+    - cron: "0 1 * * 2-6"
+    # Reintento: 05:00 UTC. NO es un segundo escaneo. Si la ejecución principal
+    # terminó bien, este se salta solo en unos segundos. Existe porque la
+    # descarga depende de Yahoo, que limita el ritmo y falla de vez en cuando:
+    # sin esta red, un fallo puntual te deja sin informe hasta el día siguiente.
+    - cron: "0 5 * * 2-6"
   workflow_dispatch:
     inputs:
       rebuild_universe:
@@ -16,7 +24,7 @@ on:
         default: "0"
 
 permissions:
-  contents: write      # necesario para desempaquetar el código desde el zip
+  contents: write
   pages: write
   id-token: write
 
@@ -25,19 +33,36 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  scan:
+  # Decide si hay algo que hacer. Se separa en su propio job para no tener que
+  # colgar un "if" de cada uno de los catorce pasos del escaneo.
+  preflight:
     runs-on: ubuntu-latest
-    timeout-minutes: 330      # el límite duro de un job es 6 h
+    outputs:
+      run: ${{ steps.check.outputs.run }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: check
+        run: |
+          HOY=$(date -u +%F)
+          ULT=$( [ -f .last_success ] && cat .last_success || echo nunca )
+          echo "hoy (UTC): $HOY · último escaneo correcto: $ULT"
+          if [ "${{ github.event.schedule }}" = "0 5 * * 2-6" ] && [ "$ULT" = "$HOY" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "la ejecución principal de hoy fue bien: no hace falta reintento"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  scan:
+    needs: preflight
+    if: needs.preflight.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
     steps:
       - uses: actions/checkout@v4
 
       # Se admite CUALQUIER fichero qscan*.zip en la raíz y gana el que lleve el
-      # número de VERSION más alto. El nombre deja de importar: subir
-      # qscan-v3.zip junto al viejo qscan.zip funciona, y un zip antiguo no puede
-      # pisar a uno nuevo aunque se suba después. Antes, con el nombre fijo
-      # qscan.zip, era imposible distinguir versiones desde el móvil.
-      # Se excluye .github/ a propósito: el GITHUB_TOKEN no puede escribir
-      # ficheros de workflow, así que este fichero lo mantienes tú a mano.
+      # número de VERSION más alto. El nombre deja de importar.
       - name: Desempaquetar la versión más reciente
         run: |
           BEST=""; BESTV=-1
@@ -76,9 +101,6 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      # El almacén de precios vive en la caché, no en el repo: son cientos de MB
-      # que no tiene sentido versionar. La clave rota a diario y se restaura
-      # desde la más reciente disponible, de modo que la descarga es incremental.
       - name: Restaurar almacén de precios
         id: cache
         uses: actions/cache/restore@v4
@@ -94,10 +116,6 @@ jobs:
         env:
           PYTHONPATH: src
 
-      # El límite se puede fijar de tres formas, por orden de prioridad:
-      #   1. el campo del formulario al lanzar el workflow a mano
-      #   2. la variable de repositorio QSCAN_LIMIT (Settings -> Variables)
-      #   3. 0 = universo completo
       - name: Actualizar cotizaciones
         run: python -m qscan.cli update --years 8 --limit ${{ inputs.limit || vars.QSCAN_LIMIT || 0 }}
         env:
@@ -113,14 +131,23 @@ jobs:
         env:
           PYTHONPATH: src
 
-      # La capa de comentario usa la API de Anthropic si existe el secreto
-      # ANTHROPIC_API_KEY. Sin él, el informe sale igual con textos deterministas:
-      # es una comodidad, no una dependencia.
       - name: Generar informe
         run: python -m qscan.cli report --top 40 --comment-top 15
         env:
           PYTHONPATH: src
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      # Marca de éxito. Es lo que lee el preflight para saber si el reintento de
+      # las 05:00 tiene algo que hacer. Se escribe sólo si todo lo anterior fue
+      # bien, que es justo la condición que interesa.
+      - name: Marcar la ejecución como correcta
+        run: |
+          date -u +%F > .last_success
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .last_success
+          git commit -m "Escaneo correcto $(date -u +%F)" || true
+          git push || echo "aviso: no se pudo registrar la marca de éxito"
 
       - name: Guardar almacén actualizado
         if: always()
@@ -143,6 +170,7 @@ jobs:
 
   publish:
     needs: scan
+    if: needs.scan.result == 'success'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
