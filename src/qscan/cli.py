@@ -51,7 +51,9 @@ def cmd_update(a) -> None:
     u = pd.read_csv(a.universe)
     if a.limit:
         u = u.head(a.limit)
-    data.update(u, data.PriceStore(a.store), years=a.years)
+    data.update(u, data.PriceStore(a.store), years=a.years,
+                recarga_completa=True if a.full else None,
+                cada_dias=a.refresh_days)
 
 
 def cmd_scan(a) -> None:
@@ -200,7 +202,12 @@ def main(argv=None) -> None:
     u.add_argument("--no-eu", action="store_true"); u.set_defaults(f=cmd_universe)
 
     d = sub.add_parser("update"); d.add_argument("--years", type=int, default=8)
-    d.add_argument("--limit", type=int, default=0); d.set_defaults(f=cmd_update)
+    d.add_argument("--limit", type=int, default=0)
+    d.add_argument("--full", action="store_true",
+                   help="forzar recarga completa de la historia")
+    d.add_argument("--refresh-days", type=int, default=data.DIAS_ENTRE_RECARGAS,
+                   help="cada cuántos días se recarga la historia entera")
+    d.set_defaults(f=cmd_update)
 
     s = sub.add_parser("scan"); s.add_argument("--freq", default="ME")
     s.add_argument("--history-months", type=int, default=96)

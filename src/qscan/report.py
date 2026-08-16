@@ -253,6 +253,49 @@ def _tabla_ops(ops, titulo: str, nota: str) -> str:
             % (html.escape(titulo), len(df), html.escape(nota), "".join(filas)))
 
 
+def _tabla_descartes(estado: dict | None) -> str:
+    """Lo que el sistema decidió NO hacer, y por qué.
+
+    Es la parte más útil de un optimizador de costes y la que nadie enseña: las
+    operaciones que no se hacen no dejan rastro en ningún sitio, así que sin esta
+    tabla es imposible saber si el filtro está trabajando o está apagado.
+    """
+    if not estado:
+        return ""
+    filas, ahorro_total, ahorro_acum = [], 0.0, 0.0
+    for e, esc in (estado.get("escenarios") or {}).items():
+        for k, b in (esc.get("brokers") or {}).items():
+            ahorro_acum += float(b.get("ahorro_acumulado") or 0.0)
+            if k != "trade_republic":
+                continue
+            for d in b.get("descartadas") or []:
+                ahorro_total += float(d.get("coste_evitado_eur") or 0.0)
+                filas.append(
+                    "<tr><td><span class='tag'>%s</span></td><td class='sym'>%s</td>"
+                    "<td>%s</td><td>%s</td>%s</tr>"
+                    % (html.escape(ESC_ETIQUETA.get(e, e)),
+                       html.escape(str(d.get("symbol", ""))),
+                       html.escape(str(d.get("lado", ""))),
+                       html.escape(str(d.get("motivo", ""))),
+                       _celda(format(float(d.get("coste_evitado_eur") or 0), ",.2f") + " €")))
+    cabecera = ("<h2>Operaciones descartadas por coste</h2>"
+                "<p class='sub'>El sistema sólo opera cuando el beneficio esperado "
+                "supera el coste con un margen de 1,5x. El beneficio esperado sale de "
+                "la fórmula <b>IC × z × σ</b>, con el IC que mide la propia validación: "
+                "si un grupo no tiene señal, su IC ronda cero, ninguna rotación "
+                "compensa la comisión y la cartera se queda quieta. Dejar de operar "
+                "cuando no sabes nada es una decisión, no una avería. "
+                "Ahorro acumulado estimado: <b>%s €</b>.</p>"
+                % format(ahorro_acum, ",.0f"))
+    if not filas:
+        return cabecera + ("<p class='sub'>Hoy no se descartó ninguna: o no tocaba "
+                           "rebalanceo, o todas las candidatas cubrían su coste.</p>")
+    return (cabecera + "<table><thead><tr><th>Escenario</th><th>Activo</th>"
+            "<th>Operación</th><th>Motivo del descarte</th>"
+            "<th class='num'>Coste evitado</th></tr></thead><tbody>"
+            + "".join(filas) + "</tbody></table>")
+
+
 def _bloque_cartera(curva: pd.DataFrame, estado: dict | None,
                     comp: pd.DataFrame | None) -> str:
     if curva is None or curva.empty or "escenario" not in curva.columns:
@@ -327,6 +370,7 @@ def _bloque_cartera(curva: pd.DataFrame, estado: dict | None,
             + _tabla_ops(ops_hoy, "Ejecutado hoy",
                          "Órdenes decididas ayer y cruzadas hoy a la apertura, ya con "
                          "su coste aplicado.")
+            + _tabla_descartes(estado)
             + "<script id='datos-cartera' type='application/json'>" + payload
             + "</script>" + JS_CARTERA)
 

@@ -135,12 +135,56 @@ def main() -> int:
                           values=["rentabilidad_pct", "costes_acum_eur"]).round(2)
           .to_string())
 
-    # --- 4. la rotación semanal debe costar más que la trimestral ---------
-    tr = ult[ult.broker == "trade_republic"].set_index("escenario")
-    if {"corto", "largo"} <= set(tr.index):
-        if tr.loc["corto"].costes_acum_eur <= tr.loc["largo"].costes_acum_eur:
-            fails.append("el escenario corto no acumula más costes que el largo: "
-                         "la frecuencia de rebalanceo no se está aplicando")
+    # --- 4. ninguna orden ejecutada por debajo del mínimo rentable --------
+    minimo = (portfolio.BROKERS["trade_republic"].comision_orden_eur
+              / portfolio.COMISION_MAX_PCT)
+    compras = ops[(ops.lado == "compra") & (ops.broker == "trade_republic")]
+    pequenas = compras[compras.importe_eur < minimo * 0.9]
+    print(f"compras por debajo del mínimo rentable ({minimo:,.0f} €): {len(pequenas)}")
+    if len(pequenas):
+        fails.append(f"{len(pequenas)} compras por debajo del mínimo: la comisión "
+                     f"se come una parte desproporcionada")
+
+    # --- 5. el optimizador tiene que descartar operaciones ----------------
+    ahorro = sum(estado["escenarios"][e]["brokers"][k].get("ahorro_acumulado", 0)
+                 for e in portfolio.ESCENARIOS for k in portfolio.BROKERS)
+    print(f"ahorro estimado por operaciones descartadas: {ahorro:,.2f} €")
+    if ahorro <= 0:
+        fails.append("el optimizador no descartó ninguna operación: no está actuando")
+
+    # --- 6. control positivo: con señal medida, el sistema SÍ debe rotar ---
+    # Sin alfa esperado el optimizador se queda quieto, que es lo correcto. Pero
+    # hay que comprobar que no está simplemente roto: con un IC alto declarado,
+    # las mismas señales tienen que producir rotación.
+    veredicto_fuerte = pd.DataFrame([
+        {"horizonte": h, "grupo": g, "ic_medio": 0.25, "t_stat": 4.0,
+         "periodos": 80, "veredicto": "señal consistente"}
+        for h in ("corto", "medio", "largo") for g in ("equity_us", "etf")])
+    TMP2 = Path("/tmp/qscan_cartera_pos")
+    if TMP2.exists():
+        shutil.rmtree(TMP2)
+    for hoy in dias:
+        px = {k: v.loc[:hoy] for k, v in px_full.items()}
+        fr = features.rebalance_dates(px["close"].index, "ME")
+        fr = fr[fr >= px["close"].index.min() + pd.Timedelta(days=400)]
+        fr = pd.DatetimeIndex(sorted(set(fr[-3:]) | {hoy}))
+        panel2 = features.sample_panel({k: v.loc[:hoy] for k, v in fh.items()},
+                                       fr, px["close"], grupos, 0)
+        portfolio.simular(scoring.score_panel(panel2), px, uni, None,
+                          veredicto_fuerte, TMP2)
+    ops2 = pd.read_csv(TMP2 / "operaciones.csv")
+    c1 = pd.read_csv(TMP / "curva.csv")
+    c2 = pd.read_csv(TMP2 / "curva.csv")
+    cost_sin = float(c1[(c1.fecha == c1.fecha.max()) & (c1.escenario == "corto")
+                        & (c1.broker == "trade_republic")].costes_acum_eur.iloc[0])
+    cost_con = float(c2[(c2.fecha == c2.fecha.max()) & (c2.escenario == "corto")
+                        & (c2.broker == "trade_republic")].costes_acum_eur.iloc[0])
+    print(f"\ncon IC declarado 0,25: {len(ops2)} operaciones ({len(ops)} sin señal)")
+    print(f"  costes del escenario corto: {cost_con:,.2f} € con señal · "
+          f"{cost_sin:,.2f} € sin señal")
+    if len(ops2) <= len(ops):
+        fails.append("con señal medida no rota más que sin ella: el alfa esperado "
+                     "no está llegando a la decisión")
 
     print()
     if fails:

@@ -142,17 +142,49 @@ def fetch_crypto(symbols: list[str], start: pd.Timestamp, timeframe: str = "1d")
         pd.DataFrame(columns=["symbol", "date"] + COLS)
 
 
+DIAS_ENTRE_RECARGAS = 30
+
+
+def toca_recarga_completa(marca: Path, cada_dias: int = DIAS_ENTRE_RECARGAS) -> bool:
+    """¿Toca volver a bajar toda la historia?
+
+    Hace falta porque la actualización incremental sólo pide los últimos días,
+    pero Yahoo revisa la historia HACIA ATRÁS: cuando una empresa hace un split o
+    paga dividendo, se reajusta la serie entera. Nuestro almacén se quedaría con
+    la versión vieja y desincronizada, y el detector de anomalías acabaría
+    marcando el activo como "split sin ajustar" y apartándolo — apagando el
+    activo en lugar de arreglar el dato.
+    """
+    if not marca.exists():
+        return True
+    try:
+        ultima = pd.Timestamp(marca.read_text().strip())
+    except (ValueError, OSError):
+        return True
+    dias = (pd.Timestamp.utcnow().tz_localize(None).normalize() - ultima).days
+    return dias >= cada_dias
+
+
 def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
-           lookback_days: int = 7) -> pd.DataFrame:
-    """Actualización incremental: sólo pide lo que falta desde la última fecha."""
+           lookback_days: int = 7, recarga_completa: bool | None = None,
+           cada_dias: int = DIAS_ENTRE_RECARGAS) -> pd.DataFrame:
+    """Actualización incremental, con recarga completa periódica."""
     existing = store.load()
     last = store.last_dates()
     full_start = pd.Timestamp.utcnow().tz_localize(None).normalize() - pd.DateOffset(years=years)
+    marca = store.path.parent / ".ultima_recarga"
+    if recarga_completa is None:
+        recarga_completa = toca_recarga_completa(marca, cada_dias)
+    if recarga_completa:
+        log.info("recarga completa: se vuelve a bajar la historia entera para "
+                 "recoger splits y dividendos aplicados retroactivamente")
 
     crypto_syms = universe.loc[universe.group == "crypto", "symbol"].tolist()
     other_syms = universe.loc[universe.group != "crypto", "symbol"].tolist()
 
     def _start_for(syms: list[str]) -> pd.Timestamp:
+        if recarga_completa:
+            return full_start
         known = [last[s] for s in syms if s in last.index]
         if len(known) < len(syms) * 0.9:
             return full_start
@@ -164,12 +196,27 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
     if crypto_syms:
         new.append(fetch_crypto(crypto_syms, _start_for(crypto_syms)))
 
-    merged = pd.concat([existing] + [n for n in new if not n.empty], ignore_index=True)
+    nuevos = [n for n in new if not n.empty]
+    if recarga_completa and nuevos and not existing.empty:
+        # Se DESCARTAN las filas viejas de los símbolos recargados en vez de
+        # fusionarlas. Si se mezclaran, un split dejaría el tramo antiguo en la
+        # escala vieja y el nuevo en la nueva, con un salto falso justo en la
+        # frontera: exactamente el dato roto que se quería eliminar.
+        refrescados = set(pd.concat(nuevos, ignore_index=True).symbol.unique())
+        antes = len(existing)
+        existing = existing[~existing.symbol.isin(refrescados)]
+        log.info("recarga completa: sustituidas %d filas de %d símbolos",
+                 antes - len(existing), len(refrescados))
+
+    merged = pd.concat([existing] + nuevos, ignore_index=True)
     merged["date"] = pd.to_datetime(merged["date"])
     for c in COLS:
         merged[c] = pd.to_numeric(merged[c], errors="coerce").astype("float32")
     merged = quality_filter(merged)
     store.save(merged)
+    if recarga_completa and nuevos:
+        marca.parent.mkdir(parents=True, exist_ok=True)
+        marca.write_text(str(pd.Timestamp.utcnow().tz_localize(None).date()))
     return merged
 
 

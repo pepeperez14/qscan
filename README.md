@@ -79,6 +79,22 @@ artificialmente bajo en todo el universo.
 El almacén de precios vive en la caché de Actions (límite 10 GB, de sobra), así
 que las ejecuciones siguientes solo descargan lo nuevo.
 
+**Recarga completa cada 30 días.** La actualización incremental sólo pide los
+últimos días, pero Yahoo revisa la historia *hacia atrás*: cuando una empresa hace
+un split o paga dividendo, reajusta la serie entera. Sin recarga, el almacén se
+queda con el tramo antiguo en la escala vieja y el nuevo en la nueva, con un salto
+falso justo en la frontera — el detector de anomalías lo caza y aparta el activo,
+que es apagar un valor sano en lugar de arreglar el dato.
+
+La recarga **descarta** las filas viejas de los símbolos que vuelve a bajar, en
+vez de fusionarlas: fusionar deja el salto exactamente donde estaba.
+`tests/test_recarga.py` reproduce un split 4:1 y comprueba las dos ramas —
+fusionando, el activo queda marcado; sustituyendo, no.
+
+Se dispara sola leyendo `data/.ultima_recarga`, sin tocar el workflow. Para
+forzarla: `python -m qscan.cli update --full`. El periodo se cambia con
+`--refresh-days`.
+
 **Coste**: en un repo público los minutos de Actions son ilimitados. En uno
 privado el plan gratuito da 2.000 min/mes y una ejecución diaria completa se los
 come; si lo quieres privado, reduce el universo con `--limit` o pasa a semanal.
@@ -231,7 +247,45 @@ pesos salen de la misma validación que mide el sistema, así que hay algo de
 ajuste a los propios datos; se mitiga con un umbral duro en vez de optimizar
 libremente, pero no desaparece.
 
-Cinco decisiones la separan de un folleto:
+### Optimización de costes: sólo se opera si compensa
+
+Cada movimiento pasa por tres filtros antes de ejecutarse:
+
+1. **Tamaño mínimo.** Con 1 € de comisión, una compra de 200 € paga un 0,5% antes
+   de empezar. Se exige que la comisión no supere el 0,1% del importe, lo que fija
+   un mínimo de 1.000 € por operación en Trade Republic.
+2. **Banda de no operar.** Si el peso actual se desvía menos de un 25% del
+   objetivo, se deja quieto. Reequilibrar por reequilibrar es pagar por nada.
+3. **El beneficio esperado tiene que cubrir el coste con margen 1,5x.** Cambiar A
+   por B sólo compensa si la diferencia de alfa supera el coste de vender A y
+   comprar B. El margen existe porque el alfa es una estimación ruidosa: operar
+   al filo es perder de media.
+
+El alfa esperado sale de la aproximación de Grinold, **E[r] = IC × z × σ**, con el
+IC que mide la propia validación para ese grupo y horizonte. Esto es lo que hace
+que el sistema se adapte solo: si un grupo no tiene señal, su IC ronda cero, el
+alfa ronda cero, ninguna rotación compensa la comisión y la cartera se queda
+quieta. Dejar de operar cuando no sabes nada es una decisión, no una avería.
+
+Un IC negativo se trata como cero. Invertir la señal porque el backtest salió al
+revés es una de las formas más fáciles de sobreajustar.
+
+El efecto medido sobre datos sintéticos, mismo periodo y mismas señales:
+
+| | Sin optimizar | Con optimizador |
+|---|---|---|
+| Costes (corto, TR) | 505 € | **40 €** |
+| Rentabilidad (corto, TR) | +4,61% | **+6,48%** |
+| Rentabilidad (medio, TR) | +3,10% | **+7,56%** |
+
+Y el control positivo: declarando un IC de 0,25, el mismo sistema pasa de 150 a
+482 operaciones y sus costes vuelven a 505 €. Rota cuando hay algo que ganar y se
+queda quieto cuando no. El informe enseña además la tabla de **operaciones
+descartadas** con su motivo y el coste evitado: las operaciones que no se hacen no
+dejan rastro en ningún sitio, así que sin esa tabla sería imposible saber si el
+filtro trabaja o está apagado.
+
+Cinco decisiones más la separan de un folleto:
 
 - **Ejecución a la apertura del día siguiente.** El ranking sale del cierre de
   hoy y nadie puede comprar a ese precio. Ejecutar al precio con el que decides

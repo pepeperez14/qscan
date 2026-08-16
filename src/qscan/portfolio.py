@@ -92,7 +92,8 @@ BROKERS = {
 # --------------------------------------------------------------------------- #
 def _broker_vacio() -> dict:
     return {"efectivo": 0.0, "posiciones": {}, "costes_acumulados": 0.0,
-            "ordenes_pendientes": [], "creadas_el": None}
+            "ordenes_pendientes": [], "creadas_el": None,
+            "descartadas": [], "ahorro_acumulado": 0.0}
 
 
 def _estado_vacio() -> dict:
@@ -306,6 +307,164 @@ def _toca_rebalanceo(ultimo: str | None, hoy: pd.Timestamp, freq: str) -> bool:
 
 
 # --------------------------------------------------------------------------- #
+# optimización: operar sólo cuando el beneficio esperado cubre el coste
+# --------------------------------------------------------------------------- #
+MARGEN_SEGURIDAD = 1.5     # el beneficio esperado debe superar 1,5x el coste
+COMISION_MAX_PCT = 0.001   # una comisión no puede pasar del 0,1% de la operación
+BANDA_NO_OPERAR = 0.25     # no se ajusta un peso que se desvía menos de un 25%
+PESO_MIN, PESO_MAX = 0.5, 2.0   # límites del peso relativo a la equiponderación
+
+
+def alfa_esperado(scored: pd.DataFrame, verdict: pd.DataFrame | None,
+                  close: pd.DataFrame, pesos: dict[str, float]) -> pd.Series:
+    """Rentabilidad esperada de cada activo en su horizonte, en tanto por uno.
+
+    Se usa la aproximación de Grinold:  E[r] = IC x z x sigma
+
+    donde `IC` es el coeficiente de información MEDIDO por la validación para ese
+    grupo y horizonte, `z` es el score transversal del activo y `sigma` la
+    dispersión de rentabilidades en ese horizonte, estimada con la volatilidad
+    realizada.
+
+    Que el IC salga de la validación y no de una corazonada es lo que hace útil
+    todo esto: si un grupo no tiene señal, su IC ronda cero, el alfa esperado
+    ronda cero, y el optimizador concluye que ninguna rotación compensa la
+    comisión. Es decir, el sistema deja de operar solo cuando no sabe nada. Un IC
+    negativo se trata como cero: invertir la señal porque el backtest salió al
+    revés es una de las formas más fáciles de sobreajustar.
+    """
+    ultima = scored[scored.date == scored.date.max()]
+    if ultima.empty:
+        return pd.Series(dtype=float)
+
+    # volatilidad anualizada por activo, para escalar al horizonte
+    r = np.log(close / close.shift(1)).tail(252)
+    vol_anual = r.std() * np.sqrt(252)
+
+    ic = {}
+    if verdict is not None and not verdict.empty and "ic_medio" in verdict.columns:
+        for _, row in verdict.iterrows():
+            ic[(str(row.horizonte), str(row.grupo))] = float(row.ic_medio)
+
+    total = pd.Series(0.0, index=ultima.symbol)
+    for h, peso in pesos.items():
+        col = f"score_{h}"
+        if peso <= 0 or col not in ultima.columns:
+            continue
+        dias = HORIZONTE_DIAS.get(h, 63)
+        for grupo, sub in ultima.groupby("group"):
+            z = sub[col]
+            if z.notna().sum() < 5:
+                continue
+            z = (z - z.mean()) / (z.std(ddof=0) or 1.0)
+            ic_gh = max(ic.get((h, str(grupo)), 0.0), 0.0)
+            sigma = vol_anual.reindex(sub.symbol).fillna(0.25) * np.sqrt(dias / 252)
+            aporte = ic_gh * z.to_numpy() * sigma.to_numpy() * peso
+            total.loc[sub.symbol] = total.reindex(sub.symbol).fillna(0.0).to_numpy() + aporte
+    return total.groupby(level=0).first()
+
+
+HORIZONTE_DIAS = {"corto": 10, "medio": 63, "largo": 252}
+
+
+def _coste_por_euro(broker: Broker, grupo: str, importe: float) -> float:
+    """Coste de cruzar, en tanto por uno del importe: comisión + media horquilla."""
+    if importe <= 0:
+        return 1.0
+    return broker.comision(grupo) / importe + broker.horquilla(grupo)
+
+
+def plan_ordenes(b: dict, broker: Broker, objetivo: list[str], alfa: pd.Series,
+                 valor: float, grupos: pd.Series, n: int) -> tuple[list[dict], list[dict]]:
+    """Decide qué operar de verdad. Devuelve (órdenes, descartadas).
+
+    Tres filtros, en este orden:
+
+    1. **Tamaño mínimo.** Con 1 € de comisión, una compra de 200 € paga un 0,5%
+       antes de empezar. Se exige que la comisión no pase del 0,1% del importe.
+    2. **Banda de no operar.** Si el peso actual sólo se desvía un poco del
+       objetivo, se deja quieto: reequilibrar por reequilibrar es pagar por nada.
+    3. **El beneficio esperado tiene que cubrir el coste con margen.** Cambiar A
+       por B sólo compensa si la diferencia de alfa supera el coste de vender A y
+       comprar B, multiplicado por un margen de seguridad, porque el alfa es una
+       estimación ruidosa y operar al filo es perder de media.
+    """
+    ordenes, descartadas = [], []
+    posiciones = b.get("posiciones", {})
+    inicial = not posiciones
+
+    # --- pesos objetivo por alfa, acotados alrededor de la equiponderación ---
+    a_obj = alfa.reindex(objetivo).fillna(0.0).clip(lower=0.0)
+    base = 1.0 / max(len(objetivo), 1)
+    if a_obj.sum() > 0:
+        w = a_obj / a_obj.sum()
+        w = w.clip(base * PESO_MIN, base * PESO_MAX)
+        w = w / w.sum()
+    else:
+        w = pd.Series(base, index=objetivo)   # sin alfa medible: equiponderar
+
+    minimo = broker.comision_orden_eur / COMISION_MAX_PCT if COMISION_MAX_PCT else 0.0
+
+    # --- salidas -----------------------------------------------------------
+    for sym in list(posiciones):
+        if sym in objetivo:
+            continue
+        grupo = str(grupos.get(sym, "default"))
+        importe = posiciones[sym].get("coste_eur", 0.0)
+        a_fuera = float(alfa.get(sym, 0.0))
+        # ¿merece la pena salir? se compara contra el mejor candidato disponible
+        mejor = float(a_obj.max()) if len(a_obj) else 0.0
+        coste = (_coste_por_euro(broker, grupo, importe)
+                 + _coste_por_euro(broker, str(grupos.get(a_obj.idxmax(), "default"))
+                                   if len(a_obj) else "default", importe))
+        if not inicial and (mejor - a_fuera) < MARGEN_SEGURIDAD * coste:
+            descartadas.append({"symbol": sym, "lado": "venta", "importe_eur": importe,
+                                "motivo": "el candidato no supera el coste del cambio",
+                                "coste_evitado_eur": round(coste * importe, 2)})
+            continue
+        ordenes.append({"symbol": sym, "lado": "venta"})
+
+    # --- entradas y ajustes -------------------------------------------------
+    for sym in objetivo:
+        grupo = str(grupos.get(sym, "default"))
+        actual = posiciones.get(sym, {}).get("coste_eur", 0.0)
+        deseado = float(w.get(sym, base)) * valor
+        delta = deseado - actual
+
+        if actual > 0:                       # ya lo tenemos: ¿hace falta ajustar?
+            if abs(delta) < BANDA_NO_OPERAR * max(actual, 1.0):
+                continue
+            if abs(delta) < minimo:
+                descartadas.append({"symbol": sym, "lado": "ajuste",
+                                    "importe_eur": round(abs(delta), 2),
+                                    "motivo": "ajuste por debajo del mínimo rentable",
+                                    "coste_evitado_eur": round(broker.comision(grupo), 2)})
+                continue
+            if delta < 0:
+                continue                     # recortes: se dejan correr, no compensan
+            ordenes.append({"symbol": sym, "lado": "compra",
+                            "importe_eur": round(delta, 2)})
+            continue
+
+        if deseado < minimo:
+            descartadas.append({"symbol": sym, "lado": "compra",
+                                "importe_eur": round(deseado, 2),
+                                "motivo": "posición demasiado pequeña para su comisión",
+                                "coste_evitado_eur": round(broker.comision(grupo), 2)})
+            continue
+        coste = _coste_por_euro(broker, grupo, deseado)
+        if not inicial and float(alfa.get(sym, 0.0)) < MARGEN_SEGURIDAD * coste:
+            descartadas.append({"symbol": sym, "lado": "compra",
+                                "importe_eur": round(deseado, 2),
+                                "motivo": "alfa esperado por debajo del coste de entrada",
+                                "coste_evitado_eur": round(coste * deseado, 2)})
+            continue
+        ordenes.append({"symbol": sym, "lado": "compra",
+                        "importe_eur": round(deseado, 2)})
+    return ordenes, descartadas
+
+
+# --------------------------------------------------------------------------- #
 # simulación
 # --------------------------------------------------------------------------- #
 def simular(scored: pd.DataFrame, px: dict, universo: pd.DataFrame,
@@ -349,6 +508,7 @@ def simular(scored: pd.DataFrame, px: dict, universo: pd.DataFrame,
 
     # 3. decidir rebalanceos (se cruzan mañana)
     pesos_comb, nota = pesos_por_evidencia(verdict)
+    descartes_hoy: list[dict] = []
     for e, cfg in ESCENARIOS.items():
         esc = estado["escenarios"][e]
         if not _toca_rebalanceo(esc["ultimo_rebalanceo"], hoy, cfg["freq"]):
@@ -357,17 +517,19 @@ def simular(scored: pd.DataFrame, px: dict, universo: pd.DataFrame,
         objetivo = seleccionar(scored, anomalias, px["close"], cfg["n"], pesos)
         if not objetivo:
             continue
-        for k in BROKERS:
+        alfa = alfa_esperado(scored, verdict, px["close"], pesos)
+        for k, br in BROKERS.items():
             b = esc["brokers"][k]
             valor = _valorar(b, px, cambio, hoy)
-            fuera = [s for s in b["posiciones"] if s not in objetivo]
-            dentro = [s for s in objetivo if s not in b["posiciones"]]
-            por_pos = valor / max(len(objetivo), 1)
-            b["ordenes_pendientes"] = (
-                [{"symbol": s, "lado": "venta"} for s in fuera] +
-                [{"symbol": s, "lado": "compra", "importe_eur": round(por_pos, 2)}
-                 for s in dentro])
-            b["creadas_el"] = str(hoy.date())
+            ordenes, descartadas = plan_ordenes(b, br, objetivo, alfa, valor,
+                                                grupos, cfg["n"])
+            b["ordenes_pendientes"] = ordenes
+            b["creadas_el"] = str(hoy.date()) if ordenes else None
+            b["descartadas"] = descartadas
+            ahorro = sum(d.get("coste_evitado_eur", 0) or 0 for d in descartadas)
+            b["ahorro_acumulado"] = round(b.get("ahorro_acumulado", 0.0) + ahorro, 2)
+            descartes_hoy.append({"escenario": e, "broker": k,
+                                  "n": len(descartadas), "ahorro_eur": round(ahorro, 2)})
         esc["ultimo_rebalanceo"] = str(hoy.date())
         if e == "combinada":
             esc["pesos_evidencia"] = {"pesos": pesos_comb, "nota": nota}
@@ -402,6 +564,7 @@ def simular(scored: pd.DataFrame, px: dict, universo: pd.DataFrame,
     guardar(estado, r_estado)
     estado["_ops_hoy"] = ops
     estado["_pendientes"] = _pendientes(estado)
+    estado["_descartes"] = descartes_hoy
     return estado
 
 
