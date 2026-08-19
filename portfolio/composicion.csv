@@ -1,76 +1,76 @@
 escenario,symbol,nombre,grupo,valor_eur,coste_eur,peso_pct,plusvalia_eur,plusvalia_pct
-corto,APPS,"Digital Turbine, Inc. - Common Stock",equity_us,2406.06,2665.67,5.99,-259.61,-9.74
-corto,ASTY,Defiance Daily Target 2X Long ASTS ETF,etf,2314.49,2665.67,5.76,-351.18,-13.17
-corto,AYA,Aya Gold & Silver Inc. - Common Shares,equity_us,2766.5,2665.67,6.89,100.83,3.78
-corto,BWX,BWX,bond,2655.69,2665.67,6.61,-9.98,-0.37
-corto,BXC,Bluelinx Holdings Inc. Common Stock,equity_us,2656.55,2665.67,6.62,-9.12,-0.34
-corto,GC=F,GC=F,commodity,2741.98,2665.67,6.83,76.31,2.86
-corto,HNST,"The Honest Company, Inc. - Common Stock",equity_us,2754.79,2665.62,6.86,89.17,3.35
-corto,LIFE,Ethos Technologies Inc. - Class A Common Sto,equity_us,2548.07,2665.67,6.35,-117.6,-4.41
-corto,LOFF,Direxion Daily SpaceX Bull 2X ETF,etf,2626.52,2665.67,6.54,-39.15,-1.47
-corto,MATV,"Mativ Holdings, Inc. Common Stock",equity_us,2646.13,2665.67,6.59,-19.54,-0.73
-corto,PAXG/USD,PAXG/USD,crypto,2713.67,2665.67,6.76,48.0,1.8
-corto,RCEL,"Avita Medical, Inc. - Common Stock",equity_us,3450.49,2665.67,8.59,784.82,29.44
-corto,SNOU,T-REX 2X Long SNOW Daily Target ETF,etf,2622.6,2665.67,6.53,-43.07,-1.62
-corto,USDTRY=X,USDTRY=X,fx,2642.93,2665.67,6.58,-22.74,-0.85
-corto,^STOXX,^STOXX,index,2609.12,2665.67,6.5,-56.55,-2.12
-medio,ALOT,"AstroNova, Inc. - Common Stock",equity_us,1978.08,1999.0,4.9,-20.92,-1.05
-medio,ANGL,ANGL,bond,1981.79,1999.0,4.91,-17.21,-0.86
-medio,BFLY,"Butterfly Network, Inc. Class A Common Stock",equity_us,2081.6,1999.0,5.16,82.6,4.13
-medio,BWET,Breakwave Tanker Shipping ETF,etf,2218.19,1999.0,5.5,219.19,10.97
-medio,CBRL,"Cracker Barrel Old Country Store, Inc. - Com",equity_us,1938.65,1999.0,4.8,-60.35,-3.02
-medio,CDNA,"CareDx, Inc. - Common Stock",equity_us,2031.2,1999.0,5.03,32.2,1.61
-medio,CLYM,"Climb Bio, Inc. - Common Stock",equity_us,2112.22,1999.0,5.23,113.22,5.66
-medio,COAG,"Hemab Therapeutics Holdings, Inc. - Common S",equity_us,1866.71,1999.0,4.63,-132.29,-6.62
-medio,CRWL,GraniteShares 2x Long CRWD Daily ETF,etf,1692.57,1999.0,4.19,-306.43,-15.33
-medio,HYPE/USD,HYPE/USD,crypto,2406.37,1999.0,5.96,407.37,20.38
-medio,NTAP,"NetApp, Inc. - Common Stock",equity_us,1856.14,1999.0,4.6,-142.86,-7.15
-medio,ORKA,"Oruka Therapeutics, Inc. - Common Stock",equity_us,1969.93,1999.0,4.88,-29.07,-1.45
-medio,PAYS,"Paysign, Inc. - Common Stock",equity_us,2094.81,1999.0,5.19,95.81,4.79
-medio,PLSE,"Pulse Biosciences, Inc - Common Stock",equity_us,2091.54,1999.0,5.18,92.54,4.63
-medio,RRGB,"Red Robin Gourmet Burgers, Inc. - Common Sto",equity_us,1856.46,1999.0,4.6,-142.54,-7.13
-medio,SB=F,SB=F,commodity,2098.45,1999.0,5.2,99.45,4.98
-medio,SNOY,YieldMax SNOW Option Income Strategy ETF,etf,1975.0,1999.0,4.89,-24.0,-1.2
-medio,TXG,"10x Genomics, Inc. - Common Stock",equity_us,2208.5,1999.0,5.47,209.5,10.48
-medio,USDCHF=X,USDCHF=X,fx,1943.49,1999.0,4.82,-55.51,-2.78
-medio,^IBEX,^IBEX,index,1951.68,1999.0,4.84,-47.32,-2.37
-largo,APGE,"Apogee Therapeutics, Inc. - Common Stock",equity_us,1982.09,1999.0,4.93,-16.91,-0.85
-largo,ATEX,Anterix Inc. - Common Stock,equity_us,1916.35,1999.0,4.77,-82.65,-4.13
-largo,BIL,BIL,bond,1980.31,1999.0,4.93,-18.69,-0.94
-largo,BWET,Breakwave Tanker Shipping ETF,etf,2218.19,1999.0,5.52,219.19,10.97
-largo,CDNA,"CareDx, Inc. - Common Stock",equity_us,2031.2,1999.0,5.05,32.2,1.61
-largo,CHPS,Xtrackers Semiconductor Select Equity ETF,etf,1855.8,1999.0,4.62,-143.2,-7.16
-largo,DFTX,"Definium Therapeutics, Inc.  - Common Shares",equity_us,2149.25,1999.0,5.35,150.25,7.52
-largo,DLLL,GraniteShares 2x Long DELL Daily ETF,etf,1528.48,1999.0,3.8,-470.52,-23.54
-largo,DNTH,"Dianthus Therapeutics, Inc. - Common Stock",equity_us,1951.64,1999.0,4.85,-47.36,-2.37
-largo,NESR,National Energy Services Reunited Corp - Ord,equity_us,1801.91,1999.0,4.48,-197.09,-9.86
-largo,ORKA,"Oruka Therapeutics, Inc. - Common Stock",equity_us,1969.93,1999.0,4.9,-29.07,-1.45
-largo,RVMD,"Revolution Medicines, Inc. - Common Stock",equity_us,2082.68,1999.0,5.18,83.68,4.19
-largo,SPHR,Sphere Entertainment Co. Class A Common Stoc,equity_us,1881.59,1999.0,4.68,-117.41,-5.87
-largo,SYRE,"Spyre Therapeutics, Inc. - Common Stock",equity_us,2094.44,1999.0,5.21,95.44,4.77
-largo,TWST,Twist Bioscience Corporation - Common Stock,equity_us,2410.86,1999.0,6.0,411.86,20.6
-largo,TXG,"10x Genomics, Inc. - Common Stock",equity_us,2208.5,1999.0,5.49,209.5,10.48
-largo,USDJPY=X,USDJPY=X,fx,1966.67,1999.0,4.89,-32.33,-1.62
-largo,USO,USO,commodity,2035.54,1999.0,5.06,36.54,1.83
-largo,ZEC/USD,ZEC/USD,crypto,2253.26,1999.0,5.6,254.26,12.72
-largo,^N225,^N225,index,1888.23,1999.0,4.7,-110.77,-5.54
-combinada,ALOT,"AstroNova, Inc. - Common Stock",equity_us,1978.08,1999.0,4.98,-20.92,-1.05
-combinada,ASTY,Defiance Daily Target 2X Long ASTS ETF,etf,1735.65,1999.0,4.37,-263.35,-13.17
-combinada,ATEX,Anterix Inc. - Common Stock,equity_us,1916.35,1999.0,4.82,-82.65,-4.13
-combinada,AYA,Aya Gold & Silver Inc. - Common Shares,equity_us,2074.61,1999.0,5.22,75.61,3.78
-combinada,BIL,BIL,bond,1980.31,1999.0,4.98,-18.69,-0.94
-combinada,BWET,Breakwave Tanker Shipping ETF,etf,2218.19,1999.0,5.58,219.19,10.97
-combinada,BXC,Bluelinx Holdings Inc. Common Stock,equity_us,1992.16,1999.0,5.01,-6.84,-0.34
-combinada,CDNA,"CareDx, Inc. - Common Stock",equity_us,2031.2,1999.0,5.11,32.2,1.61
-combinada,CHPS,Xtrackers Semiconductor Select Equity ETF,etf,1855.8,1999.0,4.67,-143.2,-7.16
-combinada,DFTX,"Definium Therapeutics, Inc.  - Common Shares",equity_us,2149.25,1999.0,5.41,150.25,7.52
-combinada,DLLL,GraniteShares 2x Long DELL Daily ETF,etf,1528.48,1999.0,3.85,-470.52,-23.54
-combinada,DNTH,"Dianthus Therapeutics, Inc. - Common Stock",equity_us,1951.64,1999.0,4.91,-47.36,-2.37
-combinada,NESR,National Energy Services Reunited Corp - Ord,equity_us,1801.91,1999.0,4.53,-197.09,-9.86
-combinada,RVMD,"Revolution Medicines, Inc. - Common Stock",equity_us,2082.68,1999.0,5.24,83.68,4.19
-combinada,SYRE,"Spyre Therapeutics, Inc. - Common Stock",equity_us,2094.44,1999.0,5.27,95.44,4.77
-combinada,TXG,"10x Genomics, Inc. - Common Stock",equity_us,2208.5,1999.0,5.56,209.5,10.48
-combinada,USDJPY=X,USDJPY=X,fx,1966.67,1999.0,4.95,-32.33,-1.62
-combinada,USO,USO,commodity,2035.54,1999.0,5.12,36.54,1.83
-combinada,ZEC/USD,ZEC/USD,crypto,2253.26,1999.0,5.67,254.26,12.72
-combinada,^N225,^N225,index,1888.23,1999.0,4.75,-110.77,-5.54
+corto,APPS,"Digital Turbine, Inc. - Common Stock",equity_us,2406.34,2665.67,5.99,-259.33,-9.73
+corto,ASTY,,,2314.76,2665.67,5.76,-350.91,-13.16
+corto,AYA,Aya Gold & Silver Inc. - Common Shares,equity_us,2766.82,2665.67,6.89,101.15,3.79
+corto,BWX,BWX,bond,2654.79,2665.67,6.61,-10.88,-0.41
+corto,BXC,Bluelinx Holdings Inc. Common Stock,equity_us,2656.86,2665.67,6.61,-8.81,-0.33
+corto,GC=F,GC=F,commodity,2750.88,2665.67,6.85,85.21,3.2
+corto,HNST,"The Honest Company, Inc. - Common Stock",equity_us,2755.11,2665.62,6.86,89.49,3.36
+corto,LIFE,Ethos Technologies Inc. - Class A Common Sto,equity_us,2548.36,2665.67,6.34,-117.31,-4.4
+corto,LOFF,,,2626.83,2665.67,6.54,-38.84,-1.46
+corto,MATV,"Mativ Holdings, Inc. Common Stock",equity_us,2646.44,2665.67,6.59,-19.23,-0.72
+corto,PAXG/USD,PAXG/USD,crypto,2717.66,2665.67,6.76,51.99,1.95
+corto,RCEL,"Avita Medical, Inc. - Common Stock",equity_us,3450.9,2665.67,8.59,785.23,29.46
+corto,SNOU,,,2622.91,2665.67,6.53,-42.76,-1.6
+corto,USDTRY=X,USDTRY=X,fx,2644.69,2665.67,6.58,-20.98,-0.79
+corto,^STOXX,^STOXX,index,2609.43,2665.67,6.5,-56.24,-2.11
+medio,ALOT,"AstroNova, Inc. - Common Stock",equity_us,1978.31,1999.0,4.89,-20.69,-1.04
+medio,ANGL,ANGL,bond,1982.02,1999.0,4.9,-16.98,-0.85
+medio,BFLY,"Butterfly Network, Inc. Class A Common Stock",equity_us,2081.84,1999.0,5.15,82.84,4.14
+medio,BWET,Breakwave Tanker Shipping ETF,etf,2218.45,1999.0,5.49,219.45,10.98
+medio,CBRL,"Cracker Barrel Old Country Store, Inc. - Com",equity_us,1938.87,1999.0,4.8,-60.13,-3.01
+medio,CDNA,"CareDx, Inc. - Common Stock",equity_us,2031.44,1999.0,5.02,32.43,1.62
+medio,CLYM,"Climb Bio, Inc. - Common Stock",equity_us,2112.47,1999.0,5.23,113.47,5.68
+medio,COAG,"Hemab Therapeutics Holdings, Inc. - Common S",equity_us,1866.92,1999.0,4.62,-132.08,-6.61
+medio,CRWL,,,1692.77,1999.0,4.19,-306.23,-15.32
+medio,HYPE/USD,HYPE/USD,crypto,2476.73,1999.0,6.13,477.73,23.9
+medio,NTAP,"NetApp, Inc. - Common Stock",equity_us,1856.35,1999.0,4.59,-142.65,-7.14
+medio,ORKA,"Oruka Therapeutics, Inc. - Common Stock",equity_us,1970.16,1999.0,4.87,-28.84,-1.44
+medio,PAYS,"Paysign, Inc. - Common Stock",equity_us,2095.06,1999.0,5.18,96.06,4.81
+medio,PLSE,"Pulse Biosciences, Inc - Common Stock",equity_us,2091.79,1999.0,5.17,92.79,4.64
+medio,RRGB,"Red Robin Gourmet Burgers, Inc. - Common Sto",equity_us,1856.68,1999.0,4.59,-142.32,-7.12
+medio,SB=F,SB=F,commodity,2098.7,1999.0,5.19,99.7,4.99
+medio,SNOY,YieldMax SNOW Option Income Strategy ETF,etf,1975.24,1999.0,4.89,-23.77,-1.19
+medio,TXG,"10x Genomics, Inc. - Common Stock",equity_us,2208.76,1999.0,5.46,209.76,10.49
+medio,USDCHF=X,USDCHF=X,fx,1942.72,1999.0,4.81,-56.28,-2.82
+medio,^IBEX,^IBEX,index,1951.91,1999.0,4.83,-47.09,-2.36
+largo,APGE,"Apogee Therapeutics, Inc. - Common Stock",equity_us,1982.33,1999.0,4.92,-16.67,-0.83
+largo,ATEX,Anterix Inc. - Common Stock,equity_us,1916.57,1999.0,4.76,-82.43,-4.12
+largo,BIL,BIL,bond,1980.62,1999.0,4.91,-18.38,-0.92
+largo,BWET,Breakwave Tanker Shipping ETF,etf,2218.45,1999.0,5.5,219.45,10.98
+largo,CDNA,"CareDx, Inc. - Common Stock",equity_us,2031.44,1999.0,5.04,32.43,1.62
+largo,CHPS,Xtrackers Semiconductor Select Equity ETF,etf,1856.02,1999.0,4.61,-142.98,-7.15
+largo,DFTX,"Definium Therapeutics, Inc.  - Common Shares",equity_us,2149.5,1999.0,5.33,150.5,7.53
+largo,DLLL,,,1528.66,1999.0,3.79,-470.34,-23.53
+largo,DNTH,"Dianthus Therapeutics, Inc. - Common Stock",equity_us,1951.87,1999.0,4.84,-47.13,-2.36
+largo,NESR,National Energy Services Reunited Corp - Ord,equity_us,1802.12,1999.0,4.47,-196.88,-9.85
+largo,ORKA,"Oruka Therapeutics, Inc. - Common Stock",equity_us,1970.16,1999.0,4.89,-28.84,-1.44
+largo,RVMD,"Revolution Medicines, Inc. - Common Stock",equity_us,2082.92,1999.0,5.17,83.92,4.2
+largo,SPHR,Sphere Entertainment Co. Class A Common Stoc,equity_us,1881.81,1999.0,4.67,-117.19,-5.86
+largo,SYRE,"Spyre Therapeutics, Inc. - Common Stock",equity_us,2094.68,1999.0,5.2,95.68,4.79
+largo,TWST,Twist Bioscience Corporation - Common Stock,equity_us,2411.14,1999.0,5.98,412.14,20.62
+largo,TXG,"10x Genomics, Inc. - Common Stock",equity_us,2208.76,1999.0,5.48,209.76,10.49
+largo,USDJPY=X,USDJPY=X,fx,1966.17,1999.0,4.88,-32.83,-1.64
+largo,USO,USO,commodity,2035.47,1999.0,5.05,36.47,1.82
+largo,ZEC/USD,ZEC/USD,crypto,2342.55,1999.0,5.81,343.55,17.19
+largo,^N225,^N225,index,1888.45,1999.0,4.69,-110.55,-5.53
+combinada,ALOT,"AstroNova, Inc. - Common Stock",equity_us,1978.31,1999.0,4.97,-20.69,-1.04
+combinada,ASTY,,,1735.85,1999.0,4.36,-263.15,-13.16
+combinada,ATEX,Anterix Inc. - Common Stock,equity_us,1916.57,1999.0,4.81,-82.43,-4.12
+combinada,AYA,Aya Gold & Silver Inc. - Common Shares,equity_us,2074.85,1999.0,5.21,75.85,3.79
+combinada,BIL,BIL,bond,1980.62,1999.0,4.97,-18.38,-0.92
+combinada,BWET,Breakwave Tanker Shipping ETF,etf,2218.45,1999.0,5.57,219.45,10.98
+combinada,BXC,Bluelinx Holdings Inc. Common Stock,equity_us,1992.4,1999.0,5.0,-6.6,-0.33
+combinada,CDNA,"CareDx, Inc. - Common Stock",equity_us,2031.44,1999.0,5.1,32.43,1.62
+combinada,CHPS,Xtrackers Semiconductor Select Equity ETF,etf,1856.02,1999.0,4.66,-142.98,-7.15
+combinada,DFTX,"Definium Therapeutics, Inc.  - Common Shares",equity_us,2149.5,1999.0,5.4,150.5,7.53
+combinada,DLLL,,,1528.66,1999.0,3.84,-470.34,-23.53
+combinada,DNTH,"Dianthus Therapeutics, Inc. - Common Stock",equity_us,1951.87,1999.0,4.9,-47.13,-2.36
+combinada,NESR,National Energy Services Reunited Corp - Ord,equity_us,1802.12,1999.0,4.52,-196.88,-9.85
+combinada,RVMD,"Revolution Medicines, Inc. - Common Stock",equity_us,2082.92,1999.0,5.23,83.92,4.2
+combinada,SYRE,"Spyre Therapeutics, Inc. - Common Stock",equity_us,2094.68,1999.0,5.26,95.68,4.79
+combinada,TXG,"10x Genomics, Inc. - Common Stock",equity_us,2208.76,1999.0,5.54,209.76,10.49
+combinada,USDJPY=X,USDJPY=X,fx,1966.17,1999.0,4.94,-32.83,-1.64
+combinada,USO,USO,commodity,2035.47,1999.0,5.11,36.47,1.82
+combinada,ZEC/USD,ZEC/USD,crypto,2342.55,1999.0,5.88,343.55,17.19
+combinada,^N225,^N225,index,1888.45,1999.0,4.74,-110.55,-5.53
