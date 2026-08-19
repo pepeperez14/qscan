@@ -306,8 +306,67 @@ def pesos_por_evidencia(verdict: pd.DataFrame | None) -> tuple[dict[str, float],
     return pesos, f"por evidencia de la validación ({detalle})"
 
 
+MAX_CORR_CARTERA = 0.80    # por encima de esto, dos posiciones son una apuesta
+UMBRAL_CLON = 0.97         # por encima de esto son literalmente el mismo activo
+VENTAJA_LIQUIDEZ = 3.0     # cuánto más líquido tiene que ser para preferirlo
+
+
+def liquidez_mediana(px: dict, dias: int = 63) -> pd.Series:
+    """Volumen en dólares típico de cada activo. Sirve para elegir entre clones."""
+    if "volume" not in px:
+        return pd.Series(dtype=float)
+    v = (px["close"] * px["volume"]).tail(dias)
+    return v.median(axis=0)
+
+
+def _sin_clones(cand: list[str], close: pd.DataFrame, liquidez: pd.Series | None,
+                ya: list[str], max_corr: float = MAX_CORR_CARTERA) -> list[str]:
+    """Quita de `cand` lo que sea la misma apuesta que algo ya elegido.
+
+    Dos cosas que el filtro anterior no hacía:
+
+    1. **Se compara contra TODO lo ya elegido**, no sólo dentro del horizonte que
+       se está rellenando. Antes, `corto` podía elegir GLD y `medio` volver a
+       elegir IAU: cada horizonte miraba su propia lista y ninguno veía la del
+       otro. En la cartera combinada eso significaba comprar oro dos veces
+       creyendo que se diversificaba.
+    2. **Entre clones se queda el que se cruza más barato.** Cuando dos activos
+       correlacionan por encima de 0,97 —GLD e IAU están en 0,999, son el mismo
+       lingote con distinta comisión— la diferencia de puesto en el ranking es
+       ruido y lo que sí es real es la horquilla. Si el peor situado negocia al
+       menos el triple, se cambia por él.
+    """
+    ya = list(ya)
+    universo = [s for s in ya + list(cand) if s in close.columns]
+    if len(universo) < 2:
+        return [s for s in cand if s not in ya]
+    r = np.log(close[universo].tail(127)).diff()
+    corr = r.corr().abs()
+    liq = liquidez if liquidez is not None else pd.Series(dtype=float)
+
+    aceptados = [s for s in ya if s in corr.columns]
+    salida: list[str] = []
+    for s in cand:
+        if s in ya or s in salida or s not in corr.columns:
+            continue
+        if aceptados:
+            c = corr.loc[s, aceptados]
+            if c.notna().any() and float(c.max()) >= max_corr:
+                rival = str(c.idxmax())
+                if (float(c.max()) >= UMBRAL_CLON and rival in salida
+                        and float(liq.get(s, 0.0))
+                        > float(liq.get(rival, 0.0)) * VENTAJA_LIQUIDEZ):
+                    salida[salida.index(rival)] = s
+                    aceptados[aceptados.index(rival)] = s
+                continue
+        aceptados.append(s)
+        salida.append(s)
+    return salida
+
+
 def seleccionar(scored: pd.DataFrame, anomalias: pd.DataFrame | None,
-                close: pd.DataFrame, n: int, pesos: dict[str, float]) -> list[str]:
+                close: pd.DataFrame, n: int, pesos: dict[str, float],
+                liquidez: pd.Series | None = None) -> list[str]:
     """Los n mejores según los horizontes indicados, sin duplicar apuestas."""
     from . import scoring
 
@@ -318,23 +377,32 @@ def seleccionar(scored: pd.DataFrame, anomalias: pd.DataFrame | None,
     tam = ultima.group.value_counts()
     ultima = ultima[ultima.group.isin(tam[tam >= scoring.MIN_PEERS].index)]
 
+    def _ranking(h: str) -> list[str]:
+        if f"score_{h}" not in ultima.columns:
+            return []
+        return (ultima.dropna(subset=[f"score_{h}"])
+                      .sort_values([f"pct_{h}", f"score_{h}"], ascending=False)
+                      .symbol.tolist())
+
     elegidos: list[str] = []
     for h, peso in sorted(pesos.items(), key=lambda kv: -kv[1]):
         cupo = int(round(n * peso))
-        if cupo <= 0 or f"score_{h}" not in ultima.columns:
+        if cupo <= 0:
             continue
-        cand = (ultima.dropna(subset=[f"score_{h}"])
-                      .sort_values([f"pct_{h}", f"score_{h}"], ascending=False)
-                      .symbol.tolist())
-        cand = [s for s in cand if s not in elegidos]
-        red = scoring.redundancy(cand[:cupo * 3], close, max_corr=0.80)
-        elegidos += [s for s in cand if s not in red][:cupo]
+        # se miran 5x candidatos porque ahora se descarta mucho más: si el top
+        # del ranking son seis versiones del mismo ETF de oro, con 3x no habría
+        # suficientes ideas distintas para llenar el cupo.
+        cand = _ranking(h)[:max(cupo * 5, 40)]
+        elegidos += _sin_clones(cand, close, liquidez, elegidos)[:cupo]
     if len(elegidos) < n:      # rellenar con lo mejor del horizonte dominante
         dom = max(pesos, key=pesos.get)
-        resto = (ultima.dropna(subset=[f"score_{dom}"])
-                       .sort_values([f"pct_{dom}", f"score_{dom}"], ascending=False)
-                       .symbol.tolist())
-        elegidos += [s for s in resto if s not in elegidos][:n - len(elegidos)]
+        resto = _ranking(dom)[:max(n * 5, 60)]
+        # el relleno TAMBIÉN se limpia. Antes no, y era la vía por la que los
+        # clones acababan entrando de todos modos.
+        elegidos += _sin_clones(resto, close, liquidez, elegidos)[:n - len(elegidos)]
+    if len(elegidos) < n:
+        log.info("cartera: %d posiciones en vez de %d; el resto de candidatos "
+                 "eran la misma apuesta que alguno ya elegido", len(elegidos), n)
     return elegidos[:n]
 
 
@@ -551,13 +619,15 @@ def simular(scored: pd.DataFrame, px: dict, universo: pd.DataFrame,
 
     # 3. decidir rebalanceos (se cruzan mañana)
     pesos_comb, nota = pesos_por_evidencia(verdict)
+    liq = liquidez_mediana(px)
     descartes_hoy: list[dict] = []
     for e, cfg in ESCENARIOS.items():
         esc = estado["escenarios"][e]
         if not _toca_rebalanceo(esc["ultimo_rebalanceo"], hoy, cfg["freq"]):
             continue
         pesos = cfg["pesos"] or pesos_comb
-        objetivo = seleccionar(scored, anomalias, px["close"], cfg["n"], pesos)
+        objetivo = seleccionar(scored, anomalias, px["close"], cfg["n"],
+                               pesos, liq)
         if not objetivo:
             continue
         alfa = alfa_esperado(scored, verdict, px["close"], pesos)

@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import io
 import logging
+import re
 from dataclasses import dataclass, asdict
 
 import pandas as pd
@@ -93,6 +94,52 @@ def _get(url: str, timeout: int = 30) -> str:
     return r.text
 
 
+# --------------------------------------------------------------------------- #
+# productos estructuralmente inanalizables
+# --------------------------------------------------------------------------- #
+# Un multiplicador (2X, 3x, -1x) SÓLO cuenta si viene acompañado de una palabra
+# direccional. Así "10x Genomics" no se confunde con "T-Rex 2X Long".
+_MULTIPLICADOR = re.compile(r"(?<![A-Za-z0-9])[-+]?[1-3](?:\.\d)?\s*x(?![A-Za-z])", re.I)
+_DIRECCIONAL = re.compile(r"\b(bull|bear|long|short|ultra\w*|inverse|leveraged|"
+                          r"daily|apalancad\w+)\b", re.I)
+_SIEMPRE_FUERA = re.compile(r"\bultra(short|pro)?\b|\binverse\b|\bleveraged\b"
+                            r"|\bvix\b|volatility\s+index", re.I)
+
+# Los inversos 1x no llevan multiplicador en el nombre ("ProShares Short S&P500")
+# y "short" a secas descartaría medio mercado de renta fija (iShares Short
+# Treasury Bond). Son pocos y conocidos, así que se nombran uno a uno.
+INVERSOS_1X = {
+    "SH", "PSQ", "DOG", "RWM", "EUM", "EFZ", "SEF", "SBB", "MYY", "MZZ",
+    "DDG", "SJB", "TBF", "TBX", "IGBH", "BITI", "ETHD", "REK", "SDP", "SZK",
+}
+
+
+def derivado_estructural(nombre: str, symbol: str) -> bool:
+    """¿Es un producto cuyo precio no se puede analizar como el de un activo?
+
+    Los ETFs apalancados e inversos se reajustan a diario, así que su serie
+    arrastra decaimiento por volatilidad: pierden valor incluso cuando el
+    subyacente acaba donde empezó. Y los productos sobre el VIX cotizan futuros
+    en contango permanente, así que caen estructuralmente.
+
+    Todos ellos rompen exactamente lo que este sistema mide. `mom_12_1`,
+    `slope_12m` o la distancia al máximo de 52 semanas describen la mecánica del
+    envoltorio, no el comportamiento del activo. Un NUGT puede puntuar altísimo
+    justo antes de un contrasplit, y el ranking no tiene forma de distinguirlo:
+    su serie de precios es, formalmente, la de un activo con momento excelente.
+
+    Se aplica SÓLO a ETFs. Sobre acciones daría falsos positivos evidentes
+    (Ultra Clean Holdings, Ultragenyx, 10x Genomics) y ninguna acción es un
+    envoltorio apalancado.
+    """
+    if symbol.upper() in INVERSOS_1X:
+        return True
+    n = nombre or ""
+    if _SIEMPRE_FUERA.search(n):
+        return True
+    return bool(_MULTIPLICADOR.search(n) and _DIRECCIONAL.search(n))
+
+
 def us_listed() -> list[Asset]:
     """Acciones y ETFs de EE.UU. desde el directorio oficial de NASDAQ Trader."""
     out: list[Asset] = []
@@ -113,13 +160,20 @@ def us_listed() -> list[Asset]:
         if "Financial Status" in df.columns:
             df = df[df["Financial Status"].isin(["N", "Normal"]) | df["Financial Status"].isna()]
         is_etf = df["ETF"].eq("Y") if "ETF" in df.columns else pd.Series(False, index=df.index)
+        fuera = 0
         for sym, name, etf in zip(df[sym_col], df.get("Security Name", ""), is_etf):
             sym = str(sym).strip()
             # los símbolos con $ o . de clases especiales rompen en Yahoo
             if not sym or any(c in sym for c in "$ "):
                 continue
-            out.append(Asset(sym.replace(".", "-"), str(name)[:120],
+            sym = sym.replace(".", "-")
+            if etf and derivado_estructural(str(name), sym):
+                fuera += 1
+                continue
+            out.append(Asset(sym, str(name)[:120],
                              "etf" if etf else "equity_us", exch_default))
+        if fuera:
+            log.info("%s: %d ETFs apalancados/inversos/VIX descartados", fname, fuera)
     return out
 
 

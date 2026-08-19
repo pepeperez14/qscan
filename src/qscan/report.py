@@ -9,6 +9,11 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 
+# `portfolio` no importa `report`, así que no hay ciclo. Se necesita `a_json`:
+# lo que se embebe en la página sale de las mismas matrices float32 que rompían
+# al guardar el estado.
+from .portfolio import a_json
+
 HORIZON_LABEL = {"corto": "Corto plazo", "medio": "Medio plazo", "largo": "Largo plazo"}
 HORIZON_SUB = {"corto": "1-3 semanas", "medio": "1-6 meses", "largo": "6-24 meses"}
 
@@ -306,7 +311,7 @@ def _bloque_cartera(curva: pd.DataFrame, estado: dict | None,
     # servidor precalculara los periodos, cada uno sería una página distinta.
     datos = (curva[["fecha", "escenario", "broker", "valor_eur", "costes_acum_eur"]]
              .to_dict(orient="records"))
-    payload = json.dumps(portfolio.a_json({"curva": datos,
+    payload = json.dumps(a_json({"curva": datos,
                           "etiquetas": ESC_ETIQUETA,
                           "detalles": ESC_DETALLE,
                           "series": {k: v[1] for k, v in SERIES.items()},

@@ -283,6 +283,41 @@ debajo del 75% se emite un ERROR. El número de filas del almacén no vale para
 esto: sigue creciendo aunque medio universo se haya quedado sin cotización de
 hoy. `tests/test_descarga.py` reproduce el escenario completo.
 
+## No todo lo que cotiza es analizable
+
+El universo se construye solo a partir del directorio de NASDAQ, y eso mete
+dentro dos cosas que el sistema no sabe medir.
+
+**Envoltorios apalancados, inversos y de volatilidad.** Un ETF 3x se reajusta
+cada día, así que su serie arrastra decaimiento por volatilidad: pierde valor
+aunque el subyacente acabe donde empezó. Los productos sobre el VIX cotizan
+futuros en contango permanente y caen estructuralmente. El problema no es que
+sean arriesgados —eso sería decisión del inversor— sino que **rompen justo lo que
+este sistema mide**: `mom_12_1`, `slope_12m` o la distancia al máximo de 52
+semanas describen la mecánica del envoltorio, no el activo. Un NUGT puede
+puntuar altísimo justo antes de un contrasplit y el ranking no tiene forma de
+verlo, porque su serie es formalmente la de un activo con momento excelente.
+
+`universe.derivado_estructural` los filtra por nombre, y **sólo entre ETFs**: el
+mismo patrón sobre acciones se llevaría por delante a Ultra Clean Holdings,
+Ultragenyx o 10x Genomics. Un multiplicador (`2X`, `3x`, `-1x`) sólo cuenta si va
+acompañado de una palabra direccional, y los inversos 1x —que no llevan
+multiplicador en el nombre y cuyo "Short" a secas descartaría medio mercado de
+renta fija— se nombran uno a uno en una lista corta.
+
+**Clones.** GLD, IAU, GLDM y SGOL son el mismo lingote con distinta comisión:
+correlación 0,999. Cuatro de ellos en la cartera no son cuatro ideas, son una
+idea con cuatro veces el tamaño y cuatro comisiones. El filtro que había sólo
+miraba dentro de cada horizonte, así que `corto` podía comprar GLD y `medio` IAU
+sin enterarse, y el relleno final del cupo no filtraba nada en absoluto.
+
+Ahora `_sin_clones` compara contra **todo** lo ya elegido, se aplica también al
+relleno, y añade una regla: por encima de 0,97 de correlación la diferencia de
+puesto en el ranking es ruido y lo que sí es real es la horquilla, así que si el
+peor situado negocia al menos el triple, se cambia por él. Si al filtrar no
+quedan `n` ideas distintas, la cartera lleva menos posiciones y lo dice — mejor
+diecisiete apuestas que veinte con cuatro veces oro.
+
 ## La avería de la cartera: `float32` y un `except` demasiado amable
 
 Vale la pena dejarlo escrito porque el patrón se repetirá. La simulación de

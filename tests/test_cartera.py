@@ -193,6 +193,34 @@ def main() -> int:
         fails.append("con señal medida no rota más que sin ella: el alfa esperado "
                      "no está llegando a la decisión")
 
+    # --- el informe tiene que RENDERIZAR el bloque de cartera ----------------
+    # No basta con que la simulación funcione. `demo_report.py` construía la
+    # página sin curva, así que `_bloque_cartera` salía por la primera línea y
+    # todo ese camino —el JSON embebido, las tablas de escenarios, composición y
+    # operaciones— no lo ejecutaba ninguna prueba. Un `NameError` de una sola
+    # línea ahí tumbaba la ejecución entera en producción con las nueve pruebas
+    # en verde.
+    from qscan import report
+    estado_fin = portfolio.cargar(TMP / "estado.json")
+    comp_fin = portfolio.composicion(estado_fin, px_full, uni)
+    curva_fin = portfolio.resumen(TMP)
+    try:
+        pagina = report.build_html(
+            scored, panel, {}, uni.set_index("symbol")["name"].to_dict(), None,
+            universe_size=len(uni), top_n=5, curva=curva_fin,
+            estado_cartera=estado_fin, composicion=comp_fin)
+    except Exception as e:
+        pagina = ""
+        fails.append(f"el informe no se puede generar con cartera: "
+                     f"{type(e).__name__}: {e}")
+    marcas = ["Carteras simuladas", "Composición de las carteras",
+              "Trade Republic", "data-dias"]
+    presentes = [m for m in marcas if m.lower() in pagina.lower()]
+    print(f"\ninforme con cartera: {len(pagina):,} bytes · "
+          f"bloques encontrados {len(presentes)}/{len(marcas)}")
+    if pagina and len(presentes) < len(marcas):
+        fails.append("la página se genera pero el bloque de cartera no aparece")
+
     print()
     if fails:
         print("FALLOS:")
