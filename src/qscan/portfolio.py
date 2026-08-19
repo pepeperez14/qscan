@@ -615,22 +615,41 @@ def _anexar(ruta: Path, df: pd.DataFrame, clave: list[str] | None = None) -> Non
     df.to_csv(ruta, index=False)
 
 
-def commitear(dir_salida: Path) -> None:
-    """Guarda el estado en el repositorio: sin esto la simulación se perdería con
-    la caché y cada día empezaría de cero."""
+def commitear(dir_salida: Path) -> bool:
+    """Guarda el estado en el repositorio y DICE si lo consiguió.
+
+    La versión anterior se tragaba cualquier fallo en silencio. Si el push no
+    funcionaba, la simulación se recalculaba entera cada día y nunca persistía,
+    con el agravante de que el log no lo mencionaba: otra vez el mismo patrón de
+    fallo silencioso que este proyecto ya ha pagado dos veces.
+    """
+    def _git(*args):
+        return subprocess.run(["git", *args], capture_output=True, text=True)
+
     try:
-        subprocess.run(["git", "config", "user.name", "github-actions[bot]"], check=False)
-        subprocess.run(["git", "config", "user.email",
-                        "41898282+github-actions[bot]@users.noreply.github.com"],
-                       check=False)
-        subprocess.run(["git", "add", str(dir_salida)], check=False)
-        r = subprocess.run(["git", "commit", "-m", "Actualizar simulación de cartera"],
-                           capture_output=True, text=True)
-        if r.returncode == 0:
-            subprocess.run(["git", "push"], capture_output=True, text=True)
-            log.info("simulación guardada en el repositorio")
+        _git("config", "user.name", "github-actions[bot]")
+        _git("config", "user.email",
+             "41898282+github-actions[bot]@users.noreply.github.com")
+        _git("add", str(dir_salida))
+        r = _git("commit", "-m", "Actualizar simulación de cartera")
+        if r.returncode != 0:
+            if "nothing to commit" in (r.stdout + r.stderr):
+                log.info("simulación sin cambios que guardar")
+            else:
+                log.error("no se pudo crear el commit de la simulación: %s",
+                          (r.stdout + r.stderr).strip()[:300])
+            return False
+        p = _git("push")
+        if p.returncode != 0:
+            log.error("EL COMMIT DE LA SIMULACIÓN NO SE PUDO SUBIR: %s. "
+                      "El estado se perderá y mañana se empezará de cero.",
+                      (p.stdout + p.stderr).strip()[:300])
+            return False
+        log.info("simulación guardada y subida al repositorio")
+        return True
     except Exception as e:  # pragma: no cover
-        log.warning("no se pudo guardar la simulación: %s", e)
+        log.error("fallo al guardar la simulación: %s", e, exc_info=True)
+        return False
 
 
 def resumen(dir_salida: Path) -> pd.DataFrame:

@@ -84,30 +84,117 @@ def _to_long(raw: pd.DataFrame, symbols: list[str]) -> pd.DataFrame:
     return pd.concat(frames, ignore_index=True)
 
 
-def fetch_yahoo(symbols: list[str], start: str | pd.Timestamp,
-                batch: int = 200, pause: float = 1.0, retries: int = 2) -> pd.DataFrame:
-    """Descarga por lotes. yfinance rate-limitea: lotes grandes + pausa es lo estable."""
+LOTE_YAHOO = 100
+HILOS_YAHOO = 8
+PAUSA_YAHOO = 1.5
+PAUSA_MAX = 30.0
+ENFRIAMIENTO = 120.0
+LIMITE_RESCATE = 2500
+
+
+def _es_limite(e) -> bool:
+    t = str(e).lower()
+    return ("too many requests" in t or "rate limit" in t
+            or "ratelimit" in t or "429" in t)
+
+
+def _descargar_lote(chunk: list[str], start, retries: int,
+                    hilos: int) -> tuple[pd.DataFrame, bool]:
+    """Un lote. Devuelve (datos en formato largo, ¿hubo límite explícito?)."""
     import yfinance as yf
 
-    out = []
+    vacio = pd.DataFrame(columns=["symbol", "date"] + COLS)
+    limite = False
+    for intento in range(retries + 1):
+        try:
+            raw = yf.download(chunk, start=start, auto_adjust=True, progress=False,
+                              threads=hilos, group_by="column")
+            return _to_long(raw, chunk), limite
+        except Exception as e:
+            if _es_limite(e):
+                limite = True
+            if intento == retries:
+                log.warning("lote fallido definitivamente: %s", e)
+                return vacio, limite
+            # Espera exponencial y deliberadamente larga. Dormir 5 s y reintentar
+            # frente a un "too many requests" sólo sirve para confirmar el
+            # bloqueo: el contador de la fuente se libera en decenas de segundos,
+            # no en cinco.
+            time.sleep(min(15 * (2 ** intento), PAUSA_MAX))
+    return vacio, limite
+
+
+def fetch_yahoo(symbols: list[str], start: str | pd.Timestamp,
+                batch: int = LOTE_YAHOO, pause: float = PAUSA_YAHOO,
+                retries: int = 2, hilos: int = HILOS_YAHOO,
+                rescate: bool = True) -> pd.DataFrame:
+    """Descarga por lotes con ritmo adaptativo y una pasada de rescate.
+
+    El modo de fallo observado en producción no es una excepción: yfinance NO
+    lanza error cuando la fuente limita el ritmo, devuelve el lote A MEDIAS y
+    escribe los fallos por consola. Con lotes de 200 símbolos y todos los hilos
+    abiertos, las primeras decenas de lotes pasan y a partir de ahí se pierden
+    170 símbolos de cada 200 — más de mil activos por ejecución, en silencio,
+    con la ejecución en verde.
+
+    De ahí las tres decisiones de aquí:
+      - el control se basa en CUÁNTOS símbolos volvieron, no en excepciones;
+      - la pausa crece cuando un lote vuelve incompleto y decae cuando vuelve
+        entero, así el ritmo se ajusta solo al límite real del día;
+      - lo que falte tras la primera pasada se reintenta al final, después de
+        dejar enfriar el contador, en lotes pequeños y con pocos hilos.
+    """
+    out: list[pd.DataFrame] = []
+    faltan: list[str] = []
+    pausa = pause
+    total = (len(symbols) - 1) // batch + 1
+
     for i in range(0, len(symbols), batch):
         chunk = symbols[i:i + batch]
-        for attempt in range(retries + 1):
-            try:
-                raw = yf.download(chunk, start=start, auto_adjust=True, progress=False,
-                                  threads=True, group_by="column")
-                out.append(_to_long(raw, chunk))
-                break
-            except Exception as e:
-                if attempt == retries:
-                    log.warning("lote %d fallido definitivamente: %s", i // batch, e)
-                else:
-                    time.sleep(5 * (attempt + 1))
-        log.info("descargado lote %d/%d", i // batch + 1, (len(symbols) - 1) // batch + 1)
-        time.sleep(pause)
+        df, limite = _descargar_lote(chunk, start, retries, hilos)
+        if not df.empty:
+            out.append(df)
+        obtenidos = set(df.symbol.unique()) if not df.empty else set()
+        faltan += [s for s in chunk if s not in obtenidos]
+        tasa = len(obtenidos) / max(len(chunk), 1)
+        if limite or tasa < 0.6:
+            pausa = min(pausa * 1.8, PAUSA_MAX)
+            log.warning("lote %d/%d: sólo %d/%d símbolos (%s) · pausa -> %.0f s",
+                        i // batch + 1, total, len(obtenidos), len(chunk),
+                        "límite explícito" if limite else "respuesta parcial", pausa)
+        else:
+            if pausa > pause:
+                pausa = max(pause, pausa * 0.7)
+            log.info("lote %d/%d: %d/%d símbolos", i // batch + 1, total,
+                     len(obtenidos), len(chunk))
+        time.sleep(pausa)
+
+    if rescate and faltan:
+        log.warning("rescate: %d de %d símbolos sin datos en la primera pasada; "
+                    "se enfría %.0f s y se reintenta en lotes pequeños",
+                    len(faltan), len(symbols), ENFRIAMIENTO)
+        time.sleep(ENFRIAMIENTO)
+        if len(faltan) > LIMITE_RESCATE:
+            # Tope explícito y anunciado. Sin él, un día en que la fuente falle
+            # entera dejaría la ejecución reintentando durante horas.
+            log.error("rescate limitado a %d símbolos: %d se quedan SIN reintentar "
+                      "en esta ejecución", LIMITE_RESCATE, len(faltan) - LIMITE_RESCATE)
+            faltan = faltan[:LIMITE_RESCATE]
+        chico = max(10, batch // 4)
+        pausa_r = min(max(pause * 2, pausa * 0.4), 12.0)
+        recuperados = 0
+        for i in range(0, len(faltan), chico):
+            df, _ = _descargar_lote(faltan[i:i + chico], start, 1, max(2, hilos // 4))
+            if not df.empty:
+                out.append(df)
+                recuperados += df.symbol.nunique()
+            time.sleep(pausa_r)
+        log.info("rescate: recuperados %d de %d símbolos", recuperados, len(faltan))
+
     if not out:
         return pd.DataFrame(columns=["symbol", "date"] + COLS)
-    return pd.concat(out, ignore_index=True)
+    res = pd.concat(out, ignore_index=True)
+    return res.drop_duplicates(subset=["symbol", "date"], keep="last")
 
 
 def fetch_crypto(symbols: list[str], start: pd.Timestamp, timeframe: str = "1d") -> pd.DataFrame:
@@ -214,6 +301,54 @@ def fetch_stooq(symbols: list[str], start: pd.Timestamp, hilos: int = 12,
     log.info("fuente de reserva: %d símbolos · última fecha %s",
              out.symbol.nunique(), pd.to_datetime(out["date"]).max().date())
     return out
+
+
+def empalmar_reserva(reserva: pd.DataFrame, existing: pd.DataFrame) -> pd.DataFrame:
+    """Pega el tramo de la fuente de reserva al nivel del almacén.
+
+    Las dos fuentes no ajustan igual. Yahoo devuelve precios ajustados por
+    splits Y por dividendos; Stooq ajusta splits pero no dividendos. Para un
+    valor con dividendo del 3% anual y ocho años de historia, la diferencia de
+    escala entre ambas series ronda el 25%. Concatenarlas sin más crearía un
+    escalón artificial justo en la juntura: un retorno enorme e inventado en un
+    solo día, que además dispararía el detector de anomalías y acabaría
+    apartando un activo perfectamente sano.
+
+    Así que se hace lo que hace cualquiera al empalmar dos series de precios: se
+    calcula el factor en la última fecha en que ambas coinciden y se reescala la
+    serie nueva a la vieja. Sólo se conservan las filas POSTERIORES a lo que ya
+    hay en el almacén, que es lo único que se está intentando rellenar; si la
+    juntura sale absurda (factor fuera de 0,2-5) se deja el símbolo sin tocar,
+    porque un empalme así significa que los dos tickers no son el mismo activo.
+    """
+    if reserva.empty or existing.empty:
+        return reserva
+    r = reserva.copy()
+    r["date"] = pd.to_datetime(r["date"])
+    e = existing[["symbol", "date", "close"]].copy()
+    e["date"] = pd.to_datetime(e["date"])
+
+    ult = e.groupby("symbol")["date"].max()
+    conocidos = r.symbol.isin(ult.index)
+
+    solape = r[["symbol", "date", "close"]].merge(
+        e.rename(columns={"close": "close_almacen"}), on=["symbol", "date"])
+    if not solape.empty:
+        ref = solape.sort_values("date").groupby("symbol").tail(1)
+        factor = (ref["close_almacen"] / ref["close"]).values
+        f = pd.Series(factor, index=ref["symbol"].values)
+        f = f[(f > 0.2) & (f < 5) & f.notna()]
+        esc = r.symbol.map(f)
+        aplica = esc.notna()
+        for c in ("open", "high", "low", "close"):
+            r.loc[aplica, c] = r.loc[aplica, c].astype(float) * esc[aplica]
+        log.info("reserva: %d símbolos reescalados al nivel del almacén "
+                 "(factor mediano %.3f)", len(f), float(f.median()) if len(f) else 1.0)
+
+    # sólo el tramo que el almacén no tiene: rellenar, no reescribir
+    limite_sym = r.symbol.map(ult)
+    r = r[~conocidos | (r["date"] > limite_sym)]
+    return r.reset_index(drop=True)
 
 
 MAX_RETRASO_SESIONES = 2
@@ -348,15 +483,30 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
     if usar_reserva and other_syms:
         obtenidos = (pd.concat(nuevos, ignore_index=True) if nuevos
                      else pd.DataFrame(columns=["symbol", "date"]))
-        pocos = obtenidos.symbol.nunique() < len(other_syms) * 0.5 if len(obtenidos) \
-            else True
+        conseguidos = set(obtenidos.symbol.unique()) if len(obtenidos) else set()
+        faltantes = [s for s in other_syms if s not in conseguidos]
         sin_avance = (max_previo is not None and (
             obtenidos.empty or pd.to_datetime(obtenidos["date"]).max() <= max_previo))
-        if pocos or sin_avance:
-            log.warning("la fuente principal no avanzó (pocos=%s, sin_avance=%s): "
-                        "se prueba la fuente de reserva", pocos, sin_avance)
-            reserva = fetch_stooq(other_syms, _start_for(other_syms))
+        # Antes esto era todo-o-nada: la reserva sólo entraba si la fuente
+        # principal fallaba casi por completo. Pero el fallo real no es una
+        # caída, es una MERMA: se pierde un tercio del universo, el sistema
+        # sigue en verde y el ranking se calcula sobre los activos que
+        # sobrevivieron — que no son una muestra aleatoria, son los que se
+        # pidieron primero. Ahora se le pide a la reserva exactamente lo que
+        # falta.
+        if faltantes and (len(faltantes) > len(other_syms) * 0.05 or sin_avance):
+            log.warning("faltan %d de %d símbolos tras la fuente principal "
+                        "(sin_avance=%s): se pide a la reserva sólo lo que falta",
+                        len(faltantes), len(other_syms), sin_avance)
+            reserva = fetch_stooq(faltantes, _start_for(other_syms))
+            # En una recarga completa no se empalma: la historia vieja de esos
+            # símbolos se va a descartar entera unas líneas más abajo, así que
+            # la serie de la reserva no se pega a nada — es la serie entera, en
+            # su propia escala, y reescalarla o recortarla sólo la estropearía.
+            if not recarga_completa:
+                reserva = empalmar_reserva(reserva, existing)
             if not reserva.empty:
+                log.info("reserva: %d símbolos rellenados", reserva.symbol.nunique())
                 nuevos.append(reserva)
     if recarga_completa and nuevos and not existing.empty:
         # Se DESCARTAN las filas viejas de los símbolos recargados en vez de
@@ -375,6 +525,24 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
         merged[c] = pd.to_numeric(merged[c], errors="coerce").astype("float32")
     merged = quality_filter(merged)
     store.save(merged)
+
+    # Cobertura de la ÚLTIMA sesión, que es la que decide cuántos activos entran
+    # hoy en el ranking. El número de filas del almacén no sirve para esto: sigue
+    # creciendo aunque la mitad del universo se haya quedado sin la barra de hoy.
+    fechas = pd.to_datetime(merged["date"])
+    habiles = fechas[fechas.dt.dayofweek < 5]
+    if len(habiles):
+        ultima = habiles.max()
+        al_dia = merged.loc[fechas == ultima, "symbol"].nunique()
+        pedidos = len(other_syms) + len(crypto_syms)
+        pct = 100 * al_dia / max(pedidos, 1)
+        log.info("cobertura de la última sesión (%s): %d/%d símbolos (%.0f%%)",
+                 ultima.date(), al_dia, pedidos, pct)
+        if pct < 75:
+            log.error("SE HA PERDIDO EL %.0f%% DEL UNIVERSO en la última sesión. "
+                      "El ranking de hoy no se calcula sobre el universo completo "
+                      "sino sobre los símbolos que la fuente sí respondió, que no "
+                      "son una muestra aleatoria.", 100 - pct)
     if recarga_completa and nuevos:
         marca.parent.mkdir(parents=True, exist_ok=True)
         marca.write_text(str(pd.Timestamp.utcnow().tz_localize(None).date()))

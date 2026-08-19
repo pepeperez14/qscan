@@ -143,7 +143,8 @@ def cmd_report(a) -> None:
     names = u.set_index("symbol")["name"].to_dict()
     verdict = pd.read_csv(out / "verdict.csv") if (out / "verdict.csv").exists() else None
 
-    close = _wide(data.PriceStore(a.store))["close"]
+    px_full = _wide(data.PriceStore(a.store))
+    close = px_full["close"]
     last = scored[scored.date == scored.date.max()]
     rep = None
     if (out / "anomalies.parquet").exists():
@@ -171,17 +172,21 @@ def cmd_report(a) -> None:
     # obligar a tocar el YAML: este comando ya se ejecuta todos los días.
     curva, estado_cartera, comp = None, None, None
     if not a.no_portfolio:
-        px_full = _wide(data.PriceStore(a.store))
         dir_cartera = Path(a.portfolio_dir)
         try:
             estado_cartera = portfolio.simular(scored, px_full, u, rep, verdict,
-                                              dir_cartera)
+                                               dir_cartera)
             curva = portfolio.resumen(dir_cartera)
             comp = portfolio.composicion(estado_cartera, px_full, u)
             comp.to_csv(dir_cartera / "composicion.csv", index=False)
             portfolio.commitear(dir_cartera)
-        except Exception as e:
-            log.warning("la simulación de cartera falló (%s); el informe sigue", e)
+        except Exception:
+            # Con traza completa y sin tragárselo. Una simulación rota que no
+            # avanza mientras el resto del informe sale impecable es justo el
+            # tipo de avería que se queda meses sin detectar.
+            log.error("LA SIMULACIÓN DE CARTERA HA FALLADO", exc_info=True)
+            if not a.portfolio_opcional:
+                raise
 
     html = report.build_html(scored, panel, sparks, names, verdict,
                              universe_size=len(u), top_n=a.top,
@@ -232,6 +237,8 @@ def main(argv=None) -> None:
                    help="omite la capa de comentario")
     r.add_argument("--no-portfolio", action="store_true",
                    help="omite la simulación de cartera")
+    r.add_argument("--portfolio-opcional", action="store_true",
+                   help="no fallar la ejecución si la simulación se rompe")
     r.add_argument("--portfolio-dir", default="portfolio",
                    help="dónde vive el estado de la simulación")
     r.add_argument("--max-corr", type=float, default=0.80,

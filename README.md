@@ -106,6 +106,17 @@ Una ejecución verde con datos rancios es peor que una roja, porque nadie la mir
 `tests/test_frescura.py` reproduce ese caso exacto y comprueba que ahora corta,
 sin dar falsos positivos en festivos.
 
+**Nada de fallos tragados.** Si la simulación de cartera se rompe, la ejecución
+falla con la traza completa en vez de dejar un informe impecable con una cartera
+que no avanza. Y `portfolio.commitear` dice explícitamente si consiguió guardar:
+antes, un push fallido dejaba la simulación recalculándose cada día sin persistir
+nunca, y el log no lo mencionaba.
+
+Es el mismo patrón que este proyecto ya ha pagado tres veces: grupos que
+desaparecían del ranking, precios que dejaban de actualizarse, y ahora esto. El
+modo de fallo por defecto de un sistema automático no es el error, es el
+**silencio**. Cada vez que algo pueda quedarse callado, hay que hacer que grite.
+
 **Fuente de reserva.** Si la principal devuelve menos de la mitad de los símbolos
 o no aporta fechas nuevas, se intenta Stooq antes de rendirse. Cubre acciones y
 ETFs de EE.UU.; futuros, divisas e índices se dejan fuera a propósito, porque un
@@ -226,6 +237,51 @@ de muestra, predecir el rango transversal en vez del retorno, y siempre contra e
 baseline lineal en los mismos folds. Y antes de nada, saber cuánto IC saca el
 baseline: "el modelo saca 0,05" no significa nada si el lineal sacaba 0,04 con
 una décima parte de la complejidad.
+
+## La descarga: el fallo que no da error
+
+El modo de avería más caro que ha tenido este sistema no fue una excepción, fue
+una merma silenciosa. Yahoo limita el ritmo de peticiones, y `yfinance` **no
+lanza error cuando eso pasa**: escribe los fallos por consola y devuelve el lote
+a medias. Con lotes de 200 símbolos y todos los hilos abiertos, los primeros
+veintitantos lotes volvían enteros y a partir del cuarenta se perdían ~170 de
+cada 200. Más de mil activos fuera del ranking, la ejecución en verde y un
+informe con aspecto impecable.
+
+Lo grave no es el número, es el sesgo: los símbolos que sobreviven no son una
+muestra aleatoria del universo, son **los que se pidieron primero**. El ranking
+se calculaba sobre un subconjunto ordenado por posición en la lista.
+
+Cuatro defensas, en este orden:
+
+1. **El control mira lo que volvió, no las excepciones.** Cada lote compara
+   símbolos pedidos con símbolos devueltos. Es la única señal fiable cuando la
+   fuente falla sin fallar.
+2. **Ritmo adaptativo.** La pausa se multiplica por 1,8 cuando un lote vuelve
+   incompleto (tope 30 s) y decae cuando vuelve entero. El ritmo se ajusta solo
+   al límite real de ese día en vez de a una constante elegida a ojo.
+3. **Pasada de rescate.** Lo que falte tras la primera vuelta se reintenta al
+   final, después de dejar enfriar el contador dos minutos, en lotes pequeños y
+   con pocos hilos. Con tope declarado: si faltan más de 2.500 símbolos se dice
+   en el log cuántos se quedan sin reintentar, en vez de recortar en silencio.
+4. **La reserva rellena huecos concretos.** Antes Stooq sólo entraba si Yahoo
+   fallaba casi por completo — todo o nada — y por eso nunca entraba en el fallo
+   real, que es parcial. Ahora se le piden exactamente los símbolos que faltan.
+
+Y una precaución al empalmar fuentes: Yahoo ajusta por splits **y dividendos**,
+Stooq sólo por splits. Concatenar los dos tramos sin más crea un escalón de
+precio inventado —del orden del 25% en ocho años para un valor con dividendo
+normal— que además dispara el detector de anomalías y acaba apartando un activo
+sano. Por eso `empalmar_reserva` calcula el factor en la última fecha común y
+reescala el tramo nuevo al nivel del almacén; si el factor sale fuera de 0,2-5
+se deja el símbolo sin tocar, porque un empalme así significa que los dos
+tickers no son el mismo activo.
+
+Al final de cada actualización se registra la **cobertura de la última sesión**
+—cuántos símbolos tienen la barra de hoy sobre el total del universo— y por
+debajo del 75% se emite un ERROR. El número de filas del almacén no vale para
+esto: sigue creciendo aunque medio universo se haya quedado sin cotización de
+hoy. `tests/test_descarga.py` reproduce el escenario completo.
 
 ## El motor está probado, el modelo no
 
