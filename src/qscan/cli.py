@@ -51,9 +51,15 @@ def cmd_update(a) -> None:
     u = pd.read_csv(a.universe)
     if a.limit:
         u = u.head(a.limit)
-    data.update(u, data.PriceStore(a.store), years=a.years,
+    store = data.PriceStore(a.store)
+    data.update(u, store, years=a.years,
                 recarga_completa=True if a.full else None,
                 cada_dias=a.refresh_days)
+    # Se comprueba DESPUÉS de descargar y se corta la ejecución si el almacén no
+    # ha avanzado: una ejecución verde con precios de hace días es peor que una
+    # roja, porque nadie la mira.
+    if not a.sin_control_frescura:
+        data.comprobar_frescura(store, max_sesiones=a.max_retraso)
 
 
 def cmd_scan(a) -> None:
@@ -207,6 +213,10 @@ def main(argv=None) -> None:
                    help="forzar recarga completa de la historia")
     d.add_argument("--refresh-days", type=int, default=data.DIAS_ENTRE_RECARGAS,
                    help="cada cuántos días se recarga la historia entera")
+    d.add_argument("--max-retraso", type=int, default=data.MAX_RETRASO_SESIONES,
+                   help="sesiones de retraso toleradas antes de fallar")
+    d.add_argument("--sin-control-frescura", action="store_true",
+                   help="no fallar aunque el almacén esté desactualizado")
     d.set_defaults(f=cmd_update)
 
     s = sub.add_parser("scan"); s.add_argument("--freq", default="ME")

@@ -142,6 +142,146 @@ def fetch_crypto(symbols: list[str], start: pd.Timestamp, timeframe: str = "1d")
         pd.DataFrame(columns=["symbol", "date"] + COLS)
 
 
+STOOQ_URL = "https://stooq.com/q/d/l/?s={sym}&i=d"
+
+
+def _a_stooq(symbol: str) -> str | None:
+    """Traduce un ticker de Yahoo al formato de Stooq.
+
+    Sólo se cubren acciones y ETFs de EE.UU., que son el 97% del universo. Los
+    futuros, divisas e índices usan códigos distintos en cada fuente y traducir a
+    ojo sería peor que no traducir: un símbolo mal mapeado no falla, devuelve la
+    serie de OTRO activo.
+    """
+    s = symbol.strip()
+    if not s or any(c in s for c in "^=/.") or len(s) > 6:
+        return None
+    return s.replace("-", ".").lower() + ".us"
+
+
+def fetch_stooq(symbols: list[str], start: pd.Timestamp, hilos: int = 12,
+                limite: int = 3000, timeout: int = 20) -> pd.DataFrame:
+    """Fuente de reserva cuando la principal deja de responder.
+
+    No sustituye a Yahoo: cubre menos activos y menos historia. Existe para que
+    una caída de la fuente principal degrade el sistema en vez de congelarlo.
+    """
+    import concurrent.futures as cf
+    import io
+
+    import requests
+
+    pares = [(s, _a_stooq(s)) for s in symbols]
+    pares = [(y, t) for y, t in pares if t][:limite]
+    if not pares:
+        return pd.DataFrame(columns=["symbol", "date"] + COLS)
+    log.info("fuente de reserva (stooq): pidiendo %d símbolos", len(pares))
+
+    ses = requests.Session()
+    ses.headers.update({"User-Agent": "qscan/1.0"})
+
+    def uno(par):
+        yahoo, stooq = par
+        try:
+            r = ses.get(STOOQ_URL.format(sym=stooq), timeout=timeout)
+            if r.status_code != 200 or "Date" not in r.text[:64]:
+                return None
+            d = pd.read_csv(io.StringIO(r.text))
+            d.columns = [c.strip().lower() for c in d.columns]
+            if "close" not in d.columns:
+                return None
+            d["date"] = pd.to_datetime(d["date"], errors="coerce")
+            d = d[d["date"] >= pd.Timestamp(start)]
+            if d.empty:
+                return None
+            d.insert(0, "symbol", yahoo)
+            for c in COLS:
+                if c not in d.columns:
+                    d[c] = np.nan
+            return d[["symbol", "date"] + COLS]
+        except Exception:
+            return None
+
+    frames = []
+    with cf.ThreadPoolExecutor(max_workers=hilos) as ex:
+        for res in ex.map(uno, pares):
+            if res is not None and not res.empty:
+                frames.append(res)
+    if not frames:
+        log.error("la fuente de reserva tampoco devolvió nada")
+        return pd.DataFrame(columns=["symbol", "date"] + COLS)
+    out = pd.concat(frames, ignore_index=True)
+    log.info("fuente de reserva: %d símbolos · última fecha %s",
+             out.symbol.nunique(), pd.to_datetime(out["date"]).max().date())
+    return out
+
+
+MAX_RETRASO_SESIONES = 2
+
+
+def sesiones_de_retraso(ultima: pd.Timestamp, hoy: pd.Timestamp | None = None) -> int:
+    """Días hábiles transcurridos desde la última cotización del almacén."""
+    hoy = hoy or pd.Timestamp.now(tz="UTC").tz_localize(None).normalize()
+    if pd.isna(ultima):
+        return 10_000
+    return int(len(pd.bdate_range(pd.Timestamp(ultima), hoy)) - 1)
+
+
+def comprobar_frescura(store: PriceStore, max_sesiones: int = MAX_RETRASO_SESIONES,
+                       hoy: pd.Timestamp | None = None) -> int:
+    """Falla en rojo si el almacén ha dejado de avanzar.
+
+    Esta comprobación existe porque el modo de fallo real observado no fue un
+    error, fue SILENCIO: la descarga dejó de traer datos nuevos, `merged` quedó
+    igual que `existing`, y el sistema siguió calculando, publicando y
+    declarándose correcto sobre precios de hace días. Una ejecución verde con
+    datos congelados es peor que una roja: la roja se ve.
+    """
+    df = store.load()
+    if df.empty:
+        raise SystemExit("ALMACÉN VACÍO: la descarga no ha traído ningún precio.")
+    ultima = pd.to_datetime(df["date"]).max()
+    retraso = sesiones_de_retraso(ultima, hoy)
+    log.info("última cotización del almacén: %s (%d sesiones de retraso)",
+             ultima.date(), retraso)
+    if retraso > max_sesiones:
+        raise SystemExit(
+            f"DATOS CONGELADOS: la última cotización es del {ultima.date()}, "
+            f"{retraso} sesiones por detrás. La descarga no está trayendo datos "
+            f"nuevos. Revisa los avisos del paso de descarga: lo más probable es "
+            f"que la fuente esté limitando el ritmo o rechazando las peticiones. "
+            f"Se corta aquí a propósito: seguir produciría un informe con "
+            f"apariencia de recién hecho y precios viejos.")
+    return retraso
+
+
+def resumen_descarga(nuevos: list[pd.DataFrame], pedidos: int,
+                     max_previo: pd.Timestamp | None) -> None:
+    """Deja constancia de lo que la descarga trajo de verdad.
+
+    Sin esto, una descarga que falla en todos los lotes y una que funciona se
+    parecen demasiado en el log.
+    """
+    if not nuevos:
+        log.error("la descarga no devolvió NADA para %d símbolos pedidos", pedidos)
+        return
+    df = pd.concat(nuevos, ignore_index=True)
+    if df.empty:
+        log.error("la descarga devolvió 0 filas para %d símbolos pedidos", pedidos)
+        return
+    obtenidos = df.symbol.nunique()
+    maxima = pd.to_datetime(df["date"]).max()
+    log.info("descarga: %d/%d símbolos con datos · %d filas · última fecha %s",
+             obtenidos, pedidos, len(df), maxima.date())
+    if obtenidos < pedidos * 0.5:
+        log.error("sólo respondió el %.0f%% de los símbolos: la fuente está "
+                  "rechazando peticiones", 100 * obtenidos / max(pedidos, 1))
+    if max_previo is not None and maxima <= max_previo:
+        log.error("la descarga NO aporta fechas nuevas (máximo previo %s, "
+                  "máximo descargado %s)", pd.Timestamp(max_previo).date(),
+                  maxima.date())
+
+
 DIAS_ENTRE_RECARGAS = 30
 
 
@@ -167,7 +307,8 @@ def toca_recarga_completa(marca: Path, cada_dias: int = DIAS_ENTRE_RECARGAS) -> 
 
 def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
            lookback_days: int = 7, recarga_completa: bool | None = None,
-           cada_dias: int = DIAS_ENTRE_RECARGAS) -> pd.DataFrame:
+           cada_dias: int = DIAS_ENTRE_RECARGAS,
+           usar_reserva: bool = True) -> pd.DataFrame:
     """Actualización incremental, con recarga completa periódica."""
     existing = store.load()
     last = store.last_dates()
@@ -197,6 +338,26 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
         new.append(fetch_crypto(crypto_syms, _start_for(crypto_syms)))
 
     nuevos = [n for n in new if not n.empty]
+    max_previo = pd.to_datetime(existing["date"]).max() if not existing.empty else None
+    resumen_descarga(nuevos, len(other_syms) + len(crypto_syms), max_previo)
+
+    # Reserva: si la fuente principal devolvió poco o nada nuevo, se intenta otra
+    # antes de darse por vencido. Que una caída de Yahoo congele el sistema
+    # entero durante días es justo lo que pasó, y esto lo degrada en vez de
+    # pararlo.
+    if usar_reserva and other_syms:
+        obtenidos = (pd.concat(nuevos, ignore_index=True) if nuevos
+                     else pd.DataFrame(columns=["symbol", "date"]))
+        pocos = obtenidos.symbol.nunique() < len(other_syms) * 0.5 if len(obtenidos) \
+            else True
+        sin_avance = (max_previo is not None and (
+            obtenidos.empty or pd.to_datetime(obtenidos["date"]).max() <= max_previo))
+        if pocos or sin_avance:
+            log.warning("la fuente principal no avanzó (pocos=%s, sin_avance=%s): "
+                        "se prueba la fuente de reserva", pocos, sin_avance)
+            reserva = fetch_stooq(other_syms, _start_for(other_syms))
+            if not reserva.empty:
+                nuevos.append(reserva)
     if recarga_completa and nuevos and not existing.empty:
         # Se DESCARTAN las filas viejas de los símbolos recargados en vez de
         # fusionarlas. Si se mezclaran, un split dejaría el tramo antiguo en la

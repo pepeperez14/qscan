@@ -95,6 +95,22 @@ Se dispara sola leyendo `data/.ultima_recarga`, sin tocar el workflow. Para
 forzarla: `python -m qscan.cli update --full`. El periodo se cambia con
 `--refresh-days`.
 
+**Control de frescura.** Tras descargar, la ejecución falla en rojo si la última
+cotización lleva más de 2 sesiones de retraso. No es una precaución teórica: en
+agosto de 2026 el almacén se quedó anclado tres sesiones mientras las ejecuciones
+seguían saliendo en verde, porque el modo de fallo real no fue un error sino
+**silencio** — la descarga dejó de traer datos, la fusión no cambió nada y el
+resto del sistema siguió calculando y publicando sobre precios viejos.
+
+Una ejecución verde con datos rancios es peor que una roja, porque nadie la mira.
+`tests/test_frescura.py` reproduce ese caso exacto y comprueba que ahora corta,
+sin dar falsos positivos en festivos.
+
+**Fuente de reserva.** Si la principal devuelve menos de la mitad de los símbolos
+o no aporta fechas nuevas, se intenta Stooq antes de rendirse. Cubre acciones y
+ETFs de EE.UU.; futuros, divisas e índices se dejan fuera a propósito, porque un
+símbolo mal traducido no falla: devuelve la serie de otro activo.
+
 **Coste**: en un repo público los minutos de Actions son ilimitados. En uno
 privado el plan gratuito da 2.000 min/mes y una ejecución diaria completa se los
 come; si lo quieres privado, reduce el universo con `--limit` o pasa a semanal.
