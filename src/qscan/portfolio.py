@@ -293,11 +293,22 @@ def pesos_por_evidencia(verdict: pd.DataFrame | None) -> tuple[dict[str, float],
     igual = {h: 1 / 3 for h in ("corto", "medio", "largo")}
     if verdict is None or verdict.empty or "t_stat" not in verdict.columns:
         return igual, "sin validación disponible: reparto a partes iguales"
+    # Sólo cuentan las filas que la validación considera creíbles. Sin esto, la
+    # cripto a largo plazo —IC 0,584 y t 26,8 sobre siete ventanas anuales
+    # solapadas, que el propio veredicto marcaba como sospechosa— se llevaba el
+    # 83% del capital de la cartera combinada. Ver validate.verdict.
+    if "usable" in verdict.columns:
+        verdict = verdict[verdict["usable"].astype(bool)]
+        if verdict.empty:
+            return igual, "ninguna medición creíble: reparto a partes iguales"
     fuerza = {}
     for h in ("corto", "medio", "largo"):
         sub = verdict[verdict.horizonte == h]
         t = pd.to_numeric(sub.t_stat, errors="coerce").dropna()
-        fuerza[h] = max(float(t.mean()) - 1.0, 0.0) if len(t) else 0.0
+        # MEDIANA, no media, y con tope. Un solo grupo con un t disparatado no
+        # puede decidir el reparto: la mediana lo ignora y el tope acota lo que
+        # un horizonte legítimamente fuerte puede acaparar.
+        fuerza[h] = min(max(float(t.median()) - 1.0, 0.0), 3.0) if len(t) else 0.0
     total = sum(fuerza.values())
     if total <= 0:
         return igual, "ningún horizonte supera t=1: reparto a partes iguales"

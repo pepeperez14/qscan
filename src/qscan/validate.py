@@ -153,8 +153,24 @@ def run_all(scored: pd.DataFrame, fwd: pd.DataFrame, cost_bps: float = 10.0,
     return out
 
 
+MIN_PERIODOS = 20
+
+
 def verdict(results: dict) -> pd.DataFrame:
-    """Traduce las métricas a un juicio legible. Deliberadamente severo."""
+    """Traduce las métricas a un juicio legible. Deliberadamente severo.
+
+    La columna `usable` es lo que el resto del sistema debe mirar para decidir
+    si un horizonte merece capital. Existe porque el caso real fue justo el
+    contrario: la cripto a largo plazo salió con IC 0,584 y t 26,8 sobre SIETE
+    ventanas de un año. Con esa historia las ventanas se solapan casi por
+    completo, así que siete "periodos" son en la práctica una sola observación
+    independiente y el t-stat no significa nada. El veredicto lo marcaba como
+    sospechoso —bien— pero `pesos_por_evidencia` promediaba t sin mirar el
+    veredicto, y ese 26,8 se llevaba el 83% del capital de la cartera combinada.
+
+    Una cifra que el propio sistema declara no creíble no puede entrar después
+    por la puerta de atrás en una media.
+    """
     rows = []
     for h, r in results.items():
         s = r["ic_resumen"]
@@ -162,10 +178,14 @@ def verdict(results: dict) -> pd.DataFrame:
             continue
         for grp, row in s.iterrows():
             t = row["t_stat"]
+            n = int(row["periodos"])
+            usable = True
             if not np.isfinite(t):
-                v = "sin datos"
+                v, usable = "sin datos", False
+            elif n < MIN_PERIODOS:
+                v, usable = f"evidencia insuficiente: sólo {n} ventanas", False
             elif abs(row["ic_medio"]) > 0.15:
-                v = "SOSPECHOSO: revisar fuga de datos"
+                v, usable = "SOSPECHOSO: revisar fuga de datos", False
             elif t > 2.5:
                 v = "señal consistente"
             elif t > 1.5:
@@ -174,5 +194,5 @@ def verdict(results: dict) -> pd.DataFrame:
                 v = "sin evidencia de señal"
             rows.append({"horizonte": h, "grupo": grp, "ic_medio": row["ic_medio"],
                          "t_stat": round(t, 2) if np.isfinite(t) else np.nan,
-                         "periodos": int(row["periodos"]), "veredicto": v})
+                         "periodos": n, "usable": usable, "veredicto": v})
     return pd.DataFrame(rows)

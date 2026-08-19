@@ -266,27 +266,51 @@ def fetch_stooq(symbols: list[str], start: pd.Timestamp, hilos: int = 12,
 
     ses = requests.Session()
     ses.headers.update({"User-Agent": "qscan/1.0"})
+    # El pool por defecto de urllib3 son 10 conexiones. Con 12 hilos el pool se
+    # desborda, urllib3 descarta conexiones ("Connection pool is full") y parte
+    # de las peticiones se pierden — que es justo lo que se vio: la reserva se
+    # llamó y devolvió cero. El pool tiene que ser al menos tan grande como el
+    # número de hilos que lo usan.
+    ada = requests.adapters.HTTPAdapter(pool_connections=hilos,
+                                        pool_maxsize=hilos, max_retries=1)
+    ses.mount("https://", ada)
+    ses.mount("http://", ada)
+    fallos: dict[str, int] = {}
+
+    def _anota(motivo: str):
+        fallos[motivo] = fallos.get(motivo, 0) + 1
 
     def uno(par):
+        # Se lleva la cuenta del MOTIVO de cada fallo. Sin esto, "la fuente de
+        # reserva tampoco devolvió nada" no distingue entre un bloqueo, un
+        # símbolo inexistente y un CSV sin la historia pedida — y las tres cosas
+        # se arreglan de manera distinta.
         yahoo, stooq = par
         try:
             r = ses.get(STOOQ_URL.format(sym=stooq), timeout=timeout)
-            if r.status_code != 200 or "Date" not in r.text[:64]:
+            if r.status_code != 200:
+                _anota(f"http {r.status_code}")
+                return None
+            if "Date" not in r.text[:64]:
+                _anota("sin datos para el símbolo")
                 return None
             d = pd.read_csv(io.StringIO(r.text))
             d.columns = [c.strip().lower() for c in d.columns]
             if "close" not in d.columns:
+                _anota("csv sin columna close")
                 return None
             d["date"] = pd.to_datetime(d["date"], errors="coerce")
             d = d[d["date"] >= pd.Timestamp(start)]
             if d.empty:
+                _anota("sin fechas dentro del rango pedido")
                 return None
             d.insert(0, "symbol", yahoo)
             for c in COLS:
                 if c not in d.columns:
                     d[c] = np.nan
             return d[["symbol", "date"] + COLS]
-        except Exception:
+        except Exception as e:
+            _anota(type(e).__name__)
             return None
 
     frames = []
@@ -294,9 +318,14 @@ def fetch_stooq(symbols: list[str], start: pd.Timestamp, hilos: int = 12,
         for res in ex.map(uno, pares):
             if res is not None and not res.empty:
                 frames.append(res)
+    detalle = " · ".join(f"{k}: {v}" for k, v in
+                         sorted(fallos.items(), key=lambda kv: -kv[1])[:5])
     if not frames:
-        log.error("la fuente de reserva tampoco devolvió nada")
+        log.error("la fuente de reserva tampoco devolvió nada (%s)",
+                  detalle or "sin motivo registrado")
         return pd.DataFrame(columns=["symbol", "date"] + COLS)
+    if fallos:
+        log.info("reserva: %d símbolos sin datos (%s)", sum(fallos.values()), detalle)
     out = pd.concat(frames, ignore_index=True)
     log.info("fuente de reserva: %d símbolos · última fecha %s",
              out.symbol.nunique(), pd.to_datetime(out["date"]).max().date())
@@ -411,10 +440,17 @@ def resumen_descarga(nuevos: list[pd.DataFrame], pedidos: int,
     if obtenidos < pedidos * 0.5:
         log.error("sólo respondió el %.0f%% de los símbolos: la fuente está "
                   "rechazando peticiones", 100 * obtenidos / max(pedidos, 1))
-    if max_previo is not None and maxima <= max_previo:
-        log.error("la descarga NO aporta fechas nuevas (máximo previo %s, "
-                  "máximo descargado %s)", pd.Timestamp(max_previo).date(),
-                  maxima.date())
+    if max_previo is not None and maxima < max_previo:
+        log.error("la descarga RETROCEDE (máximo previo %s, máximo descargado "
+                  "%s)", pd.Timestamp(max_previo).date(), maxima.date())
+    elif max_previo is not None and maxima == max_previo:
+        # NO es un fallo. Es lo que pasa al relanzar el mismo día: el almacén ya
+        # tiene la última sesión y la descarga trae exactamente lo mismo. Antes
+        # esto se registraba como ERROR y además disparaba la fuente de reserva
+        # sin ninguna necesidad. Si además la fecha estuviera vieja, quien lo
+        # detecta es `comprobar_frescura`, que es su trabajo.
+        log.info("la descarga confirma la última sesión ya almacenada (%s): "
+                 "reejecución del mismo día", maxima.date())
 
 
 DIAS_ENTRE_RECARGAS = 30
@@ -485,8 +521,11 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
                      else pd.DataFrame(columns=["symbol", "date"]))
         conseguidos = set(obtenidos.symbol.unique()) if len(obtenidos) else set()
         faltantes = [s for s in other_syms if s not in conseguidos]
+        # "sin avance" es que la descarga se quede POR DETRÁS de lo que ya hay,
+        # no que traiga lo mismo: relanzar el mismo día es normal y no debe
+        # arrastrar a la fuente de reserva a pedir símbolos que no faltan.
         sin_avance = (max_previo is not None and (
-            obtenidos.empty or pd.to_datetime(obtenidos["date"]).max() <= max_previo))
+            obtenidos.empty or pd.to_datetime(obtenidos["date"]).max() < max_previo))
         # Antes esto era todo-o-nada: la reserva sólo entraba si la fuente
         # principal fallaba casi por completo. Pero el fallo real no es una
         # caída, es una MERMA: se pierde un tercio del universo, el sistema

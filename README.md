@@ -283,6 +283,32 @@ debajo del 75% se emite un ERROR. El número de filas del almacén no vale para
 esto: sigue creciendo aunque medio universo se haya quedado sin cotización de
 hoy. `tests/test_descarga.py` reproduce el escenario completo.
 
+## Una cifra que el sistema declara mentira no puede repartir capital
+
+El informe del 19/08/2026 dio a la cripto a largo plazo un IC de 0,584 y un
+t-stat de **26,8** sobre **siete** ventanas de un año. Con esa historia las
+ventanas se solapan casi por completo: siete "periodos" son en la práctica una
+sola observación independiente, y el t-stat no mide nada.
+
+El veredicto lo marcaba correctamente como sospechoso. El problema es que
+`pesos_por_evidencia` promediaba los t-stats **sin mirar el veredicto**, así que
+ese 26,8 arrastraba la media del horizonte largo hasta 9,3 y se llevaba el **83%
+del capital** de la cartera combinada. La cifra que el sistema declaraba no
+creíble entraba después por la puerta de atrás.
+
+Tres cambios:
+
+- `validate.verdict` publica una columna **`usable`**. Un booleano explícito es
+  mejor que obligar a quien consume el veredicto a reconocer cadenas de texto.
+- Menos de 20 ventanas es "evidencia insuficiente", y no cuenta. Antes sólo se
+  filtraba por IC absurdo, que es un síntoma y no la causa.
+- El reparto usa la **mediana** de los t-stats en vez de la media, y con tope: un
+  solo grupo con un número disparatado no puede decidir dónde va el dinero, y ni
+  siquiera un horizonte legítimamente fuerte debe acaparar la cartera entera.
+
+Con las cifras reales de ese día, el reparto pasa de *largo 83%* a **corto 66% ·
+medio 34%**. `tests/test_evidencia.py` usa esas cifras exactas.
+
 ## No todo lo que cotiza es analizable
 
 El universo se construye solo a partir del directorio de NASDAQ, y eso mete
