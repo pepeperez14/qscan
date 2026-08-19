@@ -41,7 +41,7 @@ def cmd_universe(a) -> None:
     # guardarlo, y por eso conviene que exista desde la primera ejecución.
     snap = Path(a.out).parent / "snapshots"
     snap.mkdir(parents=True, exist_ok=True)
-    stamp = pd.Timestamp.utcnow().tz_localize(None).strftime("%Y-%m-%d")
+    stamp = pd.Timestamp.now(tz="UTC").tz_localize(None).strftime("%Y-%m-%d")
     u.to_csv(snap / f"universe_{stamp}.csv.gz", index=False, compression="gzip")
     print(f"{len(u)} activos -> {a.out} (instantánea {stamp})")
     print(u.group.value_counts().to_string())

@@ -283,6 +283,41 @@ debajo del 75% se emite un ERROR. El número de filas del almacén no vale para
 esto: sigue creciendo aunque medio universo se haya quedado sin cotización de
 hoy. `tests/test_descarga.py` reproduce el escenario completo.
 
+## Europa nunca estuvo en el universo
+
+Los seis índices europeos fallaban **todos a la vez** con `HTTP Error 403:
+Forbidden`, y se registraba como aviso entre otros muchos avisos. El sistema
+llevaba desde el primer día sin una sola acción europea: ni IBEX, ni DAX, ni
+CAC, ni FTSE, ni MIB, ni AEX.
+
+La causa es de una sola línea: `pd.read_html(url)` descarga por dentro con
+urllib, que se presenta como `Python-urllib/3.12`, y Wikimedia rechaza los
+agentes genéricos. Ahora el HTML se baja con `requests` y un agente descriptivo
+con forma de contacto, como pide su política, con la API REST como reserva.
+
+Y la lección que importa más que el arreglo: **si un grupo entero desaparece del
+universo, eso es un ERROR, no un aviso.** `build` compara los grupos obtenidos
+contra los esperados y lo dice con todas las letras. Un grupo que no puntúa
+porque no llega al mínimo de comparables y un grupo que no existe porque su
+fuente falló son problemas distintos, y antes se veían igual.
+
+## El almacén tiene que parecerse al universo
+
+Al retirar los 838 ETFs apalancados, la cobertura salió del **102%**: se
+contaban símbolos vivos en el almacén contra un universo más pequeño. El almacén
+se poda ahora hasta el universo — pero con freno de mano: si la poda se llevara
+más del 20%, lo más probable no es que el mercado haya encogido sino que la
+construcción del universo haya fallado a medias, y se registra el error sin
+borrar nada. Perder años de historia por un 403 de Wikipedia sería mucho peor
+que arrastrar filas de sobra.
+
+También hay ahora una **lista de símbolos muertos** (`.simbolos_muertos.csv`).
+Warrants caducados y unidades de SPAC que ya no existen hacían que cada
+ejecución gastara dos minutos de enfriamiento más varios de reintentos para
+recuperar *uno* de 136. No es una lista negra permanente: se reintenta con todos
+cada 30 días, por si un ticker vuelve, y se limpia sola guardando sólo los que
+fallan hoy.
+
 ## Una cifra que el sistema declara mentira no puede repartir capital
 
 El informe del 19/08/2026 dio a la cripto a largo plazo un IC de 0,584 y un

@@ -127,7 +127,7 @@ def _descargar_lote(chunk: list[str], start, retries: int,
 def fetch_yahoo(symbols: list[str], start: str | pd.Timestamp,
                 batch: int = LOTE_YAHOO, pause: float = PAUSA_YAHOO,
                 retries: int = 2, hilos: int = HILOS_YAHOO,
-                rescate: bool = True) -> pd.DataFrame:
+                rescate: bool = True, sin_rescate: set[str] | None = None) -> pd.DataFrame:
     """Descarga por lotes con ritmo adaptativo y una pasada de rescate.
 
     El modo de fallo observado en producción no es una excepción: yfinance NO
@@ -168,6 +168,16 @@ def fetch_yahoo(symbols: list[str], start: str | pd.Timestamp,
             log.info("lote %d/%d: %d/%d símbolos", i // batch + 1, total,
                      len(obtenidos), len(chunk))
         time.sleep(pausa)
+
+    if rescate and sin_rescate:
+        # Un warrant caducado o un ticker retirado no van a volver mañana. Sin
+        # esta lista, cada ejecución gastaba dos minutos de enfriamiento más
+        # varios de reintentos para recuperar 1 de 136 símbolos, todos muertos.
+        antes = len(faltan)
+        faltan = [s for s in faltan if s not in sin_rescate]
+        if antes != len(faltan):
+            log.info("rescate: %d símbolos dados por muertos, no se reintentan",
+                     antes - len(faltan))
 
     if rescate and faltan:
         log.warning("rescate: %d de %d símbolos sin datos en la primera pasada; "
@@ -453,6 +463,51 @@ def resumen_descarga(nuevos: list[pd.DataFrame], pedidos: int,
                  "reejecución del mismo día", maxima.date())
 
 
+DIAS_REINTENTO_MUERTOS = 30
+
+
+def _ahora() -> pd.Timestamp:
+    return pd.Timestamp.now(tz="UTC").tz_localize(None).normalize()
+
+
+def leer_muertos(ruta: Path) -> dict[str, str]:
+    """Símbolos que la fuente no devuelve, con la fecha en que se dieron por tales."""
+    if not ruta.exists():
+        return {}
+    try:
+        d = pd.read_csv(ruta)
+        return dict(zip(d["symbol"].astype(str), d["desde"].astype(str)))
+    except Exception as e:
+        log.warning("no se pudo leer la lista de símbolos muertos: %s", e)
+        return {}
+
+
+def escribir_muertos(ruta: Path, muertos: dict[str, str]) -> None:
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame({"symbol": list(muertos), "desde": list(muertos.values())}) \
+        .to_csv(ruta, index=False)
+
+
+def muertos_vigentes(muertos: dict[str, str], hoy: pd.Timestamp | None = None,
+                     dias: int = DIAS_REINTENTO_MUERTOS) -> set[str]:
+    """Los que no merece la pena reintentar todavía.
+
+    No es una lista negra permanente: cada mes se vuelve a probar con todos, por
+    si un ticker vuelve a listarse o la fuente lo recupera. Lo que se evita es
+    pagar el enfriamiento y los reintentos TODOS los días por warrants caducados
+    y unidades de SPAC que ya no existen.
+    """
+    hoy = hoy if hoy is not None else _ahora()
+    vivos = set()
+    for s, desde in muertos.items():
+        try:
+            if (hoy - pd.Timestamp(desde)).days < dias:
+                vivos.add(s)
+        except (ValueError, TypeError):
+            continue
+    return vivos
+
+
 DIAS_ENTRE_RECARGAS = 30
 
 
@@ -472,7 +527,7 @@ def toca_recarga_completa(marca: Path, cada_dias: int = DIAS_ENTRE_RECARGAS) -> 
         ultima = pd.Timestamp(marca.read_text().strip())
     except (ValueError, OSError):
         return True
-    dias = (pd.Timestamp.utcnow().tz_localize(None).normalize() - ultima).days
+    dias = (_ahora() - ultima).days
     return dias >= cada_dias
 
 
@@ -483,7 +538,7 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
     """Actualización incremental, con recarga completa periódica."""
     existing = store.load()
     last = store.last_dates()
-    full_start = pd.Timestamp.utcnow().tz_localize(None).normalize() - pd.DateOffset(years=years)
+    full_start = _ahora() - pd.DateOffset(years=years)
     marca = store.path.parent / ".ultima_recarga"
     if recarga_completa is None:
         recarga_completa = toca_recarga_completa(marca, cada_dias)
@@ -502,9 +557,17 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
             return full_start
         return min(known) - pd.Timedelta(days=lookback_days)
 
+    ruta_muertos = store.path.parent / ".simbolos_muertos.csv"
+    muertos = leer_muertos(ruta_muertos)
+    vigentes = muertos_vigentes(muertos)
+    if vigentes:
+        log.info("%d símbolos en la lista de muertos (se reintentan cada %d días)",
+                 len(vigentes), DIAS_REINTENTO_MUERTOS)
+
     new = []
     if other_syms:
-        new.append(fetch_yahoo(other_syms, _start_for(other_syms)))
+        new.append(fetch_yahoo(other_syms, _start_for(other_syms),
+                               sin_rescate=vigentes))
     if crypto_syms:
         new.append(fetch_crypto(crypto_syms, _start_for(crypto_syms)))
 
@@ -562,7 +625,41 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
     merged["date"] = pd.to_datetime(merged["date"])
     for c in COLS:
         merged[c] = pd.to_numeric(merged[c], errors="coerce").astype("float32")
+    # Se actualiza la lista de muertos: entra el que no ha devuelto nada y sale
+    # el que ha vuelto a responder. Guardar sólo los que fallan HOY hace que la
+    # lista se limpie sola en vez de crecer para siempre.
+    if other_syms:
+        respondieron = set(pd.concat(nuevos, ignore_index=True).symbol.unique()) \
+            if nuevos else set()
+        hoy_txt = str(_ahora().date())
+        muertos = {s: muertos.get(s, hoy_txt)
+                   for s in other_syms if s not in respondieron}
+        escribir_muertos(ruta_muertos, muertos)
+        log.info("lista de muertos: %d símbolos", len(muertos))
+
     merged = quality_filter(merged)
+
+    # El almacén se queda con lo que el universo ya no incluye. Al retirar 838
+    # ETFs apalancados el conteo de cobertura salió del 102%: se contaban
+    # símbolos vivos en el almacén contra un universo más pequeño. Se poda, pero
+    # con freno de mano: si la poda se llevara más del 20% del almacén, lo más
+    # probable no es que el mercado haya encogido sino que la construcción del
+    # universo haya fallado a medias, y borrar años de historia por eso sería
+    # mucho peor que dejar filas de sobra.
+    conocidos = set(universe.symbol)
+    sobra = sorted(set(merged.symbol.unique()) - conocidos)
+    if sobra:
+        frac = len(sobra) / max(merged.symbol.nunique(), 1)
+        if frac > 0.20:
+            log.error("el universo ya no contiene %d de los %d símbolos del "
+                      "almacén (%.0f%%). NO se podan: una caída así apunta a un "
+                      "universo mal construido, no a un mercado que encoge.",
+                      len(sobra), merged.symbol.nunique(), 100 * frac)
+        else:
+            log.info("almacén: se retiran %d símbolos que ya no están en el "
+                     "universo", len(sobra))
+            merged = merged[merged.symbol.isin(conocidos)]
+
     store.save(merged)
 
     # Cobertura de la ÚLTIMA sesión, que es la que decide cuántos activos entran
@@ -572,8 +669,11 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
     habiles = fechas[fechas.dt.dayofweek < 5]
     if len(habiles):
         ultima = habiles.max()
-        al_dia = merged.loc[fechas == ultima, "symbol"].nunique()
-        pedidos = len(other_syms) + len(crypto_syms)
+        # sólo cuentan los símbolos DEL UNIVERSO: si no, el almacén arrastra
+        # símbolos retirados y la cobertura puede pasar del 100%
+        al_dia = merged.loc[(fechas == ultima)
+                            & merged.symbol.isin(conocidos), "symbol"].nunique()
+        pedidos = len(conocidos)
         pct = 100 * al_dia / max(pedidos, 1)
         log.info("cobertura de la última sesión (%s): %d/%d símbolos (%.0f%%)",
                  ultima.date(), al_dia, pedidos, pct)
@@ -584,7 +684,7 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
                       "son una muestra aleatoria.", 100 - pct)
     if recarga_completa and nuevos:
         marca.parent.mkdir(parents=True, exist_ok=True)
-        marca.write_text(str(pd.Timestamp.utcnow().tz_localize(None).date()))
+        marca.write_text(str(_ahora().date()))
     return merged
 
 

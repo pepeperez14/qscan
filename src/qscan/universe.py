@@ -88,8 +88,19 @@ class Asset:
         return asdict(self)
 
 
+# Wikimedia RECHAZA con 403 los agentes genéricos, y `pd.read_html(url)` usa por
+# dentro urllib, que se presenta como "Python-urllib/3.12". Ese era el motivo de
+# que los seis índices europeos fallaran a la vez con "HTTP Error 403:
+# Forbidden" y de que el universo no tuviera NI UNA acción europea. Su política
+# pide un agente descriptivo con forma de contactar.
+AGENTE = ("qscan/1.0 (escaner multiactivo de codigo abierto; "
+          "https://github.com/pepeperez14/qscan)")
+
+WIKI_REST = "https://en.wikipedia.org/api/rest_v1/page/html/{titulo}"
+
+
 def _get(url: str, timeout: int = 30) -> str:
-    r = requests.get(url, timeout=timeout, headers={"User-Agent": "qscan/1.0"})
+    r = requests.get(url, timeout=timeout, headers={"User-Agent": AGENTE})
     r.raise_for_status()
     return r.text
 
@@ -177,14 +188,31 @@ def us_listed() -> list[Asset]:
     return out
 
 
+def _tablas_wiki(url: str) -> list[pd.DataFrame]:
+    """Descarga una página de Wikipedia y devuelve sus tablas.
+
+    Se baja el HTML con `requests` y un agente descriptivo en vez de dejar que
+    `pd.read_html` lo haga por su cuenta: por dentro usa urllib, que se presenta
+    como "Python-urllib/3.12", y Wikimedia responde 403 a eso. Si aun así falla,
+    se intenta la API REST, que es el camino que ellos mismos recomiendan.
+    """
+    try:
+        return pd.read_html(io.StringIO(_get(url)))
+    except Exception as e:
+        log.info("página normal no disponible (%s), se prueba la API REST", e)
+    titulo = url.rstrip("/").rsplit("/", 1)[-1]
+    return pd.read_html(io.StringIO(_get(WIKI_REST.format(titulo=titulo))))
+
+
 def eu_indices() -> list[Asset]:
     """Constituyentes de los grandes índices europeos vía Wikipedia."""
     out: list[Asset] = []
     for name, url, col, suffix in EU_INDICES:
+        antes = len(out)
         try:
-            tables = pd.read_html(url)
+            tables = _tablas_wiki(url)
         except Exception as e:  # pragma: no cover - red
-            log.warning("no se pudo leer %s: %s", name, e)
+            log.error("no se pudo leer %s: %s", name, e)
             continue
         for t in tables:
             cols = {str(c).strip(): c for c in t.columns}
@@ -201,6 +229,10 @@ def eu_indices() -> list[Asset]:
                 out.append(Asset(ysym, str(cname)[:120], "equity_eu", name,
                                  "GBP" if suffix == ".L" else "EUR"))
             break  # la primera tabla válida es la de constituyentes
+        if len(out) == antes:
+            log.error("%s: ninguna tabla de constituyentes reconocible", name)
+        else:
+            log.info("%s: %d constituyentes", name, len(out) - antes)
     return out
 
 
@@ -258,4 +290,17 @@ def build(include_crypto: bool = True, include_eu: bool = True) -> pd.DataFrame:
     df = pd.DataFrame([a.as_dict() for a in assets])
     df = df.drop_duplicates(subset="symbol").reset_index(drop=True)
     log.info("universo: %d activos\n%s", len(df), df.group.value_counts().to_string())
+    # Un grupo entero que desaparece tiene que verse. La renta variable europea
+    # llevaba ausente desde el principio —los seis índices fallaban a la vez con
+    # un 403 de Wikipedia— y sólo se registraba como aviso, entre otros muchos.
+    esperados = {"equity_us", "etf", "commodity", "fx", "index", "bond"}
+    if include_eu:
+        esperados.add("equity_eu")
+    if include_crypto:
+        esperados.add("crypto")
+    faltan = esperados - set(df.group.unique())
+    if faltan:
+        log.error("GRUPOS AUSENTES DEL UNIVERSO: %s. No es que no puntúen: es "
+                  "que no se han llegado a construir, así que ese trozo de "
+                  "mercado no existe para el sistema.", ", ".join(sorted(faltan)))
     return df

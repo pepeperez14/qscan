@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import html
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 import numpy as np
 import pandas as pd
@@ -608,7 +608,7 @@ def build_html(scored: pd.DataFrame, panel: pd.DataFrame, sparks: dict[str, np.n
 <body class="viz-root">
 <h1>Escáner multiactivo</h1>
 <p class="sub">Análisis de la evolución de cotizaciones en tres horizontes ·
-generado {datetime.utcnow():%d/%m/%Y %H:%M} UTC</p>
+generado {datetime.now(timezone.utc):%d/%m/%Y %H:%M} UTC</p>
 <div class="tiles">{tiles_html}</div>
 <div class="note"><b>Esto no es asesoramiento de inversión.</b> El score es un
 ranking transversal derivado únicamente del historial de precios y volumen: dice
