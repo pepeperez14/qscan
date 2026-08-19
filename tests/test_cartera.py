@@ -60,6 +60,13 @@ def main() -> int:
 
     px_full = {f: prices.pivot(index="date", columns="symbol", values=f).sort_index()
                for f in ("open", "high", "low", "close", "volume")}
+    # float32 A PROPÓSITO: es lo que hace `data.update` para que la historia
+    # entera quepa en la caché, y por tanto lo que la simulación ve en
+    # producción. Con float64 esta prueba pasaba mientras el sistema real
+    # llevaba semanas sin poder guardar el estado — `json` no serializa
+    # `numpy.float32`. Una prueba que usa tipos más cómodos que los de
+    # producción no está probando producción.
+    px_full = {f: v.astype("float32") for f, v in px_full.items()}
     idx = px_full["close"].index
     fh = features.build_feature_history(px_full, px_full["close"][portfolio.BENCHMARK])
     grupos = uni.set_index("symbol")["group"]

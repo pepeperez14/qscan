@@ -25,6 +25,7 @@ Reglas que hacen que esto sea una simulación y no un folleto:
 
 from __future__ import annotations
 
+import datetime
 import json
 import logging
 import subprocess
@@ -121,9 +122,51 @@ def cargar(ruta: Path) -> dict:
     return _estado_vacio()
 
 
+def a_json(o):
+    """Convierte a tipos nativos lo que `json` no sabe escribir.
+
+    ESTE ERA EL FALLO. El almacén guarda los precios en `float32` para que la
+    historia entera quepa en la caché, así que todo lo que sale de las matrices
+    de precios es `numpy.float32` y no `float`. `json.dumps` no lo serializa y
+    lanza `TypeError: Object of type float32 is not JSON serializable`.
+
+    Lo traicionero es DÓNDE saltaba: al guardar, o sea después de haber simulado
+    el día entero correctamente. La simulación se ejecutaba, calculaba sus
+    órdenes, y luego el estado se perdía al escribirlo. Y como la excepción
+    estaba dentro de un `except` que sólo registraba un aviso, el informe seguía
+    generándose impecable mientras la cartera llevaba semanas congelada en la
+    misma fecha con las mismas órdenes pendientes.
+
+    Se recorre la estructura entera en vez de usar `default=`: así también se
+    convierten los NaN e infinitos, que `json` sí escribe pero produciendo un
+    fichero que no es JSON válido y que al releerse rompería en otro sitio.
+    """
+    if isinstance(o, dict):
+        return {str(k): a_json(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple, set)):
+        return [a_json(v) for v in o]
+    if isinstance(o, np.ndarray):
+        return [a_json(v) for v in o.tolist()]
+    if o is None or o is pd.NaT:
+        return None
+    if isinstance(o, (np.bool_, bool)):
+        return bool(o)
+    if isinstance(o, (np.integer, int)):
+        return int(o)
+    if isinstance(o, (np.floating, float)):
+        v = float(o)
+        return v if np.isfinite(v) else None
+    if isinstance(o, (pd.Timestamp, datetime.date, datetime.datetime)):
+        return str(pd.Timestamp(o).date())
+    if isinstance(o, str):
+        return o
+    return str(o)
+
+
 def guardar(estado: dict, ruta: Path) -> None:
     ruta.parent.mkdir(parents=True, exist_ok=True)
-    ruta.write_text(json.dumps(estado, indent=1, ensure_ascii=False), encoding="utf-8")
+    ruta.write_text(json.dumps(a_json(estado), indent=1, ensure_ascii=False),
+                    encoding="utf-8")
 
 
 # --------------------------------------------------------------------------- #

@@ -306,11 +306,11 @@ def _bloque_cartera(curva: pd.DataFrame, estado: dict | None,
     # servidor precalculara los periodos, cada uno sería una página distinta.
     datos = (curva[["fecha", "escenario", "broker", "valor_eur", "costes_acum_eur"]]
              .to_dict(orient="records"))
-    payload = json.dumps({"curva": datos,
+    payload = json.dumps(portfolio.a_json({"curva": datos,
                           "etiquetas": ESC_ETIQUETA,
                           "detalles": ESC_DETALLE,
                           "series": {k: v[1] for k, v in SERIES.items()},
-                          "nombres": {k: v[0] for k, v in SERIES.items()}},
+                          "nombres": {k: v[0] for k, v in SERIES.items()}}),
                          ensure_ascii=False)
 
     botones = "".join(

@@ -283,6 +283,32 @@ debajo del 75% se emite un ERROR. El número de filas del almacén no vale para
 esto: sigue creciendo aunque medio universo se haya quedado sin cotización de
 hoy. `tests/test_descarga.py` reproduce el escenario completo.
 
+## La avería de la cartera: `float32` y un `except` demasiado amable
+
+Vale la pena dejarlo escrito porque el patrón se repetirá. La simulación de
+cartera estuvo semanas congelada en la misma fecha, con las mismas 75 órdenes
+pendientes, mientras el informe se publicaba cada día impecable. La causa:
+
+- el almacén guarda los precios en `float32` para que ocho años de historia
+  quepan en la caché, así que todo lo que sale de las matrices de precios es
+  `numpy.float32`, no `float`;
+- `json.dumps` no sabe serializar `numpy.float32` y lanza `TypeError`;
+- el fallo saltaba **al guardar**, es decir, después de simular el día entero
+  correctamente: se calculaba todo y se perdía al escribirlo;
+- y estaba dentro de un `except` que se limitaba a registrar un aviso.
+
+Tres lecciones, aplicadas:
+
+1. **Un `except` que traga una excepción tiene que fallar en rojo o gritar.** Se
+   arregló antes de encontrar la causa, y fue lo que reveló la traza.
+2. **Las pruebas tienen que usar los tipos de producción.** `test_cartera.py`
+   construía sus precios sintéticos en `float64`, más cómodo, y por eso pasaba
+   mientras el sistema real llevaba semanas roto. Ahora los convierte a
+   `float32` a propósito: con el arreglo deshecho, la prueba falla.
+3. **Serializar es un borde del sistema.** `portfolio.a_json` recorre la
+   estructura entera y convierte tipos de numpy, fechas, NaN e infinitos, en vez
+   de confiar en que lo que se guarda ya sea JSON válido.
+
 ## El motor está probado, el modelo no
 
 `tests/test_pipeline.py` verifica tres cosas sobre datos sintéticos:
