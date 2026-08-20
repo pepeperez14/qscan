@@ -33,8 +33,8 @@ def main() -> int:
     TMP.mkdir(parents=True)
 
     hoy = data._ahora()
-    fechas = pd.bdate_range(hoy - pd.Timedelta(days=400), hoy)
-    viejas = pd.bdate_range(hoy - pd.Timedelta(days=400), hoy - pd.Timedelta(days=90))
+    fechas = pd.bdate_range(hoy - pd.Timedelta(days=1000), hoy)
+    viejas = pd.bdate_range(hoy - pd.Timedelta(days=1000), hoy - pd.Timedelta(days=90))
 
     filas = []
     for s in [f"US{i:03d}" for i in range(50)]:          # al día
@@ -47,12 +47,21 @@ def main() -> int:
     store = data.PriceStore(TMP / "prices.parquet")
     store.save(pd.concat(filas, ignore_index=True))
 
-    # universo: los 50 conocidos + el rezagado + 20 europeos recién llegados
+    # y los "al día pero cortos": actualizados cada mañana, pero con seis
+    # semanas de historia. Es el caso exacto de las 278 acciones europeas.
+    recientes = pd.bdate_range(hoy - pd.Timedelta(days=42), hoy)
+    cortos = [f"EUCORTO{i:02d}.MC" for i in range(10)]
+    filas2 = [pd.DataFrame({"symbol": s, "date": recientes, "open": 10.0,
+                            "high": 10.0, "low": 10.0, "close": 10.0,
+                            "volume": 1e6}) for s in cortos]
+    store.save(pd.concat([store.load()] + filas2, ignore_index=True))
+
+    # universo: los 50 conocidos + el rezagado + los cortos + 20 europeos nuevos
     europeos = [f"EU{i:03d}.MC" for i in range(20)]
     uni = pd.DataFrame({
-        "symbol": [f"US{i:03d}" for i in range(50)] + ["REZAGADO"] + europeos,
+        "symbol": [f"US{i:03d}" for i in range(50)] + ["REZAGADO"] + cortos + europeos,
         "name": "x",
-        "group": ["equity_us"] * 51 + ["equity_eu"] * 20,
+        "group": ["equity_us"] * 51 + ["equity_eu"] * (len(cortos) + 20),
     })
 
     peticiones = []
@@ -93,6 +102,11 @@ def main() -> int:
             fails.append(f"{len(faltan_eu)} europeos nuevos sin historia entera")
         if "REZAGADO" not in pedidos_completos:
             fails.append("el símbolo rezagado no recibe historia entera")
+        faltan_cortos = [s for s in cortos if s not in pedidos_completos]
+        if faltan_cortos:
+            fails.append(f"{len(faltan_cortos)} símbolos al día pero con seis "
+                         f"semanas de historia no reciben historia entera: es "
+                         f"el caso de las acciones europeas")
         colados = [s for s in pedidos_completos if s.startswith("US")]
         if colados:
             fails.append(f"{len(colados)} símbolos al día piden historia entera "
@@ -108,11 +122,25 @@ def main() -> int:
 
     # y tras la actualización, los nuevos tienen historia de verdad
     df = store.load()
-    n_eu = df[df.symbol.isin(europeos)].groupby("symbol").size()
+    n_eu = df[df.symbol.isin(europeos + cortos)].groupby("symbol").size()
     print(f"filas por europeo tras actualizar: mínimo {int(n_eu.min())}")
     if int(n_eu.min()) < 250:
         fails.append(f"los europeos se quedan con {int(n_eu.min())} sesiones: "
                      f"no llegan para las features de doce meses")
+
+    # y no se les vuelve a pedir al día siguiente: si siguen cortos es que son
+    # jóvenes de verdad, y pedir ocho años cada día no los hará más viejos
+    peticiones.clear()
+    data.fetch_yahoo = fetch_falso
+    try:
+        data.update(uni, store, years=8, recarga_completa=False, usar_reserva=False)
+    finally:
+        data.fetch_yahoo = real
+    completas2 = [(s, d) for s, d in peticiones if (hoy - d).days > 300]
+    n2 = len(completas2[0][0]) if completas2 else 0
+    print(f"en la segunda vuelta piden historia entera: {n2} símbolos")
+    if n2 > 5:
+        fails.append(f"{n2} símbolos vuelven a pedir ocho años al día siguiente")
 
     print()
     if fails:

@@ -324,8 +324,17 @@ Europa entraron al universo y se quedaron fuera del ranking.
 
 La descarga se reparte ahora en dos:
 
-- **al día** (última cotización de hace menos de 30 días): tramo incremental;
-- **historia entera**: los que el almacén no conoce y los rezagados.
+- **al día**: tramo incremental;
+- **historia entera**: los que el almacén no conoce, los rezagados, y —esto se
+  descubrió una versión más tarde— los que están al día pero **cortos**.
+
+Ese tercer caso era el que seguía dejando a Europa fuera. Las 278 acciones se
+actualizaban cada mañana con toda normalidad, así que su última cotización era
+la de ayer y entraban en el saco incremental; pero seguían teniendo seis semanas
+de historia, y con eso no salen `ret_12m` ni `slope_12m`. Estar al día no basta:
+un símbolo necesita historia **reciente y suficiente**. Por debajo de 400
+sesiones se vuelve a pedir la historia entera, y se anota la petición para no
+repetirla a diario con las empresas que simplemente son jóvenes.
 
 Y de paso arregla algo más silencioso: el inicio incremental era el **mínimo** de
 todas las últimas fechas del almacén, así que un solo símbolo rezagado obligaba

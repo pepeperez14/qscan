@@ -465,6 +465,47 @@ def resumen_descarga(nuevos: list[pd.DataFrame], pedidos: int,
 
 DIAS_REINTENTO_MUERTOS = 30
 
+# Por debajo de esto no salen las features de doce meses (ret_12m, slope_12m,
+# donch_252): unas 18 meses de sesiones hábiles con margen para huecos.
+MIN_SESIONES_HISTORIA = 400
+DIAS_ENTRE_PETICIONES_HISTORIA = 30
+
+
+def leer_marcas(ruta: Path) -> dict[str, str]:
+    """Fecha en que se pidió por última vez la historia completa de cada símbolo."""
+    if not ruta.exists():
+        return {}
+    try:
+        d = pd.read_csv(ruta)
+        return dict(zip(d["symbol"].astype(str), d["fecha"].astype(str)))
+    except Exception:
+        return {}
+
+
+def escribir_marcas(ruta: Path, marcas: dict[str, str]) -> None:
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame({"symbol": list(marcas), "fecha": list(marcas.values())},
+                 columns=["symbol", "fecha"]).to_csv(ruta, index=False)
+
+
+def marcas_vigentes(marcas: dict[str, str], hoy: pd.Timestamp | None = None,
+                    dias: int = DIAS_ENTRE_PETICIONES_HISTORIA) -> set[str]:
+    """A quién NO hace falta volver a pedirle la historia entera todavía.
+
+    Sin esto, una empresa que salió a bolsa hace tres meses nunca llegará a las
+    400 sesiones y pediríamos sus ocho años TODOS los días, para siempre. Se
+    intenta una vez y se anota; si sigue corta, es que es joven de verdad.
+    """
+    hoy = hoy if hoy is not None else _ahora()
+    out = set()
+    for s, f in marcas.items():
+        try:
+            if (hoy - pd.Timestamp(f)).days < dias:
+                out.add(s)
+        except (ValueError, TypeError):
+            continue
+    return out
+
 
 def _ahora() -> pd.Timestamp:
     return pd.Timestamp.now(tz="UTC").tz_localize(None).normalize()
@@ -491,8 +532,11 @@ def leer_muertos(ruta: Path) -> dict[str, dict]:
 
 def escribir_muertos(ruta: Path, muertos: dict[str, dict]) -> None:
     ruta.parent.mkdir(parents=True, exist_ok=True)
+    # con el diccionario vacío hay que escribir la cabecera igualmente: un CSV
+    # de cero bytes no se puede releer y ensucia el log con un aviso cada día
     pd.DataFrame([{"symbol": s, "desde": v["desde"], "fallos": v["fallos"]}
-                  for s, v in muertos.items()]).to_csv(ruta, index=False)
+                  for s, v in muertos.items()],
+                 columns=["symbol", "desde", "fallos"]).to_csv(ruta, index=False)
 
 
 def actualizar_muertos(muertos: dict[str, dict], pedidos: list[str],
@@ -601,11 +645,30 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
         if len(conocidos) < len(syms) * 0.5:
             return [], syms, full_start          # almacén casi vacío
         corte = _ahora() - pd.Timedelta(days=30)
-        al_dia = [s for s in conocidos if pd.Timestamp(last[s]) >= corte]
+        # Estar al día NO basta. Las 278 acciones europeas se actualizaban cada
+        # mañana con toda normalidad, así que su última fecha era la de ayer y
+        # entraban en el saco incremental — pero sólo tenían seis semanas de
+        # historia, y las features de doce meses no salen con eso. Llevaban dos
+        # versiones "al día" y fuera del ranking. Un símbolo necesita historia
+        # RECIENTE y SUFICIENTE.
+        cortos = {s for s in conocidos
+                  if int(n_filas.get(s, 0)) < MIN_SESIONES_HISTORIA
+                  and s not in ya_pedidos}
+        if cortos:
+            log.info("%d símbolos con menos de %d sesiones: se les vuelve a "
+                     "pedir la historia entera", len(cortos), MIN_SESIONES_HISTORIA)
+        al_dia = [s for s in conocidos
+                  if pd.Timestamp(last[s]) >= corte and s not in cortos]
         rezagados = [s for s in syms if s not in set(al_dia)]
         inicio = (min(pd.Timestamp(last[s]) for s in al_dia)
                   - pd.Timedelta(days=lookback_days)) if al_dia else full_start
         return al_dia, rezagados, inicio
+
+    n_filas = (existing.groupby("symbol").size() if not existing.empty
+               else pd.Series(dtype=int))
+    ruta_marcas = store.path.parent / ".historia_pedida.csv"
+    marcas = leer_marcas(ruta_marcas)
+    ya_pedidos = marcas_vigentes(marcas)
 
     ruta_muertos = store.path.parent / ".simbolos_muertos.csv"
     muertos = leer_muertos(ruta_muertos)
@@ -622,9 +685,12 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
                      len(al_dia), inicio.date())
             new.append(fetch_yahoo(al_dia, inicio, sin_rescate=vigentes))
         if completos:
-            log.info("historia entera para %d símbolos (nuevos en el universo o "
-                     "con el almacén rezagado)", len(completos))
+            log.info("historia entera para %d símbolos (nuevos, rezagados o con "
+                     "historia insuficiente)", len(completos))
             new.append(fetch_yahoo(completos, full_start, sin_rescate=vigentes))
+            hoy_txt = str(_ahora().date())
+            marcas.update({s: hoy_txt for s in completos})
+            escribir_marcas(ruta_marcas, marcas)
     if crypto_syms:
         al_dia_c, completos_c, inicio_c = repartir(crypto_syms)
         if al_dia_c:
