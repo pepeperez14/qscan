@@ -1,14 +1,14 @@
 {
  "capital_inicial": 40000.0,
  "inicio": "2026-08-14",
- "ultima_fecha": "2026-08-19",
+ "ultima_fecha": "2026-08-20",
  "escenarios": {
   "corto": {
    "ultimo_rebalanceo": "2026-08-19",
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
-     "efectivo": 0.0,
+     "efectivo": 2641.688232421875,
      "posiciones": {
       "ASTY": {
        "unidades": 377.01678466796875,
@@ -36,10 +36,6 @@
       },
       "PAXG/USD": {
        "unidades": 0.7034267783164978,
-       "coste_eur": 2665.67
-      },
-      "USDTRY=X": {
-       "unidades": 64.42134094238281,
        "coste_eur": 2665.67
       },
       "^STOXX": {
@@ -71,103 +67,9 @@
        "coste_eur": 2665.6200000000135
       }
      },
-     "costes_acumulados": 53.70042419433594,
-     "ordenes_pendientes": [
-      {
-       "symbol": "ASTY",
-       "lado": "venta"
-      },
-      {
-       "symbol": "BXC",
-       "lado": "venta"
-      },
-      {
-       "symbol": "AYA",
-       "lado": "venta"
-      },
-      {
-       "symbol": "LOFF",
-       "lado": "venta"
-      },
-      {
-       "symbol": "BWX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "USDTRY=X",
-       "lado": "venta"
-      },
-      {
-       "symbol": "^STOXX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "MATV",
-       "lado": "venta"
-      },
-      {
-       "symbol": "APPS",
-       "lado": "venta"
-      },
-      {
-       "symbol": "RCEL",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SNOU",
-       "lado": "venta"
-      },
-      {
-       "symbol": "HNST",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SPAX",
-       "lado": "compra",
-       "importe_eur": 5818.89
-      },
-      {
-       "symbol": "STIM",
-       "lado": "compra",
-       "importe_eur": 3929.51
-      },
-      {
-       "symbol": "QMCO",
-       "lado": "compra",
-       "importe_eur": 3877.44
-      },
-      {
-       "symbol": "P",
-       "lado": "compra",
-       "importe_eur": 2139.38
-      },
-      {
-       "symbol": "ZENA",
-       "lado": "compra",
-       "importe_eur": 2911.63
-      },
-      {
-       "symbol": "VREX",
-       "lado": "compra",
-       "importe_eur": 1824.72
-      },
-      {
-       "symbol": "NEOV",
-       "lado": "compra",
-       "importe_eur": 3702.16
-      },
-      {
-       "symbol": "SMJF",
-       "lado": "compra",
-       "importe_eur": 2605.45
-      },
-      {
-       "symbol": "ALMR",
-       "lado": "compra",
-       "importe_eur": 2215.4
-      }
-     ],
-     "creadas_el": "2026-08-19",
+     "costes_acumulados": 56.022430419921875,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "USDBRL=X",
@@ -194,7 +96,7 @@
      "ahorro_acumulado": 6.05
     },
     "etoro": {
-     "efectivo": 0.04999999998653948,
+     "efectivo": 2625.606689453125,
      "posiciones": {
       "ASTY": {
        "unidades": 375.2339782714844,
@@ -222,10 +124,6 @@
       },
       "PAXG/USD": {
        "unidades": 0.6965764164924622,
-       "coste_eur": 2651.5299999999997
-      },
-      "USDTRY=X": {
-       "unidades": 64.0636215209961,
        "coste_eur": 2651.5299999999997
       },
       "^STOXX": {
@@ -257,103 +155,9 @@
        "coste_eur": 2651.5299999999997
       }
      },
-     "costes_acumulados": 270.4010314941406,
-     "ordenes_pendientes": [
-      {
-       "symbol": "ASTY",
-       "lado": "venta"
-      },
-      {
-       "symbol": "BXC",
-       "lado": "venta"
-      },
-      {
-       "symbol": "AYA",
-       "lado": "venta"
-      },
-      {
-       "symbol": "LOFF",
-       "lado": "venta"
-      },
-      {
-       "symbol": "BWX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "USDTRY=X",
-       "lado": "venta"
-      },
-      {
-       "symbol": "^STOXX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "MATV",
-       "lado": "venta"
-      },
-      {
-       "symbol": "APPS",
-       "lado": "venta"
-      },
-      {
-       "symbol": "RCEL",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SNOU",
-       "lado": "venta"
-      },
-      {
-       "symbol": "HNST",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SPAX",
-       "lado": "compra",
-       "importe_eur": 5787.28
-      },
-      {
-       "symbol": "STIM",
-       "lado": "compra",
-       "importe_eur": 3908.16
-      },
-      {
-       "symbol": "QMCO",
-       "lado": "compra",
-       "importe_eur": 3856.37
-      },
-      {
-       "symbol": "P",
-       "lado": "compra",
-       "importe_eur": 2127.75
-      },
-      {
-       "symbol": "ZENA",
-       "lado": "compra",
-       "importe_eur": 2895.81
-      },
-      {
-       "symbol": "VREX",
-       "lado": "compra",
-       "importe_eur": 1814.81
-      },
-      {
-       "symbol": "NEOV",
-       "lado": "compra",
-       "importe_eur": 3682.05
-      },
-      {
-       "symbol": "SMJF",
-       "lado": "compra",
-       "importe_eur": 2591.3
-      },
-      {
-       "symbol": "ALMR",
-       "lado": "compra",
-       "importe_eur": 2203.36
-      }
-     ],
-     "creadas_el": "2026-08-19",
+     "costes_acumulados": 274.17303466796875,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "GC=F",

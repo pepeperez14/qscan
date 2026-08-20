@@ -149,3 +149,5 @@ fecha,escenario,broker,symbol,lado,importe_eur,coste_eur
 2026-08-17,combinada,etoro,BXC,compra,1990.0,1.8
 2026-08-17,combinada,etoro,AYA,compra,1990.0,1.8
 2026-08-17,combinada,etoro,ALOT,compra,1990.0,1.8
+2026-08-20,corto,trade_republic,USDTRY=X,venta,2642.68994140625,1.0
+2026-08-20,corto,etoro,USDTRY=X,venta,2627.360107421875,1.8
