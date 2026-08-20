@@ -549,13 +549,32 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
     crypto_syms = universe.loc[universe.group == "crypto", "symbol"].tolist()
     other_syms = universe.loc[universe.group != "crypto", "symbol"].tolist()
 
-    def _start_for(syms: list[str]) -> pd.Timestamp:
+    def repartir(syms: list[str]) -> tuple[list[str], list[str], pd.Timestamp]:
+        """Separa los que necesitan historia entera de los que sólo el último tramo.
+
+        Antes había UNA sola fecha de inicio para todo el mundo, y eso dejó a las
+        278 acciones europeas —recién incorporadas al universo— con seis semanas
+        de historia: sólo 99 de 277 llegaron al panel, porque las features de
+        doce meses no se pueden calcular sobre mes y medio de precios. Un símbolo
+        que el almacén no conoce necesita su historia completa, no el tramo
+        incremental que sirve para los demás.
+
+        Se aplica lo mismo a los rezagados: un símbolo que lleva semanas sin
+        actualizarse no se arregla pidiendo los últimos siete días. Antes el
+        inicio incremental era el MÍNIMO de todas las últimas fechas, así que un
+        solo rezagado obligaba a rebajar la ventana de los doce mil restantes.
+        """
         if recarga_completa:
-            return full_start
-        known = [last[s] for s in syms if s in last.index]
-        if len(known) < len(syms) * 0.9:
-            return full_start
-        return min(known) - pd.Timedelta(days=lookback_days)
+            return [], syms, full_start
+        conocidos = [s for s in syms if s in last.index]
+        if len(conocidos) < len(syms) * 0.5:
+            return [], syms, full_start          # almacén casi vacío
+        corte = _ahora() - pd.Timedelta(days=30)
+        al_dia = [s for s in conocidos if pd.Timestamp(last[s]) >= corte]
+        rezagados = [s for s in syms if s not in set(al_dia)]
+        inicio = (min(pd.Timestamp(last[s]) for s in al_dia)
+                  - pd.Timedelta(days=lookback_days)) if al_dia else full_start
+        return al_dia, rezagados, inicio
 
     ruta_muertos = store.path.parent / ".simbolos_muertos.csv"
     muertos = leer_muertos(ruta_muertos)
@@ -566,10 +585,21 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
 
     new = []
     if other_syms:
-        new.append(fetch_yahoo(other_syms, _start_for(other_syms),
-                               sin_rescate=vigentes))
+        al_dia, completos, inicio = repartir(other_syms)
+        if al_dia:
+            log.info("descarga incremental de %d símbolos desde %s",
+                     len(al_dia), inicio.date())
+            new.append(fetch_yahoo(al_dia, inicio, sin_rescate=vigentes))
+        if completos:
+            log.info("historia entera para %d símbolos (nuevos en el universo o "
+                     "con el almacén rezagado)", len(completos))
+            new.append(fetch_yahoo(completos, full_start, sin_rescate=vigentes))
     if crypto_syms:
-        new.append(fetch_crypto(crypto_syms, _start_for(crypto_syms)))
+        al_dia_c, completos_c, inicio_c = repartir(crypto_syms)
+        if al_dia_c:
+            new.append(fetch_crypto(al_dia_c, inicio_c))
+        if completos_c:
+            new.append(fetch_crypto(completos_c, full_start))
 
     nuevos = [n for n in new if not n.empty]
     max_previo = pd.to_datetime(existing["date"]).max() if not existing.empty else None
@@ -600,7 +630,9 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
             log.warning("faltan %d de %d símbolos tras la fuente principal "
                         "(sin_avance=%s): se pide a la reserva sólo lo que falta",
                         len(faltantes), len(other_syms), sin_avance)
-            reserva = fetch_stooq(faltantes, _start_for(other_syms))
+            # a la reserva se le pide historia completa: los que faltan suelen
+            # ser justo los que el almacén no conoce o tiene rezagados
+            reserva = fetch_stooq(faltantes, full_start)
             # En una recarga completa no se empalma: la historia vieja de esos
             # símbolos se va a descartar entera unas líneas más abajo, así que
             # la serie de la reserva no se pega a nada — es la serie entera, en

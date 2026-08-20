@@ -283,6 +283,25 @@ debajo del 75% se emite un ERROR. El número de filas del almacén no vale para
 esto: sigue creciendo aunque medio universo se haya quedado sin cotización de
 hoy. `tests/test_descarga.py` reproduce el escenario completo.
 
+## Un símbolo nuevo necesita su historia, no el último tramo
+
+Al recuperar la renta variable europea entraron 278 acciones nuevas al universo.
+De 277 con precios, sólo **99** llegaron al panel. La razón: había **una sola
+fecha de inicio para todo el mundo**, así que las europeas se descargaron con la
+misma ventana incremental que el resto —seis semanas— y las features de doce
+meses no se pueden calcular sobre mes y medio de cotizaciones. Dos tercios de
+Europa entraron al universo y se quedaron fuera del ranking.
+
+La descarga se reparte ahora en dos:
+
+- **al día** (última cotización de hace menos de 30 días): tramo incremental;
+- **historia entera**: los que el almacén no conoce y los rezagados.
+
+Y de paso arregla algo más silencioso: el inicio incremental era el **mínimo** de
+todas las últimas fechas del almacén, así que un solo símbolo rezagado obligaba
+a bajar la ventana para los doce mil restantes. Ahora los rezagados van por su
+lado y no arrastran a nadie.
+
 ## Europa nunca estuvo en el universo
 
 Los seis índices europeos fallaban **todos a la vez** con `HTTP Error 403:
