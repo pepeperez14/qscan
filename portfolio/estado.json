@@ -1,7 +1,7 @@
 {
  "capital_inicial": 40000.0,
  "inicio": "2026-08-14",
- "ultima_fecha": "2026-08-20",
+ "ultima_fecha": "2026-08-19",
  "escenarios": {
   "corto": {
    "ultimo_rebalanceo": "2026-08-19",
