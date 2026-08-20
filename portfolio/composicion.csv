@@ -1,76 +1,76 @@
 escenario,symbol,nombre,grupo,valor_eur,coste_eur,peso_pct,plusvalia_eur,plusvalia_pct
-corto,APPS,"Digital Turbine, Inc. - Common Stock",equity_us,2665.67,2665.67,6.67,0.0,0.0
-corto,ASTY,,,2665.67,2665.67,6.67,0.0,0.0
-corto,AYA,Aya Gold & Silver Inc. - Common Shares,equity_us,2665.67,2665.67,6.67,0.0,0.0
-corto,BWX,BWX,bond,2665.67,2665.67,6.67,0.0,0.0
-corto,BXC,Bluelinx Holdings Inc. Common Stock,equity_us,2665.67,2665.67,6.67,0.0,0.0
-corto,GC=F,GC=F,commodity,2665.67,2665.67,6.67,0.0,0.0
-corto,HNST,"The Honest Company, Inc. - Common Stock",equity_us,2665.62,2665.62,6.67,0.0,0.0
-corto,LIFE,Ethos Technologies Inc. - Class A Common Sto,equity_us,2665.67,2665.67,6.67,0.0,0.0
-corto,LOFF,,,2665.67,2665.67,6.67,0.0,0.0
-corto,MATV,"Mativ Holdings, Inc. Common Stock",equity_us,2665.67,2665.67,6.67,0.0,0.0
-corto,PAXG/USD,PAXG/USD,crypto,2665.67,2665.67,6.67,0.0,0.0
-corto,RCEL,"Avita Medical, Inc. - Common Stock",equity_us,2665.67,2665.67,6.67,0.0,0.0
-corto,SNOU,,,2665.67,2665.67,6.67,0.0,0.0
-corto,^STOXX,^STOXX,index,2665.67,2665.67,6.67,0.0,0.0
-corto,· efectivo,sin invertir,,2641.68994140625,,6.610000133514404,,
-medio,ALOT,"AstroNova, Inc. - Common Stock",equity_us,1999.0,1999.0,5.0,0.0,0.0
-medio,ANGL,ANGL,bond,1999.0,1999.0,5.0,0.0,0.0
-medio,BFLY,"Butterfly Network, Inc. Class A Common Stock",equity_us,1999.0,1999.0,5.0,0.0,0.0
-medio,BWET,Breakwave Tanker Shipping ETF,etf,1999.0,1999.0,5.0,0.0,0.0
-medio,CBRL,"Cracker Barrel Old Country Store, Inc. - Com",equity_us,1999.0,1999.0,5.0,0.0,0.0
-medio,CDNA,"CareDx, Inc. - Common Stock",equity_us,1999.0,1999.0,5.0,0.0,0.0
-medio,CLYM,"Climb Bio, Inc. - Common Stock",equity_us,1999.0,1999.0,5.0,0.0,0.0
-medio,COAG,"Hemab Therapeutics Holdings, Inc. - Common S",equity_us,1999.0,1999.0,5.0,0.0,0.0
-medio,CRWL,,,1999.0,1999.0,5.0,0.0,0.0
-medio,HYPE/USD,HYPE/USD,crypto,1999.0,1999.0,5.0,0.0,0.0
-medio,NTAP,"NetApp, Inc. - Common Stock",equity_us,1999.0,1999.0,5.0,0.0,0.0
-medio,ORKA,"Oruka Therapeutics, Inc. - Common Stock",equity_us,1999.0,1999.0,5.0,0.0,0.0
-medio,PAYS,"Paysign, Inc. - Common Stock",equity_us,1999.0,1999.0,5.0,0.0,0.0
-medio,PLSE,"Pulse Biosciences, Inc - Common Stock",equity_us,1999.0,1999.0,5.0,0.0,0.0
-medio,RRGB,"Red Robin Gourmet Burgers, Inc. - Common Sto",equity_us,1999.0,1999.0,5.0,0.0,0.0
-medio,SB=F,SB=F,commodity,1999.0,1999.0,5.0,0.0,0.0
-medio,SNOY,YieldMax SNOW Option Income Strategy ETF,etf,1999.0,1999.0,5.0,0.0,0.0
-medio,TXG,"10x Genomics, Inc. - Common Stock",equity_us,1999.0,1999.0,5.0,0.0,0.0
-medio,USDCHF=X,USDCHF=X,fx,1999.0,1999.0,5.0,0.0,0.0
-medio,^IBEX,^IBEX,index,1999.0,1999.0,5.0,0.0,0.0
-largo,APGE,"Apogee Therapeutics, Inc. - Common Stock",equity_us,1999.0,1999.0,5.02,0.0,0.0
-largo,ATEX,Anterix Inc. - Common Stock,equity_us,1999.0,1999.0,5.02,0.0,0.0
-largo,BIL,BIL,bond,1999.0,1999.0,5.02,0.0,0.0
-largo,BWET,Breakwave Tanker Shipping ETF,etf,1999.0,1999.0,5.02,0.0,0.0
-largo,CDNA,"CareDx, Inc. - Common Stock",equity_us,1999.0,1999.0,5.02,0.0,0.0
-largo,CHPS,Xtrackers Semiconductor Select Equity ETF,etf,1999.0,1999.0,5.02,0.0,0.0
-largo,DFTX,"Definium Therapeutics, Inc.  - Common Shares",equity_us,1999.0,1999.0,5.02,0.0,0.0
-largo,DLLL,,,1999.0,1999.0,5.02,0.0,0.0
-largo,DNTH,"Dianthus Therapeutics, Inc. - Common Stock",equity_us,1999.0,1999.0,5.02,0.0,0.0
-largo,NESR,National Energy Services Reunited Corp - Ord,equity_us,1999.0,1999.0,5.02,0.0,0.0
-largo,ORKA,"Oruka Therapeutics, Inc. - Common Stock",equity_us,1999.0,1999.0,5.02,0.0,0.0
-largo,RVMD,"Revolution Medicines, Inc. - Common Stock",equity_us,1999.0,1999.0,5.02,0.0,0.0
-largo,SPHR,Sphere Entertainment Co. Class A Common Stoc,equity_us,1999.0,1999.0,5.02,0.0,0.0
-largo,SYRE,"Spyre Therapeutics, Inc. - Common Stock",equity_us,1999.0,1999.0,5.02,0.0,0.0
-largo,TWST,Twist Bioscience Corporation - Common Stock,equity_us,1999.0,1999.0,5.02,0.0,0.0
-largo,TXG,"10x Genomics, Inc. - Common Stock",equity_us,1999.0,1999.0,5.02,0.0,0.0
-largo,USDJPY=X,USDJPY=X,fx,1969.77001953125,1999.0,4.940000057220459,-29.229999542236328,-1.4600000381469727
-largo,USO,USO,commodity,1999.0,1999.0,5.02,0.0,0.0
-largo,ZEC/USD,ZEC/USD,crypto,1999.0,1999.0,5.02,0.0,0.0
-largo,^N225,^N225,index,1895.2099609375,1999.0,4.760000228881836,-103.79000091552734,-5.190000057220459
-combinada,ALOT,"AstroNova, Inc. - Common Stock",equity_us,1999.0,1999.0,5.02,0.0,0.0
-combinada,ASTY,,,1999.0,1999.0,5.02,0.0,0.0
-combinada,ATEX,Anterix Inc. - Common Stock,equity_us,1999.0,1999.0,5.02,0.0,0.0
-combinada,AYA,Aya Gold & Silver Inc. - Common Shares,equity_us,1999.0,1999.0,5.02,0.0,0.0
-combinada,BIL,BIL,bond,1999.0,1999.0,5.02,0.0,0.0
-combinada,BWET,Breakwave Tanker Shipping ETF,etf,1999.0,1999.0,5.02,0.0,0.0
-combinada,BXC,Bluelinx Holdings Inc. Common Stock,equity_us,1999.0,1999.0,5.02,0.0,0.0
-combinada,CDNA,"CareDx, Inc. - Common Stock",equity_us,1999.0,1999.0,5.02,0.0,0.0
-combinada,CHPS,Xtrackers Semiconductor Select Equity ETF,etf,1999.0,1999.0,5.02,0.0,0.0
-combinada,DFTX,"Definium Therapeutics, Inc.  - Common Shares",equity_us,1999.0,1999.0,5.02,0.0,0.0
-combinada,DLLL,,,1999.0,1999.0,5.02,0.0,0.0
-combinada,DNTH,"Dianthus Therapeutics, Inc. - Common Stock",equity_us,1999.0,1999.0,5.02,0.0,0.0
-combinada,NESR,National Energy Services Reunited Corp - Ord,equity_us,1999.0,1999.0,5.02,0.0,0.0
-combinada,RVMD,"Revolution Medicines, Inc. - Common Stock",equity_us,1999.0,1999.0,5.02,0.0,0.0
-combinada,SYRE,"Spyre Therapeutics, Inc. - Common Stock",equity_us,1999.0,1999.0,5.02,0.0,0.0
-combinada,TXG,"10x Genomics, Inc. - Common Stock",equity_us,1999.0,1999.0,5.02,0.0,0.0
-combinada,USDJPY=X,USDJPY=X,fx,1969.77001953125,1999.0,4.940000057220459,-29.229999542236328,-1.4600000381469727
-combinada,USO,USO,commodity,1999.0,1999.0,5.02,0.0,0.0
-combinada,ZEC/USD,ZEC/USD,crypto,1999.0,1999.0,5.02,0.0,0.0
-combinada,^N225,^N225,index,1895.2099609375,1999.0,4.760000228881836,-103.79000091552734,-5.190000057220459
+corto,APPS,"Digital Turbine, Inc. - Common Stock",equity_us,2665.67,2665.67,6.66,0.0,0.0
+corto,ASTY,,,2665.67,2665.67,6.66,0.0,0.0
+corto,AYA,Aya Gold & Silver Inc. - Common Shares,equity_us,2665.67,2665.67,6.66,0.0,0.0
+corto,BWX,BWX,bond,2665.67,2665.67,6.66,0.0,0.0
+corto,BXC,Bluelinx Holdings Inc. Common Stock,equity_us,2665.67,2665.67,6.66,0.0,0.0
+corto,GC=F,GC=F,commodity,2728.320068359375,2665.67,6.809999942779541,62.650001525878906,2.3499999046325684
+corto,HNST,"The Honest Company, Inc. - Common Stock",equity_us,2665.62,2665.62,6.66,0.0,0.0
+corto,LIFE,Ethos Technologies Inc. - Class A Common Sto,equity_us,2665.67,2665.67,6.66,0.0,0.0
+corto,LOFF,,,2665.67,2665.67,6.66,0.0,0.0
+corto,MATV,"Mativ Holdings, Inc. Common Stock",equity_us,2665.67,2665.67,6.66,0.0,0.0
+corto,PAXG/USD,PAXG/USD,crypto,2687.919921875,2665.67,6.710000038146973,22.25,0.8299999833106995
+corto,RCEL,"Avita Medical, Inc. - Common Stock",equity_us,2665.67,2665.67,6.66,0.0,0.0
+corto,SNOU,,,2665.67,2665.67,6.66,0.0,0.0
+corto,^STOXX,^STOXX,index,2665.67,2665.67,6.66,0.0,0.0
+corto,· efectivo,sin invertir,,2641.69,,6.6,,
+medio,ALOT,"AstroNova, Inc. - Common Stock",equity_us,1999.0,1999.0,4.95,0.0,0.0
+medio,ANGL,ANGL,bond,1999.0,1999.0,4.95,0.0,0.0
+medio,BFLY,"Butterfly Network, Inc. Class A Common Stock",equity_us,1999.0,1999.0,4.95,0.0,0.0
+medio,BWET,Breakwave Tanker Shipping ETF,etf,1999.0,1999.0,4.95,0.0,0.0
+medio,CBRL,"Cracker Barrel Old Country Store, Inc. - Com",equity_us,1999.0,1999.0,4.95,0.0,0.0
+medio,CDNA,"CareDx, Inc. - Common Stock",equity_us,1999.0,1999.0,4.95,0.0,0.0
+medio,CLYM,"Climb Bio, Inc. - Common Stock",equity_us,1999.0,1999.0,4.95,0.0,0.0
+medio,COAG,"Hemab Therapeutics Holdings, Inc. - Common S",equity_us,1999.0,1999.0,4.95,0.0,0.0
+medio,CRWL,,,1999.0,1999.0,4.95,0.0,0.0
+medio,HYPE/USD,HYPE/USD,crypto,2455.6201171875,1999.0,6.079999923706055,456.6199951171875,22.84000015258789
+medio,NTAP,"NetApp, Inc. - Common Stock",equity_us,1999.0,1999.0,4.95,0.0,0.0
+medio,ORKA,"Oruka Therapeutics, Inc. - Common Stock",equity_us,1999.0,1999.0,4.95,0.0,0.0
+medio,PAYS,"Paysign, Inc. - Common Stock",equity_us,1999.0,1999.0,4.95,0.0,0.0
+medio,PLSE,"Pulse Biosciences, Inc - Common Stock",equity_us,1999.0,1999.0,4.95,0.0,0.0
+medio,RRGB,"Red Robin Gourmet Burgers, Inc. - Common Sto",equity_us,1999.0,1999.0,4.95,0.0,0.0
+medio,SB=F,SB=F,commodity,1999.0,1999.0,4.95,0.0,0.0
+medio,SNOY,YieldMax SNOW Option Income Strategy ETF,etf,1999.0,1999.0,4.95,0.0,0.0
+medio,TXG,"10x Genomics, Inc. - Common Stock",equity_us,1999.0,1999.0,4.95,0.0,0.0
+medio,USDCHF=X,USDCHF=X,fx,1949.6700439453125,1999.0,4.829999923706055,-49.33000183105469,-2.4700000286102295
+medio,^IBEX,^IBEX,index,1999.0,1999.0,4.95,0.0,0.0
+largo,APGE,"Apogee Therapeutics, Inc. - Common Stock",equity_us,1999.0,1999.0,4.99,0.0,0.0
+largo,ATEX,Anterix Inc. - Common Stock,equity_us,1999.0,1999.0,4.99,0.0,0.0
+largo,BIL,BIL,bond,1999.0,1999.0,4.99,0.0,0.0
+largo,BWET,Breakwave Tanker Shipping ETF,etf,1999.0,1999.0,4.99,0.0,0.0
+largo,CDNA,"CareDx, Inc. - Common Stock",equity_us,1999.0,1999.0,4.99,0.0,0.0
+largo,CHPS,Xtrackers Semiconductor Select Equity ETF,etf,1999.0,1999.0,4.99,0.0,0.0
+largo,DFTX,"Definium Therapeutics, Inc.  - Common Shares",equity_us,1999.0,1999.0,4.99,0.0,0.0
+largo,DLLL,,,1999.0,1999.0,4.99,0.0,0.0
+largo,DNTH,"Dianthus Therapeutics, Inc. - Common Stock",equity_us,1999.0,1999.0,4.99,0.0,0.0
+largo,NESR,National Energy Services Reunited Corp - Ord,equity_us,1999.0,1999.0,4.99,0.0,0.0
+largo,ORKA,"Oruka Therapeutics, Inc. - Common Stock",equity_us,1999.0,1999.0,4.99,0.0,0.0
+largo,RVMD,"Revolution Medicines, Inc. - Common Stock",equity_us,1999.0,1999.0,4.99,0.0,0.0
+largo,SPHR,Sphere Entertainment Co. Class A Common Stoc,equity_us,1999.0,1999.0,4.99,0.0,0.0
+largo,SYRE,"Spyre Therapeutics, Inc. - Common Stock",equity_us,1999.0,1999.0,4.99,0.0,0.0
+largo,TWST,Twist Bioscience Corporation - Common Stock,equity_us,1999.0,1999.0,4.99,0.0,0.0
+largo,TXG,"10x Genomics, Inc. - Common Stock",equity_us,1999.0,1999.0,4.99,0.0,0.0
+largo,USDJPY=X,USDJPY=X,fx,1972.7900390625,1999.0,4.920000076293945,-26.209999084472656,-1.309999942779541
+largo,USO,USO,commodity,1999.0,1999.0,4.99,0.0,0.0
+largo,ZEC/USD,ZEC/USD,crypto,2243.719970703125,1999.0,5.599999904632568,244.72000122070312,12.239999771118164
+largo,^N225,^N225,index,1900.1700439453125,1999.0,4.739999771118164,-98.83000183105469,-4.940000057220459
+combinada,ALOT,"AstroNova, Inc. - Common Stock",equity_us,1999.0,1999.0,4.99,0.0,0.0
+combinada,ASTY,,,1999.0,1999.0,4.99,0.0,0.0
+combinada,ATEX,Anterix Inc. - Common Stock,equity_us,1999.0,1999.0,4.99,0.0,0.0
+combinada,AYA,Aya Gold & Silver Inc. - Common Shares,equity_us,1999.0,1999.0,4.99,0.0,0.0
+combinada,BIL,BIL,bond,1999.0,1999.0,4.99,0.0,0.0
+combinada,BWET,Breakwave Tanker Shipping ETF,etf,1999.0,1999.0,4.99,0.0,0.0
+combinada,BXC,Bluelinx Holdings Inc. Common Stock,equity_us,1999.0,1999.0,4.99,0.0,0.0
+combinada,CDNA,"CareDx, Inc. - Common Stock",equity_us,1999.0,1999.0,4.99,0.0,0.0
+combinada,CHPS,Xtrackers Semiconductor Select Equity ETF,etf,1999.0,1999.0,4.99,0.0,0.0
+combinada,DFTX,"Definium Therapeutics, Inc.  - Common Shares",equity_us,1999.0,1999.0,4.99,0.0,0.0
+combinada,DLLL,,,1999.0,1999.0,4.99,0.0,0.0
+combinada,DNTH,"Dianthus Therapeutics, Inc. - Common Stock",equity_us,1999.0,1999.0,4.99,0.0,0.0
+combinada,NESR,National Energy Services Reunited Corp - Ord,equity_us,1999.0,1999.0,4.99,0.0,0.0
+combinada,RVMD,"Revolution Medicines, Inc. - Common Stock",equity_us,1999.0,1999.0,4.99,0.0,0.0
+combinada,SYRE,"Spyre Therapeutics, Inc. - Common Stock",equity_us,1999.0,1999.0,4.99,0.0,0.0
+combinada,TXG,"10x Genomics, Inc. - Common Stock",equity_us,1999.0,1999.0,4.99,0.0,0.0
+combinada,USDJPY=X,USDJPY=X,fx,1972.7900390625,1999.0,4.920000076293945,-26.209999084472656,-1.309999942779541
+combinada,USO,USO,commodity,1999.0,1999.0,4.99,0.0,0.0
+combinada,ZEC/USD,ZEC/USD,crypto,2243.719970703125,1999.0,5.599999904632568,244.72000122070312,12.239999771118164
+combinada,^N225,^N225,index,1900.1700439453125,1999.0,4.739999771118164,-98.83000183105469,-4.940000057220459
