@@ -27,7 +27,12 @@ def _wide(store: data.PriceStore) -> dict[str, pd.DataFrame]:
     for f in ("open", "high", "low", "close", "volume"):
         out[f] = df.pivot(index="date", columns="symbol", values=f).sort_index()
     # imprescindible en cuanto hay cripto en el universo: ver data.to_business_calendar
-    return data.to_business_calendar(out)
+    out = data.to_business_calendar(out)
+    # y aquí se corta la sesión de hoy si todavía se está formando: ver
+    # data.ultima_sesion_util. Se hace en el único sitio por el que pasan todos
+    # los comandos, para que el escaneo, el informe y la cartera vean exactamente
+    # la misma última sesión.
+    return data.recortar_a_sesion_util(out)
 
 
 def cmd_universe(a) -> None:

@@ -283,6 +283,36 @@ debajo del 75% se emite un ERROR. El número de filas del almacén no vale para
 esto: sigue creciendo aunque medio universo se haya quedado sin cotización de
 hoy. `tests/test_descarga.py` reproduce el escenario completo.
 
+## Una sesión a medio formar no es la foto de hoy
+
+La ejecución de las 05:24 UTC del 20/08/2026 publicó un informe **sin una sola
+acción**:
+
+```
+equity_us   6.651 con precios ->     0 en panel
+equity_eu     277 con precios ->     0 en panel
+etf         4.742 con precios ->     0 en panel
+crypto        300 con precios ->    23 en panel
+fx             30 con precios ->    26 en panel
+```
+
+La cripto cotiza 24 horas y las divisas casi, así que a esa hora ya tenían barra
+del día 20. Nueva York no abría hasta seis horas después. El almacén tenía por
+tanto una última fila con **348 símbolos de 12.235**, y el ranking se calcula
+siempre sobre la última fila del panel.
+
+Lo peligroso es que **no falla nada**. El panel se construye, los z-scores se
+calculan sobre los pocos que hay, y sale una página con aspecto perfectamente
+normal sobre un mercado que todavía no ha abierto. Es el mismo patrón que los
+datos congelados: un resultado con forma de resultado.
+
+`data.ultima_sesion_util` recorre hacia atrás y se queda con la primera sesión
+cuya cobertura llegue al 60% de lo habitual en las veinte anteriores. Se aplica
+en `cli._wide`, que es el único sitio por el que pasan todos los comandos, para
+que el escaneo, el informe y la cartera vean exactamente la misma última sesión.
+Un festivo en EE.UU. con Europa abierta se descarta por el mismo motivo, y con
+razón: ese día no hay sección transversal que comparar.
+
 ## Un símbolo nuevo necesita su historia, no el último tramo
 
 Al recuperar la renta variable europea entraron 278 acciones nuevas al universo.

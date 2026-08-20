@@ -470,40 +470,71 @@ def _ahora() -> pd.Timestamp:
     return pd.Timestamp.now(tz="UTC").tz_localize(None).normalize()
 
 
-def leer_muertos(ruta: Path) -> dict[str, str]:
-    """Símbolos que la fuente no devuelve, con la fecha en que se dieron por tales."""
+FALLOS_PARA_MUERTO = 2
+
+
+def leer_muertos(ruta: Path) -> dict[str, dict]:
+    """Historial de fallos por símbolo: {symbol: {"desde": fecha, "fallos": n}}."""
     if not ruta.exists():
         return {}
     try:
         d = pd.read_csv(ruta)
-        return dict(zip(d["symbol"].astype(str), d["desde"].astype(str)))
+        fallos = d["fallos"] if "fallos" in d.columns else 1
+        return {str(s): {"desde": str(f), "fallos": int(n)}
+                for s, f, n in zip(d["symbol"], d["desde"],
+                                   fallos if hasattr(fallos, "__iter__")
+                                   else [fallos] * len(d))}
     except Exception as e:
         log.warning("no se pudo leer la lista de símbolos muertos: %s", e)
         return {}
 
 
-def escribir_muertos(ruta: Path, muertos: dict[str, str]) -> None:
+def escribir_muertos(ruta: Path, muertos: dict[str, dict]) -> None:
     ruta.parent.mkdir(parents=True, exist_ok=True)
-    pd.DataFrame({"symbol": list(muertos), "desde": list(muertos.values())}) \
-        .to_csv(ruta, index=False)
+    pd.DataFrame([{"symbol": s, "desde": v["desde"], "fallos": v["fallos"]}
+                  for s, v in muertos.items()]).to_csv(ruta, index=False)
 
 
-def muertos_vigentes(muertos: dict[str, str], hoy: pd.Timestamp | None = None,
-                     dias: int = DIAS_REINTENTO_MUERTOS) -> set[str]:
+def actualizar_muertos(muertos: dict[str, dict], pedidos: list[str],
+                       respondieron: set[str],
+                       hoy: pd.Timestamp | None = None) -> dict[str, dict]:
+    """Suma un fallo al que no respondió y borra al que sí.
+
+    Se cuentan fallos CONSECUTIVOS en vez de reconstruir la lista con los fallos
+    de hoy. Un símbolo perfectamente vivo puede no responder una vez por un
+    límite de ritmo puntual, y darlo por muerto al primer intento haría que
+    dejásemos de pedirlo durante un mes por un tropiezo. Con dos fallos seguidos
+    ya no es mala suerte.
+    """
+    hoy_txt = str((hoy if hoy is not None else _ahora()).date())
+    out = dict(muertos)
+    for s in pedidos:
+        if s in respondieron:
+            out.pop(s, None)
+            continue
+        prev = out.get(s)
+        out[s] = {"desde": prev["desde"] if prev else hoy_txt,
+                  "fallos": (prev["fallos"] if prev else 0) + 1}
+    return out
+
+
+def muertos_vigentes(muertos: dict[str, dict], hoy: pd.Timestamp | None = None,
+                     dias: int = DIAS_REINTENTO_MUERTOS,
+                     minimo: int = FALLOS_PARA_MUERTO) -> set[str]:
     """Los que no merece la pena reintentar todavía.
 
-    No es una lista negra permanente: cada mes se vuelve a probar con todos, por
-    si un ticker vuelve a listarse o la fuente lo recupera. Lo que se evita es
-    pagar el enfriamiento y los reintentos TODOS los días por warrants caducados
-    y unidades de SPAC que ya no existen.
+    No es una lista negra permanente: pasado el plazo se vuelve a probar con
+    todos, por si un ticker vuelve a listarse o la fuente lo recupera. Lo que se
+    evita es pagar el enfriamiento y los reintentos TODOS los días por warrants
+    caducados y unidades de SPAC que ya no existen.
     """
     hoy = hoy if hoy is not None else _ahora()
     vivos = set()
-    for s, desde in muertos.items():
+    for s, v in muertos.items():
         try:
-            if (hoy - pd.Timestamp(desde)).days < dias:
+            if v["fallos"] >= minimo and (hoy - pd.Timestamp(v["desde"])).days < dias:
                 vivos.add(s)
-        except (ValueError, TypeError):
+        except (ValueError, TypeError, KeyError):
             continue
     return vivos
 
@@ -663,11 +694,10 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
     if other_syms:
         respondieron = set(pd.concat(nuevos, ignore_index=True).symbol.unique()) \
             if nuevos else set()
-        hoy_txt = str(_ahora().date())
-        muertos = {s: muertos.get(s, hoy_txt)
-                   for s in other_syms if s not in respondieron}
+        muertos = actualizar_muertos(muertos, other_syms, respondieron)
         escribir_muertos(ruta_muertos, muertos)
-        log.info("lista de muertos: %d símbolos", len(muertos))
+        log.info("registro de fallos: %d símbolos, de los cuales %d ya no se "
+                 "reintentarán", len(muertos), len(muertos_vigentes(muertos)))
 
     merged = quality_filter(merged)
 
@@ -700,7 +730,21 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
     fechas = pd.to_datetime(merged["date"])
     habiles = fechas[fechas.dt.dayofweek < 5]
     if len(habiles):
-        ultima = habiles.max()
+        # La última sesión COMPLETA, no la última fila. Midiéndola sobre una
+        # sesión a medio formar la cobertura salía del 3% y el error gritaba que
+        # se había perdido el 97% del universo, cuando lo único que pasaba es
+        # que Nueva York todavía no había abierto.
+        por_fecha = merged[merged.symbol.isin(conocidos)].groupby(
+            fechas[merged.symbol.isin(conocidos)]).symbol.nunique()
+        por_fecha = por_fecha[por_fecha.index.dayofweek < 5].sort_index()
+        norma = float(por_fecha.tail(21).head(20).median()) if len(por_fecha) > 1 else 0.0
+        utiles = por_fecha[por_fecha >= norma * UMBRAL_SESION] if norma > 0 else por_fecha
+        ultima = utiles.index.max() if len(utiles) else habiles.max()
+        if ultima != habiles.max():
+            log.info("la sesión del %s todavía se está formando (%d símbolos): "
+                     "la cobertura se mide sobre el %s",
+                     habiles.max().date(), int(por_fecha.get(habiles.max(), 0)),
+                     ultima.date())
         # sólo cuentan los símbolos DEL UNIVERSO: si no, el almacén arrastra
         # símbolos retirados y la cobertura puede pasar del 100%
         al_dia = merged.loc[(fechas == ultima)
@@ -746,6 +790,60 @@ def to_business_calendar(px: dict[str, pd.DataFrame]) -> dict[str, pd.DataFrame]
     idx = px["close"].index
     bdays = idx[idx.dayofweek < 5]
     return {k: df.reindex(bdays) for k, df in px.items()}
+
+
+UMBRAL_SESION = 0.6
+
+
+def ultima_sesion_util(close: pd.DataFrame, ventana: int = 20,
+                       umbral: float = UMBRAL_SESION) -> pd.Timestamp | None:
+    """La última sesión que está formada del todo.
+
+    Una sesión a medio hacer no es la foto de hoy: es la foto de los pocos
+    mercados que ya han abierto. El caso real: la ejecución de las 05:24 UTC del
+    20/08/2026. La cripto cotiza 24 horas y las divisas casi, así que ya tenían
+    barra del día 20; la bolsa americana no abría hasta seis horas después y la
+    europea acababa de empezar. El almacén tenía por tanto una última fila con
+    348 símbolos de 12.235, y como el ranking se calcula SIEMPRE sobre la última
+    fila del panel, el informe de ese día salió sin una sola acción: 23 criptos y
+    25 divisas, y todos los demás grupos a cero.
+
+    Lo peligroso es que no falla nada. El panel se construye, los z-scores se
+    calculan sobre los pocos que hay, y sale un informe con aspecto normal sobre
+    un mercado que todavía no ha abierto.
+
+    Se recorre hacia atrás y se acepta la primera sesión cuya cobertura llegue a
+    una fracción de lo habitual en las sesiones previas. Un festivo en EE.UU. con
+    Europa abierta se descarta por el mismo motivo, y con razón: ese día no hay
+    sección transversal que comparar.
+    """
+    if close is None or close.empty:
+        return None
+    presentes = close.notna().sum(axis=1)
+    for i in range(len(presentes) - 1, -1, -1):
+        previas = presentes.iloc[max(0, i - ventana):i]
+        norma = float(previas.median()) if len(previas) else 0.0
+        if norma <= 0 or presentes.iloc[i] >= norma * umbral:
+            return presentes.index[i]
+    return presentes.index[-1]
+
+
+def recortar_a_sesion_util(px: dict[str, pd.DataFrame],
+                           umbral: float = UMBRAL_SESION) -> dict[str, pd.DataFrame]:
+    """Corta las matrices en la última sesión completa. Ver `ultima_sesion_util`."""
+    corte = ultima_sesion_util(px.get("close"), umbral=umbral)
+    if corte is None:
+        return px
+    idx = px["close"].index
+    descartadas = int((idx > corte).sum())
+    if descartadas:
+        presentes = px["close"].notna().sum(axis=1)
+        log.warning("se descartan %d sesión(es) a medio formar por delante de %s "
+                    "(la última tenía %d símbolos de %d): el ranking se calcula "
+                    "sobre la última sesión completa",
+                    descartadas, corte.date(), int(presentes.iloc[-1]),
+                    px["close"].shape[1])
+    return {k: df.loc[:corte] for k, df in px.items()}
 
 
 def quality_filter(df: pd.DataFrame, max_gap_ratio: float = 0.35) -> pd.DataFrame:
