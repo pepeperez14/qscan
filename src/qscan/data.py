@@ -697,6 +697,11 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
             new.append(fetch_crypto(al_dia_c, inicio_c))
         if completos_c:
             new.append(fetch_crypto(completos_c, full_start))
+            # también aquí se anota. Sin esto, los pares de cripto con poca
+            # historia en el mercado elegido pedían sus ocho años en CADA
+            # ejecución: la marca existía pero sólo la escribía la rama de Yahoo.
+            marcas.update({s: str(_ahora().date()) for s in completos_c})
+            escribir_marcas(ruta_marcas, marcas)
 
     nuevos = [n for n in new if not n.empty]
     max_previo = pd.to_datetime(existing["date"]).max() if not existing.empty else None

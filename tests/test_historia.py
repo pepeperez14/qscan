@@ -63,6 +63,13 @@ def main() -> int:
         "name": "x",
         "group": ["equity_us"] * 51 + ["equity_eu"] * (len(cortos) + 20),
     })
+    # una cripto corta: comprueba que su rama también anota la petición
+    cripto = pd.bdate_range(hoy - pd.Timedelta(days=42), hoy)
+    store.save(pd.concat([store.load(), pd.DataFrame({
+        "symbol": "BTC/USD", "date": cripto, "open": 1.0, "high": 1.0,
+        "low": 1.0, "close": 1.0, "volume": 1.0})], ignore_index=True))
+    uni = pd.concat([uni, pd.DataFrame([{"symbol": "BTC/USD", "name": "BTC",
+                                         "group": "crypto"}])], ignore_index=True)
 
     peticiones = []
 
@@ -75,12 +82,22 @@ def main() -> int:
             "symbol": s, "date": f, "open": 10.0, "high": 10.0, "low": 10.0,
             "close": 10.0, "volume": 1e6}) for s in symbols], ignore_index=True)
 
-    real = data.fetch_yahoo
-    data.fetch_yahoo = fetch_falso
+    cripto_pedidas = []
+
+    def cripto_falso(symbols, start, **kw):
+        # no pasa por `peticiones`: ahí se cuentan sólo las llamadas a Yahoo
+        cripto_pedidas.append((sorted(symbols), pd.Timestamp(start)))
+        f = pd.bdate_range(pd.Timestamp(start), hoy)
+        return pd.concat([pd.DataFrame({
+            "symbol": s, "date": f, "open": 1.0, "high": 1.0, "low": 1.0,
+            "close": 1.0, "volume": 1.0}) for s in symbols], ignore_index=True)
+
+    real, real_c = data.fetch_yahoo, data.fetch_crypto
+    data.fetch_yahoo, data.fetch_crypto = fetch_falso, cripto_falso
     try:
         data.update(uni, store, years=8, recarga_completa=False, usar_reserva=False)
     finally:
-        data.fetch_yahoo = real
+        data.fetch_yahoo, data.fetch_crypto = real, real_c
 
     print(f"llamadas a la descarga: {len(peticiones)}")
     for syms, start in peticiones:
@@ -130,12 +147,18 @@ def main() -> int:
 
     # y no se les vuelve a pedir al día siguiente: si siguen cortos es que son
     # jóvenes de verdad, y pedir ocho años cada día no los hará más viejos
-    peticiones.clear()
-    data.fetch_yahoo = fetch_falso
+    peticiones.clear(); cripto_pedidas.clear()
+    data.fetch_yahoo, data.fetch_crypto = fetch_falso, cripto_falso
     try:
         data.update(uni, store, years=8, recarga_completa=False, usar_reserva=False)
     finally:
-        data.fetch_yahoo = real
+        data.fetch_yahoo, data.fetch_crypto = real, real_c
+    cripto_completas = [s for s, d in cripto_pedidas if (hoy - d).days > 300]
+    print(f"en la segunda vuelta, cripto pidiendo historia entera: "
+          f"{len(cripto_completas)}")
+    if cripto_completas:
+        fails.append("la cripto corta vuelve a pedir ocho años cada día: la "
+                     "marca no se escribe en su rama")
     completas2 = [(s, d) for s, d in peticiones if (hoy - d).days > 300]
     n2 = len(completas2[0][0]) if completas2 else 0
     print(f"en la segunda vuelta piden historia entera: {n2} símbolos")
