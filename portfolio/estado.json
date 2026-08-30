@@ -1,29 +1,21 @@
 {
  "capital_inicial": 40000.0,
  "inicio": "2026-08-14",
- "ultima_fecha": "2026-08-19",
+ "ultima_fecha": "2026-08-28",
  "escenarios": {
   "corto": {
-   "ultimo_rebalanceo": "2026-08-19",
+   "ultimo_rebalanceo": "2026-08-28",
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
-     "efectivo": 2641.688232421875,
+     "efectivo": 10629.700474921876,
      "posiciones": {
-      "ASTY": {
-       "unidades": 377.01678466796875,
-       "coste_eur": 2665.67
-      },
       "BXC": {
        "unidades": 36.011199951171875,
        "coste_eur": 2665.67
       },
       "AYA": {
        "unidades": 118.57379150390625,
-       "coste_eur": 2665.67
-      },
-      "LOFF": {
-       "unidades": 204.37356567382812,
        "coste_eur": 2665.67
       },
       "BWX": {
@@ -58,50 +50,138 @@
        "unidades": 389.74951171875,
        "coste_eur": 2665.67
       },
-      "SNOU": {
-       "unidades": 47.56319046020508,
-       "coste_eur": 2665.67
-      },
       "HNST": {
        "unidades": 640.9274291992188,
        "coste_eur": 2665.6200000000135
       }
      },
-     "costes_acumulados": 56.022430419921875,
-     "ordenes_pendientes": [],
-     "creadas_el": null,
-     "descartadas": [
+     "costes_acumulados": 65.02018791992187,
+     "ordenes_pendientes": [
       {
-       "symbol": "USDBRL=X",
-       "lado": "compra",
-       "importe_eur": 1454.72,
-       "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 1.73
+       "symbol": "BXC",
+       "lado": "venta"
       },
       {
-       "symbol": "SCHO",
+       "symbol": "AYA",
+       "lado": "venta"
+      },
+      {
+       "symbol": "BWX",
+       "lado": "venta"
+      },
+      {
+       "symbol": "PAXG/USD",
+       "lado": "venta"
+      },
+      {
+       "symbol": "^STOXX",
+       "lado": "venta"
+      },
+      {
+       "symbol": "MATV",
+       "lado": "venta"
+      },
+      {
+       "symbol": "LIFE",
+       "lado": "venta"
+      },
+      {
+       "symbol": "APPS",
+       "lado": "venta"
+      },
+      {
+       "symbol": "RCEL",
+       "lado": "venta"
+      },
+      {
+       "symbol": "HNST",
+       "lado": "venta"
+      },
+      {
+       "symbol": "GLNK",
        "lado": "compra",
-       "importe_eur": 1454.72,
+       "importe_eur": 5556.07
+      },
+      {
+       "symbol": "MRVI",
+       "lado": "compra",
+       "importe_eur": 3073.99
+      },
+      {
+       "symbol": "PRPO",
+       "lado": "compra",
+       "importe_eur": 2856.81
+      },
+      {
+       "symbol": "PUMP/USD",
+       "lado": "compra",
+       "importe_eur": 5556.07
+      },
+      {
+       "symbol": "AMLX",
+       "lado": "compra",
+       "importe_eur": 3062.36
+      },
+      {
+       "symbol": "HTFL",
+       "lado": "compra",
+       "importe_eur": 3018.3
+      },
+      {
+       "symbol": "TEM",
+       "lado": "compra",
+       "importe_eur": 2637.12
+      },
+      {
+       "symbol": "XNCR",
+       "lado": "compra",
+       "importe_eur": 2396.34
+      },
+      {
+       "symbol": "FDMT",
+       "lado": "compra",
+       "importe_eur": 2843.09
+      },
+      {
+       "symbol": "AUGO",
+       "lado": "compra",
+       "importe_eur": 2525.73
+      },
+      {
+       "symbol": "ODTX",
+       "lado": "compra",
+       "importe_eur": 2142.57
+      }
+     ],
+     "creadas_el": "2026-08-28",
+     "descartadas": [
+      {
+       "symbol": "USDTRY=X",
+       "lado": "compra",
+       "importe_eur": 1389.02,
        "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 1.87
+       "coste_evitado_eur": 1.69
       },
       {
        "symbol": "^KS11",
        "lado": "compra",
-       "importe_eur": 1454.72,
+       "importe_eur": 1389.02,
        "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 2.45
+       "coste_evitado_eur": 2.39
+      },
+      {
+       "symbol": "SCHO",
+       "lado": "compra",
+       "importe_eur": 1389.02,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.83
       }
      ],
-     "ahorro_acumulado": 6.05
+     "ahorro_acumulado": 11.96
     },
     "etoro": {
-     "efectivo": 2625.606689453125,
+     "efectivo": 10574.226696953125,
      "posiciones": {
-      "ASTY": {
-       "unidades": 375.2339782714844,
-       "coste_eur": 2653.33
-      },
       "BXC": {
        "unidades": 35.82912826538086,
        "coste_eur": 2651.5299999999997
@@ -109,10 +189,6 @@
       "AYA": {
        "unidades": 117.97428894042969,
        "coste_eur": 2651.5299999999997
-      },
-      "LOFF": {
-       "unidades": 203.4071502685547,
-       "coste_eur": 2653.33
       },
       "BWX": {
        "unidades": 140.28204345703125,
@@ -146,49 +222,141 @@
        "unidades": 387.7789611816406,
        "coste_eur": 2651.5299999999997
       },
-      "SNOU": {
-       "unidades": 47.338279724121094,
-       "coste_eur": 2653.33
-      },
       "HNST": {
        "unidades": 637.6988525390625,
        "coste_eur": 2651.5299999999997
       }
      },
-     "costes_acumulados": 274.17303466796875,
-     "ordenes_pendientes": [],
-     "creadas_el": null,
+     "costes_acumulados": 285.54302716796883,
+     "ordenes_pendientes": [
+      {
+       "symbol": "BXC",
+       "lado": "venta"
+      },
+      {
+       "symbol": "AYA",
+       "lado": "venta"
+      },
+      {
+       "symbol": "BWX",
+       "lado": "venta"
+      },
+      {
+       "symbol": "PAXG/USD",
+       "lado": "venta"
+      },
+      {
+       "symbol": "^STOXX",
+       "lado": "venta"
+      },
+      {
+       "symbol": "MATV",
+       "lado": "venta"
+      },
+      {
+       "symbol": "LIFE",
+       "lado": "venta"
+      },
+      {
+       "symbol": "APPS",
+       "lado": "venta"
+      },
+      {
+       "symbol": "RCEL",
+       "lado": "venta"
+      },
+      {
+       "symbol": "HNST",
+       "lado": "venta"
+      },
+      {
+       "symbol": "GLNK",
+       "lado": "compra",
+       "importe_eur": 5525.55
+      },
+      {
+       "symbol": "MRVI",
+       "lado": "compra",
+       "importe_eur": 3057.11
+      },
+      {
+       "symbol": "PRPO",
+       "lado": "compra",
+       "importe_eur": 2841.12
+      },
+      {
+       "symbol": "PUMP/USD",
+       "lado": "compra",
+       "importe_eur": 5525.55
+      },
+      {
+       "symbol": "AMLX",
+       "lado": "compra",
+       "importe_eur": 3045.54
+      },
+      {
+       "symbol": "HTFL",
+       "lado": "compra",
+       "importe_eur": 3001.72
+      },
+      {
+       "symbol": "TEM",
+       "lado": "compra",
+       "importe_eur": 2622.63
+      },
+      {
+       "symbol": "XNCR",
+       "lado": "compra",
+       "importe_eur": 2383.18
+      },
+      {
+       "symbol": "FDMT",
+       "lado": "compra",
+       "importe_eur": 2827.47
+      },
+      {
+       "symbol": "AUGO",
+       "lado": "compra",
+       "importe_eur": 2511.86
+      },
+      {
+       "symbol": "ODTX",
+       "lado": "compra",
+       "importe_eur": 2130.81
+      }
+     ],
+     "creadas_el": "2026-08-28",
      "descartadas": [
       {
        "symbol": "GC=F",
        "lado": "ajuste",
-       "importe_eur": 1204.71,
+       "importe_eur": 1270.14,
        "motivo": "ajuste por debajo del mínimo rentable",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "USDBRL=X",
+       "symbol": "USDTRY=X",
        "lado": "compra",
-       "importe_eur": 1446.82,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
-      },
-      {
-       "symbol": "SCHO",
-       "lado": "compra",
-       "importe_eur": 1446.82,
+       "importe_eur": 1381.39,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
        "symbol": "^KS11",
        "lado": "compra",
-       "importe_eur": 1446.82,
+       "importe_eur": 1381.39,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "SCHO",
+       "lado": "compra",
+       "importe_eur": 1381.39,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       }
      ],
-     "ahorro_acumulado": 7.2
+     "ahorro_acumulado": 14.4
     }
    }
   },
@@ -197,7 +365,7 @@
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
-     "efectivo": 0.0,
+     "efectivo": 1996.50075,
      "posiciones": {
       "ALOT": {
        "unidades": 79.96875762939453,
@@ -267,10 +435,6 @@
        "unidades": 11.14704418182373,
        "coste_eur": 1999.0
       },
-      "CRWL": {
-       "unidades": 29.66909408569336,
-       "coste_eur": 1999.0
-      },
       "RRGB": {
        "unidades": 227.9977264404297,
        "coste_eur": 1999.0
@@ -280,12 +444,12 @@
        "coste_eur": 1999.0
       }
      },
-     "costes_acumulados": 56.512325286865234,
+     "costes_acumulados": 59.01157528686524,
      "ordenes_pendientes": [],
      "creadas_el": null
     },
     "etoro": {
-     "efectivo": 0.0,
+     "efectivo": 1986.7075,
      "posiciones": {
       "ALOT": {
        "unidades": 79.55658721923828,
@@ -355,10 +519,6 @@
        "unidades": 11.08958911895752,
        "coste_eur": 1988.2
       },
-      "CRWL": {
-       "unidades": 29.532562255859375,
-       "coste_eur": 1990.0
-      },
       "RRGB": {
        "unidades": 226.8225555419922,
        "coste_eur": 1988.2
@@ -368,7 +528,7 @@
        "coste_eur": 1988.2
       }
      },
-     "costes_acumulados": 272.1613464355469,
+     "costes_acumulados": 275.4538464355469,
      "ordenes_pendientes": [],
      "creadas_el": null
     }
@@ -379,7 +539,7 @@
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
-     "efectivo": 0.0,
+     "efectivo": 1996.50075,
      "posiciones": {
       "ATEX": {
        "unidades": 25.239049911499023,
@@ -427,10 +587,6 @@
       },
       "CDNA": {
        "unidades": 51.00709915161133,
-       "coste_eur": 1999.0
-      },
-      "DLLL": {
-       "unidades": 77.34801483154297,
        "coste_eur": 1999.0
       },
       "CHPS": {
@@ -462,12 +618,12 @@
        "coste_eur": 1999.0
       }
      },
-     "costes_acumulados": 56.512325286865234,
+     "costes_acumulados": 59.01157528686524,
      "ordenes_pendientes": [],
      "creadas_el": null
     },
     "etoro": {
-     "efectivo": 0.0,
+     "efectivo": 1986.7075,
      "posiciones": {
       "ATEX": {
        "unidades": 25.10896110534668,
@@ -517,10 +673,6 @@
        "unidades": 50.744197845458984,
        "coste_eur": 1988.2
       },
-      "DLLL": {
-       "unidades": 76.99208068847656,
-       "coste_eur": 1990.0
-      },
       "CHPS": {
        "unidades": 26.124183654785156,
        "coste_eur": 1990.0
@@ -550,7 +702,7 @@
        "coste_eur": 1988.2
       }
      },
-     "costes_acumulados": 272.1613464355469,
+     "costes_acumulados": 275.4538464355469,
      "ordenes_pendientes": [],
      "creadas_el": null
     }
@@ -568,7 +720,7 @@
    },
    "brokers": {
     "trade_republic": {
-     "efectivo": 0.0,
+     "efectivo": 3993.0015,
      "posiciones": {
       "ATEX": {
        "unidades": 25.239049911499023,
@@ -618,10 +770,6 @@
        "unidades": 51.00709915161133,
        "coste_eur": 1999.0
       },
-      "DLLL": {
-       "unidades": 77.34801483154297,
-       "coste_eur": 1999.0
-      },
       "CHPS": {
        "unidades": 26.244958877563477,
        "coste_eur": 1999.0
@@ -632,10 +780,6 @@
       },
       "TXG": {
        "unidades": 41.4764404296875,
-       "coste_eur": 1999.0
-      },
-      "ASTY": {
-       "unidades": 282.72686767578125,
        "coste_eur": 1999.0
       },
       "BXC": {
@@ -651,12 +795,12 @@
        "coste_eur": 1999.0
       }
      },
-     "costes_acumulados": 55.813480377197266,
+     "costes_acumulados": 60.81198037719727,
      "ordenes_pendientes": [],
      "creadas_el": null
     },
     "etoro": {
-     "efectivo": 0.0,
+     "efectivo": 3973.415,
      "posiciones": {
       "ATEX": {
        "unidades": 25.10896110534668,
@@ -706,10 +850,6 @@
        "unidades": 50.744197845458984,
        "coste_eur": 1988.2
       },
-      "DLLL": {
-       "unidades": 76.99208068847656,
-       "coste_eur": 1990.0
-      },
       "CHPS": {
        "unidades": 26.124183654785156,
        "coste_eur": 1990.0
@@ -721,10 +861,6 @@
       "TXG": {
        "unidades": 41.262664794921875,
        "coste_eur": 1988.2
-      },
-      "ASTY": {
-       "unidades": 281.4258117675781,
-       "coste_eur": 1990.0
       },
       "BXC": {
        "unidades": 26.86579704284668,
@@ -739,7 +875,7 @@
        "coste_eur": 1988.2
       }
      },
-     "costes_acumulados": 270.36224365234375,
+     "costes_acumulados": 276.9472436523438,
      "ordenes_pendientes": [],
      "creadas_el": null
     }
