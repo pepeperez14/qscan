@@ -283,6 +283,32 @@ debajo del 75% se emite un ERROR. El número de filas del almacén no vale para
 esto: sigue creciendo aunque medio universo se haya quedado sin cotización de
 hoy. `tests/test_descarga.py` reproduce el escenario completo.
 
+## Lo que la cartera dejó de contar
+
+Dos averías encontradas el 30/08/2026 mirando el repositorio, no el log. Las dos
+llevaban días activas y ninguna había dicho una palabra.
+
+**La cartera llevaba seis sesiones sin avanzar.** `.last_success` marcaba el
+2026-08-29 —el escáner corría y publicaba cada día— mientras `curva.csv` seguía
+anclado en el 20/08. Seis sesiones de operaciones que nunca existieron. Ahora
+`simular` compara su propio estado con la fecha del escaneo y grita por encima
+de tres sesiones de diferencia, y `commitear` distingue "no había nada que
+guardar" de "sí lo había y se ha perdido", que antes eran la misma línea de log.
+
+**Cinco posiciones valoradas a su precio de compra.** La cartera compró el 14/08
+los ETFs apalancados ASTY, CRWL, DLLL, LOFF y SNOU. Días después el filtro de
+derivados los sacó del universo y la poda del almacén se llevó sus precios. A
+partir de ahí `_valorar` no encontraba cotización y los contaba por su coste:
+**15.993 € de 163.708, casi el 10% del capital simulado**, congelados, inmunes a
+subidas y bajadas, inflando la estabilidad aparente de la curva.
+
+El arreglo va por los dos lados. La poda del almacén respeta ahora los símbolos
+que la cartera tiene en posición, así que un activo que sale del universo no
+pierde su precio mientras siga comprado. Y si aun así una posición se queda sin
+cotización durante cinco sesiones, se **cierra al último precio conocido** con
+sus costes, en vez de arrastrarla a coste para siempre: una posición sin precio
+no vale lo que costó, vale lo último que el mercado pagó por ella.
+
 ## Una sesión a medio formar no es la foto de hoy
 
 La ejecución de las 05:24 UTC del 20/08/2026 publicó un informe **sin una sola

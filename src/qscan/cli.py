@@ -59,7 +59,8 @@ def cmd_update(a) -> None:
     store = data.PriceStore(a.store)
     data.update(u, store, years=a.years,
                 recarga_completa=True if a.full else None,
-                cada_dias=a.refresh_days)
+                cada_dias=a.refresh_days,
+                proteger=portfolio.simbolos_en_cartera(Path(a.portfolio_dir)))
     # Se comprueba DESPUÉS de descargar y se corta la ejecución si el almacén no
     # ha avanzado: una ejecución verde con precios de hace días es peor que una
     # roja, porque nadie la mira.
@@ -184,7 +185,9 @@ def cmd_report(a) -> None:
             curva = portfolio.resumen(dir_cartera)
             comp = portfolio.composicion(estado_cartera, px_full, u)
             comp.to_csv(dir_cartera / "composicion.csv", index=False)
-            portfolio.commitear(dir_cartera)
+            portfolio.commitear(
+                dir_cartera,
+                esperaba_cambios=bool(estado_cartera.get("_avanzo")))
         except Exception:
             # Con traza completa y sin tragárselo. Una simulación rota que no
             # avanza mientras el resto del informe sale impecable es justo el
@@ -227,6 +230,9 @@ def main(argv=None) -> None:
                    help="sesiones de retraso toleradas antes de fallar")
     d.add_argument("--sin-control-frescura", action="store_true",
                    help="no fallar aunque el almacén esté desactualizado")
+    d.add_argument("--portfolio-dir", default="portfolio",
+                   help="de dónde leer qué símbolos tiene la cartera en posición, "
+                        "para no podarlos del almacén")
     d.set_defaults(f=cmd_update)
 
     s = sub.add_parser("scan"); s.add_argument("--freq", default="ME")

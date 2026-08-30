@@ -609,7 +609,8 @@ def toca_recarga_completa(marca: Path, cada_dias: int = DIAS_ENTRE_RECARGAS) -> 
 def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
            lookback_days: int = 7, recarga_completa: bool | None = None,
            cada_dias: int = DIAS_ENTRE_RECARGAS,
-           usar_reserva: bool = True) -> pd.DataFrame:
+           usar_reserva: bool = True,
+           proteger: set[str] | None = None) -> pd.DataFrame:
     """Actualización incremental, con recarga completa periódica."""
     existing = store.load()
     last = store.last_dates()
@@ -779,7 +780,11 @@ def update(universe: pd.DataFrame, store: PriceStore, years: int = 8,
     # probable no es que el mercado haya encogido sino que la construcción del
     # universo haya fallado a medias, y borrar años de historia por eso sería
     # mucho peor que dejar filas de sobra.
-    conocidos = set(universe.symbol)
+    # `proteger` son los símbolos que la cartera todavía tiene en posición. Sin
+    # esto, un activo que sale del universo pierde sus precios en el almacén y la
+    # posición abierta se queda valorada a su coste de compra, congelada e
+    # invisible: pasó con cinco ETFs apalancados y con el 10% del capital.
+    conocidos = set(universe.symbol) | set(proteger or ())
     sobra = sorted(set(merged.symbol.unique()) - conocidos)
     if sobra:
         frac = len(sobra) / max(merged.symbol.nunique(), 1)

@@ -163,6 +163,29 @@ def a_json(o):
     return str(o)
 
 
+def simbolos_en_cartera(dir_salida: Path) -> set[str]:
+    """Los símbolos con posición abierta en cualquier escenario y bróker.
+
+    Se usa para que la poda del almacén no borre los precios de algo que la
+    cartera todavía tiene: sin cotización, la posición se congela a su coste de
+    compra y deja de reflejar el mercado.
+    """
+    ruta = Path(dir_salida) / "estado.json"
+    if not ruta.exists():
+        return set()
+    try:
+        est = json.loads(ruta.read_text(encoding="utf-8"))
+    except Exception:
+        return set()
+    out: set[str] = set()
+    for esc in est.get("escenarios", {}).values():
+        for b in esc.get("brokers", {}).values():
+            out |= set(b.get("posiciones", {}))
+            out |= {o.get("symbol") for o in b.get("ordenes_pendientes", [])
+                    if o.get("symbol")}
+    return {s for s in out if s}
+
+
 def guardar(estado: dict, ruta: Path) -> None:
     ruta.parent.mkdir(parents=True, exist_ok=True)
     ruta.write_text(json.dumps(a_json(estado), indent=1, ensure_ascii=False),
@@ -263,6 +286,60 @@ def _ejecutar(b: dict, broker: Broker, px: dict, cambio: Cambio,
 
     b["ordenes_pendientes"] = []
     b["creadas_el"] = None
+    return hechas
+
+
+SESIONES_SIN_PRECIO = 5
+
+
+def _liquidar_sin_precio(b: dict, px: dict, cambio: Cambio, grupos: pd.Series,
+                         broker: Broker, hoy: pd.Timestamp, escenario: str,
+                         clave_broker: str) -> list[dict]:
+    """Cierra las posiciones cuyo activo ha dejado de cotizar para el sistema.
+
+    ESTO PASÓ DE VERDAD. La cartera compró el 14/08 cinco ETFs apalancados
+    (ASTY, CRWL, DLLL, LOFF, SNOU). Días después el filtro de derivados los sacó
+    del universo y la poda del almacén se llevó sus precios. A partir de ahí
+    `_valorar` no encontraba cotización y los contaba por su COSTE: 15.993 € de
+    163.708 —casi el 10% del capital simulado— congelados al precio de compra,
+    inmunes a subidas y bajadas, inflando artificialmente la estabilidad de la
+    curva. Y en silencio.
+
+    Una posición que deja de tener precio no vale lo que costó: vale lo último
+    que se pagó por ella en el mercado. Se vende a ese precio, con sus costes, y
+    se dice en el log. Si nunca hubo precio, se cierra a coste y se registra como
+    lo que es: una pérdida de información, no un resultado.
+    """
+    cierre = px["close"]
+    hechas = []
+    for sym in list(b["posiciones"]):
+        reciente = (cierre[sym].loc[:hoy].tail(SESIONES_SIN_PRECIO + 1)
+                    if sym in cierre.columns else pd.Series(dtype=float))
+        if len(reciente) and bool(np.isfinite(reciente.to_numpy(dtype=float)).any()):
+            continue
+        pos = b["posiciones"].pop(sym)
+        serie = (cierre[sym].loc[:hoy].dropna() if sym in cierre.columns
+                 else pd.Series(dtype=float))
+        if len(serie):
+            precio, fecha_ref = float(serie.iloc[-1]), serie.index[-1]
+            bruto = cambio.a_euros(pos["unidades"] * precio, sym, fecha_ref)
+        else:
+            precio, fecha_ref = float("nan"), None
+            bruto = pos["coste_eur"]
+        grupo = str(grupos.get(sym, "default"))
+        coste = bruto * broker.horquilla(grupo) + broker.comision(grupo)
+        neto = max(bruto - coste, 0.0)
+        b["efectivo"] += neto
+        b["costes_acumulados"] += coste
+        hechas.append({"fecha": str(hoy.date()), "escenario": escenario,
+                       "broker": clave_broker, "symbol": sym, "lado": "venta",
+                       "motivo": "sin precio: activo retirado del universo",
+                       "precio": precio, "unidades": pos["unidades"],
+                       "importe_eur": neto, "coste_eur": coste})
+        log.error("%s/%s: %s se cierra por falta de precio (última cotización %s, "
+                  "%.2f €). Se mantenía valorado a su coste y eso falsea la curva.",
+                  escenario, clave_broker, sym,
+                  fecha_ref.date() if fecha_ref is not None else "ninguna", neto)
     return hechas
 
 
@@ -589,6 +666,37 @@ def plan_ordenes(b: dict, broker: Broker, objetivo: list[str], alfa: pd.Series,
 # --------------------------------------------------------------------------- #
 # simulación
 # --------------------------------------------------------------------------- #
+MAX_ATRASO_CARTERA = 3
+
+
+def _avisar_estancamiento(ultima: str | None, hoy: pd.Timestamp) -> int:
+    """Grita si la cartera lleva sesiones sin avanzar mientras el escaneo sí.
+
+    El caso que lo motiva: entre el 20 y el 29 de agosto el escáner corrió y
+    publicó todos los días —`.last_success` llegaba al 29— mientras la curva de
+    la cartera seguía anclada en el 20. Seis sesiones de operaciones que nunca
+    existieron, y ni una línea en el log que lo dijera.
+
+    La causa de fondo da igual aquí (persistencia, fecha que no avanza, un
+    commit que no sube): lo que no puede volver a pasar es que ocurra en
+    silencio. El escaneo y la cartera avanzan juntos o algo está roto.
+    """
+    if not ultima:
+        return 0
+    try:
+        atraso = len(pd.bdate_range(pd.Timestamp(ultima), hoy)) - 1
+    except (ValueError, TypeError):
+        return 0
+    if atraso > MAX_ATRASO_CARTERA:
+        log.error("LA CARTERA LLEVA %d SESIONES SIN AVANZAR: su estado está en "
+                  "%s y el escaneo va por %s. Las operaciones de esas sesiones no "
+                  "existen y la curva tiene un agujero. Lo más probable es que el "
+                  "commit de portfolio/ no se esté subiendo: cada ejecución parte "
+                  "del mismo estado guardado y tira su trabajo.",
+                  atraso, ultima, hoy.date())
+    return atraso
+
+
 def simular(scored: pd.DataFrame, px: dict, universo: pd.DataFrame,
             anomalias: pd.DataFrame | None, verdict: pd.DataFrame | None,
             dir_salida: Path) -> dict:
@@ -599,10 +707,12 @@ def simular(scored: pd.DataFrame, px: dict, universo: pd.DataFrame,
                                 dir_salida / "operaciones.csv")
     estado = cargar(r_estado)
     hoy = pd.Timestamp(px["close"].index.max())
+    _avisar_estancamiento(estado.get("ultima_fecha"), hoy)
     if estado.get("ultima_fecha") == str(hoy.date()):
         log.info("simulación ya al día (%s)", hoy.date())
         estado["_ops_hoy"] = []
         estado["_pendientes"] = _pendientes(estado)
+        estado["_avanzo"] = False
         return estado
 
     grupos = universo.set_index("symbol")["group"]
@@ -618,12 +728,13 @@ def simular(scored: pd.DataFrame, px: dict, universo: pd.DataFrame,
                 b["efectivo"] = neto
                 b["costes_acumulados"] = CAPITAL_INICIAL - neto
 
-    # 1. cruzar lo pendiente
+    # 1. cruzar lo pendiente, y cerrar antes lo que ha dejado de cotizar
     ops = []
     for e in ESCENARIOS:
         for k, br in BROKERS.items():
-            ops += _ejecutar(estado["escenarios"][e]["brokers"][k], br, px,
-                             cambio, grupos, hoy, e, k)
+            b = estado["escenarios"][e]["brokers"][k]
+            ops += _liquidar_sin_precio(b, px, cambio, grupos, br, hoy, e, k)
+            ops += _ejecutar(b, br, px, cambio, grupos, hoy, e, k)
 
     # 2. índice de referencia
     _benchmark(estado, px, cambio, hoy)
@@ -686,6 +797,7 @@ def simular(scored: pd.DataFrame, px: dict, universo: pd.DataFrame,
 
     estado["ultima_fecha"] = str(hoy.date())
     guardar(estado, r_estado)
+    estado["_avanzo"] = True
     estado["_ops_hoy"] = ops
     estado["_pendientes"] = _pendientes(estado)
     estado["_descartes"] = descartes_hoy
@@ -739,7 +851,7 @@ def _anexar(ruta: Path, df: pd.DataFrame, clave: list[str] | None = None) -> Non
     df.to_csv(ruta, index=False)
 
 
-def commitear(dir_salida: Path) -> bool:
+def commitear(dir_salida: Path, esperaba_cambios: bool = False) -> bool:
     """Guarda el estado en el repositorio y DICE si lo consiguió.
 
     La versión anterior se tragaba cualquier fallo en silencio. Si el push no
@@ -758,7 +870,14 @@ def commitear(dir_salida: Path) -> bool:
         r = _git("commit", "-m", "Actualizar simulación de cartera")
         if r.returncode != 0:
             if "nothing to commit" in (r.stdout + r.stderr):
-                log.info("simulación sin cambios que guardar")
+                if esperaba_cambios:
+                    # La simulación avanzó un día pero no hay nada que commitear:
+                    # o los ficheros no se escribieron, o algo los ignora. En
+                    # cualquier caso el trabajo del día se pierde.
+                    log.error("LA SIMULACIÓN AVANZÓ PERO NO HAY NADA QUE GUARDAR "
+                              "en %s. El estado del día se va a perder.", dir_salida)
+                else:
+                    log.info("simulación sin cambios que guardar")
             else:
                 log.error("no se pudo crear el commit de la simulación: %s",
                           (r.stdout + r.stderr).strip()[:300])
