@@ -151,17 +151,65 @@ fecha,escenario,broker,symbol,lado,importe_eur,coste_eur,motivo,precio,unidades
 2026-08-17,combinada,etoro,ALOT,compra,1990.0,1.8,,,
 2026-08-20,corto,trade_republic,USDTRY=X,venta,2642.68994140625,1.0,,,
 2026-08-20,corto,etoro,USDTRY=X,venta,2627.360107421875,1.8,,,
-2026-08-28,corto,trade_republic,ASTY,venta,2662.6707475000003,2.9992525,sin precio: activo retirado del universo,,377.01678466796875
-2026-08-28,corto,trade_republic,LOFF,venta,2662.6707475000003,2.9992525,sin precio: activo retirado del universo,,204.37356567382812
+2026-08-28,corto,trade_republic,ASTY,venta,2662.6707475000003,2.9992525,sin precio: activo retirado del universo,,377.0167846679688
+2026-08-28,corto,trade_republic,LOFF,venta,2662.6707475000003,2.9992525,sin precio: activo retirado del universo,,204.37356567382807
 2026-08-28,corto,trade_republic,SNOU,venta,2662.6707475000003,2.9992525,sin precio: activo retirado del universo,,47.56319046020508
 2026-08-28,corto,etoro,ASTY,venta,2649.5400025,3.7899975,sin precio: activo retirado del universo,,375.2339782714844
 2026-08-28,corto,etoro,LOFF,venta,2649.5400025,3.7899975,sin precio: activo retirado del universo,,203.4071502685547
-2026-08-28,corto,etoro,SNOU,venta,2649.5400025,3.7899975,sin precio: activo retirado del universo,,47.338279724121094
+2026-08-28,corto,etoro,SNOU,venta,2649.5400025,3.7899975,sin precio: activo retirado del universo,,47.33827972412109
 2026-08-28,medio,trade_republic,CRWL,venta,1996.50075,2.49925,sin precio: activo retirado del universo,,29.66909408569336
-2026-08-28,medio,etoro,CRWL,venta,1986.7075,3.2925,sin precio: activo retirado del universo,,29.532562255859375
+2026-08-28,medio,etoro,CRWL,venta,1986.7075,3.2925,sin precio: activo retirado del universo,,29.53256225585937
 2026-08-28,largo,trade_republic,DLLL,venta,1996.50075,2.49925,sin precio: activo retirado del universo,,77.34801483154297
 2026-08-28,largo,etoro,DLLL,venta,1986.7075,3.2925,sin precio: activo retirado del universo,,76.99208068847656
 2026-08-28,combinada,trade_republic,DLLL,venta,1996.50075,2.49925,sin precio: activo retirado del universo,,77.34801483154297
 2026-08-28,combinada,trade_republic,ASTY,venta,1996.50075,2.49925,sin precio: activo retirado del universo,,282.72686767578125
 2026-08-28,combinada,etoro,DLLL,venta,1986.7075,3.2925,sin precio: activo retirado del universo,,76.99208068847656
 2026-08-28,combinada,etoro,ASTY,venta,1986.7075,3.2925,sin precio: activo retirado del universo,,281.4258117675781
+2026-08-31,corto,trade_republic,BXC,venta,2466.02001953125,1.0,,,
+2026-08-31,corto,trade_republic,AYA,venta,2826.919921875,1.0,,,
+2026-08-31,corto,trade_republic,BWX,venta,2646.3798828125,1.0,,,
+2026-08-31,corto,trade_republic,PAXG/USD,venta,2689.449951171875,1.0,,,
+2026-08-31,corto,trade_republic,^STOXX,venta,2641.080078125,1.0,,,
+2026-08-31,corto,trade_republic,MATV,venta,2656.030029296875,1.0,,,
+2026-08-31,corto,trade_republic,LIFE,venta,3018.330078125,1.0,,,
+2026-08-31,corto,trade_republic,APPS,venta,2351.840087890625,1.0,,,
+2026-08-31,corto,trade_republic,RCEL,venta,3447.9599609375,1.0,,,
+2026-08-31,corto,trade_republic,HNST,venta,3083.699951171875,1.0,,,
+2026-08-31,corto,trade_republic,GLNK,compra,5556.07,1.0,,,
+2026-08-31,corto,trade_republic,MRVI,compra,3073.99,1.0,,,
+2026-08-31,corto,trade_republic,PRPO,compra,2856.81,1.0,,,
+2026-08-31,corto,trade_republic,PUMP/USD,compra,5556.07,1.0,,,
+2026-08-31,corto,trade_republic,AMLX,compra,3062.36,1.0,,,
+2026-08-31,corto,trade_republic,HTFL,compra,3018.3,1.0,,,
+2026-08-31,corto,trade_republic,TEM,compra,2637.12,1.0,,,
+2026-08-31,corto,trade_republic,XNCR,compra,2396.34,1.0,,,
+2026-08-31,corto,trade_republic,FDMT,compra,2843.09,1.0,,,
+2026-08-31,corto,trade_republic,AUGO,compra,2525.73,1.0,,,
+2026-08-31,corto,trade_republic,ODTX,compra,2142.57,1.0,,,
+2026-08-31,corto,etoro,BXC,venta,2454.169921875,1.8,,,
+2026-08-31,corto,etoro,AYA,venta,2813.330078125,1.8,,,
+2026-08-31,corto,etoro,BWX,venta,2631.550048828125,1.8,,,
+2026-08-31,corto,etoro,PAXG/USD,venta,2651.219970703125,1.8,,,
+2026-08-31,corto,etoro,^STOXX,venta,2625.760009765625,1.8,,,
+2026-08-31,corto,etoro,MATV,venta,2643.260009765625,1.8,,,
+2026-08-31,corto,etoro,LIFE,venta,3003.820068359375,1.8,,,
+2026-08-31,corto,etoro,APPS,venta,2340.530029296875,1.8,,,
+2026-08-31,corto,etoro,RCEL,venta,3431.389892578125,1.8,,,
+2026-08-31,corto,etoro,HNST,venta,3068.93994140625,1.8,,,
+2026-08-31,corto,etoro,GLNK,compra,5525.55,0.0,,,
+2026-08-31,corto,etoro,MRVI,compra,3057.11,1.8,,,
+2026-08-31,corto,etoro,PRPO,compra,2841.12,1.8,,,
+2026-08-31,corto,etoro,PUMP/USD,compra,5525.55,1.8,,,
+2026-08-31,corto,etoro,AMLX,compra,3045.54,1.8,,,
+2026-08-31,corto,etoro,HTFL,compra,3001.72,1.8,,,
+2026-08-31,corto,etoro,TEM,compra,2622.63,1.8,,,
+2026-08-31,corto,etoro,XNCR,compra,2383.18,1.8,,,
+2026-08-31,corto,etoro,FDMT,compra,2827.47,1.8,,,
+2026-08-31,corto,etoro,AUGO,compra,2511.86,1.8,,,
+2026-08-31,corto,etoro,ODTX,compra,2130.81,1.8,,,
+2026-09-11,medio,trade_republic,ALOT,venta,1986.3730091672817,2.4916484932453953,sin precio: activo retirado del universo,28.989999771118164,79.96875762939453
+2026-09-11,medio,etoro,ALOT,venta,1975.8244579795328,2.789306882430982,sin precio: activo retirado del universo,28.989999771118164,79.55658721923828
+2026-09-11,largo,trade_republic,APGE,venta,2001.0445721993308,2.502660424467849,sin precio: activo retirado del universo,135.07000732421875,17.18499183654785
+2026-09-11,largo,etoro,APGE,venta,1990.4238834745197,2.7966102468606904,sin precio: activo retirado del universo,135.07000732421875,17.096416473388672
+2026-09-11,combinada,trade_republic,ALOT,venta,1986.3730091672817,2.4916484932453953,sin precio: activo retirado del universo,28.989999771118164,79.96875762939453
+2026-09-11,combinada,etoro,ALOT,venta,1975.8244579795328,2.789306882430982,sin precio: activo retirado del universo,28.989999771118164,79.55658721923828
