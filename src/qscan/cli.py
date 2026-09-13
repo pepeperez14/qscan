@@ -65,7 +65,8 @@ def cmd_update(a) -> None:
     # ha avanzado: una ejecución verde con precios de hace días es peor que una
     # roja, porque nadie la mira.
     if not a.sin_control_frescura:
-        data.comprobar_frescura(store, max_sesiones=a.max_retraso)
+        data.comprobar_frescura(store, max_sesiones=a.max_retraso,
+                                grupos=u.set_index("symbol")["group"])
 
 
 def cmd_scan(a) -> None:

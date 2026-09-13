@@ -283,6 +283,42 @@ debajo del 75% se emite un ERROR. El número de filas del almacén no vale para
 esto: sigue creciendo aunque medio universo se haya quedado sin cotización de
 hoy. `tests/test_descarga.py` reproduce el escenario completo.
 
+## Dos defensas correctas anulándose
+
+El 13/09/2026 el sistema llevaba **dieciséis días declarándose correcto** mientras
+publicaba siempre el mismo informe:
+
+```
+.last_success        2026-09-12    el escáner termina bien todos los días
+informe publicado    28/08/2026
+portfolio/curva.csv  28/08/2026    once sesiones sin avanzar
+```
+
+La cripto cotiza 24 horas y las divisas casi, así que seguían trayendo barras
+cada día. La fecha máxima del almacén era la de ayer, y `comprobar_frescura`
+—que miraba ese máximo en bruto— pasaba tan contenta. La bolsa llevaba once
+sesiones sin entrar una sola fila.
+
+Lo que hace este fallo distinto de los anteriores es que no hubo ningún
+descuido: fueron **dos defensas correctas anulándose entre sí**.
+`ultima_sesion_util` descartaba con toda la razón las sesiones de sólo cripto y
+se quedaba en el 28/08. El control de frescura miraba el máximo y no veía nada
+raro. Cada uno hacía bien su trabajo y entre los dos produjeron el peor
+resultado posible: un informe perfectamente coherente, publicado cada día, sobre
+precios de dos semanas atrás.
+
+Dos correcciones:
+
+- **El control de frescura mide la última sesión COMPLETA**, no la última fila, y
+  registra la última cotización de cada grupo por separado. "El almacén avanza" y
+  "las acciones llevan once sesiones paradas" ya no se parecen en el log.
+- **La referencia es el mejor día de los últimos seis meses**, no la mediana de
+  los últimos veinte. Con una ventana corta, un bloqueo más largo que la ventana
+  acaba redefiniendo la normalidad: a partir de la sesión veintiuna,
+  "trescientos símbolos" *es* la mediana, y las sesiones de sólo cripto pasan el
+  filtro como si fueran días completos. La prueba comprueba precisamente que un
+  bloqueo de cuarenta sesiones se sigue detectando.
+
 ## Lo que la cartera dejó de contar
 
 Dos averías encontradas el 30/08/2026 mirando el repositorio, no el log. Las dos

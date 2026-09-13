@@ -402,30 +402,69 @@ def sesiones_de_retraso(ultima: pd.Timestamp, hoy: pd.Timestamp | None = None) -
 
 
 def comprobar_frescura(store: PriceStore, max_sesiones: int = MAX_RETRASO_SESIONES,
-                       hoy: pd.Timestamp | None = None) -> int:
+                       hoy: pd.Timestamp | None = None,
+                       grupos: pd.Series | None = None) -> int:
     """Falla en rojo si el almacén ha dejado de avanzar.
 
     Esta comprobación existe porque el modo de fallo real observado no fue un
-    error, fue SILENCIO: la descarga dejó de traer datos nuevos, `merged` quedó
-    igual que `existing`, y el sistema siguió calculando, publicando y
-    declarándose correcto sobre precios de hace días. Una ejecución verde con
-    datos congelados es peor que una roja: la roja se ve.
+    error, fue SILENCIO: la descarga dejó de traer datos nuevos, el sistema
+    siguió calculando, publicando y declarándose correcto sobre precios de hace
+    días. Una ejecución verde con datos congelados es peor que una roja.
+
+    Y mide la última sesión COMPLETA, no la última fila. Esa distinción tiene su
+    propia historia. Entre el 28 de agosto y el 12 de septiembre de 2026 el
+    sistema se declaró correcto DIECISÉIS días seguidos —`.last_success` llegaba
+    al 12/09— publicando siempre el mismo informe del 28/08. La cripto y las
+    divisas seguían trayendo barras todos los días, así que la fecha máxima del
+    almacén era la de ayer y este control pasaba tan contento; la bolsa llevaba
+    once sesiones sin entrar una sola fila.
+
+    Dos defensas correctas anulándose entre sí: `ultima_sesion_util` descartaba
+    con toda la razón esas sesiones de sólo cripto y se quedaba en el 28/08,
+    mientras este control miraba el máximo en bruto y no veía nada raro. El
+    resultado fue el peor posible: un informe perfectamente coherente, publicado
+    cada día, sobre precios de dos semanas atrás.
     """
     df = store.load()
     if df.empty:
         raise SystemExit("ALMACÉN VACÍO: la descarga no ha traído ningún precio.")
-    ultima = pd.to_datetime(df["date"]).max()
+
+    fechas = pd.to_datetime(df["date"])
+    bruta = fechas.max()
+    por_fecha = df.groupby(fechas).symbol.nunique()
+    por_fecha = por_fecha[por_fecha.index.dayofweek < 5].sort_index()
+    # La referencia es el MEJOR día de los últimos seis meses, no la mediana de
+    # los últimos veinte. Ver `ultima_sesion_util`: con una mediana corta, un
+    # bloqueo largo acaba redefiniendo la normalidad y el control deja de saltar.
+    referencia = float(por_fecha.tail(VENTANA_REFERENCIA).max()) if len(por_fecha) else 0.0
+    utiles = (por_fecha[por_fecha >= referencia * UMBRAL_SESION]
+              if referencia > 0 else por_fecha)
+    ultima = utiles.index.max() if len(utiles) else bruta
     retraso = sesiones_de_retraso(ultima, hoy)
-    log.info("última cotización del almacén: %s (%d sesiones de retraso)",
-             ultima.date(), retraso)
+
+    log.info("última sesión completa del almacén: %s (%d de retraso) · última "
+             "fila de cualquier tipo: %s (%d símbolos de %d en el mejor día)",
+             pd.Timestamp(ultima).date(), retraso, pd.Timestamp(bruta).date(),
+             int(por_fecha.get(bruta, 0)), int(referencia))
+    if grupos is not None:
+        # Qué grupo se ha quedado atrás. Sin esto, "el almacén avanza" y "las
+        # acciones llevan once sesiones paradas" se parecen demasiado.
+        g = df.assign(_g=df.symbol.map(grupos)).groupby("_g")["date"].max()
+        for nombre, f in g.sort_values().items():
+            at = sesiones_de_retraso(pd.Timestamp(f), hoy)
+            (log.error if at > max_sesiones else log.info)(
+                "  %-10s última cotización %s (%d sesiones)", nombre,
+                pd.Timestamp(f).date(), at)
+
     if retraso > max_sesiones:
         raise SystemExit(
-            f"DATOS CONGELADOS: la última cotización es del {ultima.date()}, "
-            f"{retraso} sesiones por detrás. La descarga no está trayendo datos "
-            f"nuevos. Revisa los avisos del paso de descarga: lo más probable es "
-            f"que la fuente esté limitando el ritmo o rechazando las peticiones. "
-            f"Se corta aquí a propósito: seguir produciría un informe con "
-            f"apariencia de recién hecho y precios viejos.")
+            f"DATOS CONGELADOS: la última sesión COMPLETA es del "
+            f"{pd.Timestamp(ultima).date()}, {retraso} sesiones por detrás. El "
+            f"almacén tiene filas hasta el {pd.Timestamp(bruta).date()}, pero esas "
+            f"son de los pocos activos que cotizan a todas horas —cripto y "
+            f"divisas— y no bastan para calcular un ranking. La bolsa lleva días "
+            f"sin entrar. Se corta aquí a propósito: seguir produciría un informe "
+            f"con apariencia de recién hecho sobre precios viejos.")
     return retraso
 
 
@@ -869,9 +908,10 @@ def to_business_calendar(px: dict[str, pd.DataFrame]) -> dict[str, pd.DataFrame]
 
 
 UMBRAL_SESION = 0.6
+VENTANA_REFERENCIA = 120
 
 
-def ultima_sesion_util(close: pd.DataFrame, ventana: int = 20,
+def ultima_sesion_util(close: pd.DataFrame, ventana: int = VENTANA_REFERENCIA,
                        umbral: float = UMBRAL_SESION) -> pd.Timestamp | None:
     """La última sesión que está formada del todo.
 
@@ -898,7 +938,12 @@ def ultima_sesion_util(close: pd.DataFrame, ventana: int = 20,
     presentes = close.notna().sum(axis=1)
     for i in range(len(presentes) - 1, -1, -1):
         previas = presentes.iloc[max(0, i - ventana):i]
-        norma = float(previas.median()) if len(previas) else 0.0
+        # El MÁXIMO de los últimos seis meses, no la mediana de los últimos
+        # veinte. Con una ventana corta y una mediana, un bloqueo que dure más
+        # que la ventana acaba redefiniendo la normalidad: a partir de la
+        # sesión veintiuna, "trescientos símbolos" ES la mediana y las sesiones
+        # de sólo cripto pasan el filtro como si fueran días completos.
+        norma = float(previas.max()) if len(previas) else 0.0
         if norma <= 0 or presentes.iloc[i] >= norma * umbral:
             return presentes.index[i]
     return presentes.index[-1]
