@@ -1,410 +1,362 @@
 {
  "capital_inicial": 40000.0,
  "inicio": "2026-08-14",
- "ultima_fecha": "2026-09-11",
+ "ultima_fecha": "2026-10-02",
  "escenarios": {
   "corto": {
-   "ultimo_rebalanceo": "2026-09-11",
+   "ultimo_rebalanceo": "2026-10-02",
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
-     "efectivo": 2778.967529296875,
+     "efectivo": 5098.302734375,
      "posiciones": {
-      "GC=F": {
-       "unidades": 0.7013170719146729,
-       "coste_eur": 2665.67
+      "HOOW": {
+       "unidades": 234.92491149902344,
+       "coste_eur": 5460.18
       },
-      "GLNK": {
-       "unidades": 644.1617431640625,
-       "coste_eur": 5555.07
+      "CHPT": {
+       "unidades": 567.8414306640625,
+       "coste_eur": 4352.46
       },
-      "MRVI": {
-       "unidades": 461.5574035644531,
-       "coste_eur": 3072.99
+      "DFDV": {
+       "unidades": 1180.008056640625,
+       "coste_eur": 5001.05
       },
-      "PRPO": {
-       "unidades": 114.63111114501953,
-       "coste_eur": 2855.81
+      "UNI/USD": {
+       "unidades": 1028.8453369140625,
+       "coste_eur": 5460.18
       },
-      "PUMP/USD": {
-       "unidades": 1434330.75,
-       "coste_eur": 5555.07
+      "DBK.DE": {
+       "unidades": 39.30302047729492,
+       "coste_eur": 1364.3
       },
-      "AMLX": {
-       "unidades": 101.95973205566406,
-       "coste_eur": 3061.36
+      "VEGI": {
+       "unidades": 33.32595443725586,
+       "coste_eur": 1376.54
       },
-      "HTFL": {
-       "unidades": 73.28265380859375,
-       "coste_eur": 3017.3
+      "BLSM": {
+       "unidades": 167.3485870361328,
+       "coste_eur": 3019.0
       },
-      "TEM": {
-       "unidades": 48.94892883300781,
-       "coste_eur": 2636.12
+      "GPRK": {
+       "unidades": 230.04090881347656,
+       "coste_eur": 2307.31
       },
-      "XNCR": {
-       "unidades": 106.68731689453125,
-       "coste_eur": 2395.34
+      "UGP": {
+       "unidades": 215.92556762695312,
+       "coste_eur": 1364.3
       },
-      "FDMT": {
-       "unidades": 227.1372833251953,
-       "coste_eur": 2842.09
+      "SID": {
+       "unidades": 2299.1982421875,
+       "coste_eur": 2381.51
       },
-      "AUGO": {
-       "unidades": 35.12382888793945,
-       "coste_eur": 2524.73
-      },
-      "ODTX": {
-       "unidades": 101.93167114257812,
-       "coste_eur": 2141.57
+      "CERY": {
+       "unidades": 39.567771911621094,
+       "coste_eur": 1364.3
       }
      },
-     "costes_acumulados": 166.9217987060547,
+     "costes_acumulados": 278.7162170410156,
      "ordenes_pendientes": [
       {
-       "symbol": "GC=F",
-       "lado": "venta"
-      },
-      {
-       "symbol": "GLNK",
-       "lado": "venta"
-      },
-      {
-       "symbol": "MRVI",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PRPO",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PUMP/USD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "AMLX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "HTFL",
-       "lado": "venta"
-      },
-      {
-       "symbol": "TEM",
-       "lado": "venta"
-      },
-      {
-       "symbol": "XNCR",
-       "lado": "venta"
-      },
-      {
-       "symbol": "FDMT",
-       "lado": "venta"
-      },
-      {
-       "symbol": "AUGO",
-       "lado": "venta"
-      },
-      {
-       "symbol": "ODTX",
-       "lado": "venta"
-      },
-      {
        "symbol": "HOOW",
-       "lado": "compra",
-       "importe_eur": 5461.18
+       "lado": "venta"
       },
       {
        "symbol": "CHPT",
-       "lado": "compra",
-       "importe_eur": 4353.46
+       "lado": "venta"
       },
       {
        "symbol": "DFDV",
-       "lado": "compra",
-       "importe_eur": 5002.05
+       "lado": "venta"
       },
       {
        "symbol": "UNI/USD",
-       "lado": "compra",
-       "importe_eur": 5461.18
+       "lado": "venta"
       },
       {
        "symbol": "DBK.DE",
-       "lado": "compra",
-       "importe_eur": 1365.3
+       "lado": "venta"
       },
       {
        "symbol": "VEGI",
-       "lado": "compra",
-       "importe_eur": 1377.54
+       "lado": "venta"
       },
       {
        "symbol": "BLSM",
-       "lado": "compra",
-       "importe_eur": 3020.0
+       "lado": "venta"
       },
       {
        "symbol": "GPRK",
-       "lado": "compra",
-       "importe_eur": 2308.31
+       "lado": "venta"
       },
       {
        "symbol": "UGP",
-       "lado": "compra",
-       "importe_eur": 1365.3
+       "lado": "venta"
       },
       {
        "symbol": "SID",
-       "lado": "compra",
-       "importe_eur": 2382.51
+       "lado": "venta"
       },
       {
        "symbol": "CERY",
+       "lado": "venta"
+      },
+      {
+       "symbol": "SECZ",
        "lado": "compra",
-       "importe_eur": 1365.3
+       "importe_eur": 5220.06
+      },
+      {
+       "symbol": "GLNK",
+       "lado": "compra",
+       "importe_eur": 5428.2
+      },
+      {
+       "symbol": "PS",
+       "lado": "compra",
+       "importe_eur": 2773.56
+      },
+      {
+       "symbol": "NEAR/USD",
+       "lado": "compra",
+       "importe_eur": 5428.2
+      },
+      {
+       "symbol": "MTLN.L",
+       "lado": "compra",
+       "importe_eur": 1357.05
+      },
+      {
+       "symbol": "SOLT",
+       "lado": "compra",
+       "importe_eur": 5428.2
+      },
+      {
+       "symbol": "RSKD",
+       "lado": "compra",
+       "importe_eur": 1357.05
+      },
+      {
+       "symbol": "QMCO",
+       "lado": "compra",
+       "importe_eur": 2984.54
+      },
+      {
+       "symbol": "KOD",
+       "lado": "compra",
+       "importe_eur": 3865.17
+      },
+      {
+       "symbol": "NTRA",
+       "lado": "compra",
+       "importe_eur": 1357.05
+      },
+      {
+       "symbol": "ATKR",
+       "lado": "compra",
+       "importe_eur": 1357.05
       }
      ],
-     "creadas_el": "2026-09-11",
+     "creadas_el": "2026-10-02",
      "descartadas": [
       {
-       "symbol": "^BVSP",
+       "symbol": "USDMXN=X",
        "lado": "compra",
-       "importe_eur": 1365.3,
-       "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 2.37
-      },
-      {
-       "symbol": "BIL",
-       "lado": "compra",
-       "importe_eur": 1365.3,
-       "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 1.82
-      },
-      {
-       "symbol": "USDTRY=X",
-       "lado": "compra",
-       "importe_eur": 1365.3,
+       "importe_eur": 1357.05,
        "motivo": "alfa esperado por debajo del coste de entrada",
        "coste_evitado_eur": 1.68
       },
       {
-       "symbol": "CL=F",
+       "symbol": "BIL",
        "lado": "compra",
-       "importe_eur": 1365.3,
+       "importe_eur": 1357.05,
        "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 2.37
+       "coste_evitado_eur": 1.81
+      },
+      {
+       "symbol": "^TWII",
+       "lado": "compra",
+       "importe_eur": 1357.05,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 2.36
+      },
+      {
+       "symbol": "SB=F",
+       "lado": "compra",
+       "importe_eur": 1357.05,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 2.36
       }
      ],
-     "ahorro_acumulado": 20.2
+     "ahorro_acumulado": 28.41
     },
     "etoro": {
-     "efectivo": 2747.65087890625,
+     "efectivo": 10481.50390625,
      "posiciones": {
-      "GC=F": {
-       "unidades": 0.6974228024482727,
-       "coste_eur": 2651.5299999999997
+      "HOOW": {
+       "unidades": 233.42970275878906,
+       "coste_eur": 5425.97
       },
-      "GLNK": {
-       "unidades": 640.674560546875,
-       "coste_eur": 5525.55
+      "CHPT": {
+       "unidades": 564.2158203125,
+       "coste_eur": 4323.59
       },
-      "MRVI": {
-       "unidades": 459.0165710449219,
-       "coste_eur": 3055.31
+      "DFDV": {
+       "unidades": 1172.5028076171875,
+       "coste_eur": 4968.0
       },
-      "PRPO": {
-       "unidades": 113.99767303466797,
-       "coste_eur": 2839.3199999999997
+      "UNI/USD": {
+       "unidades": 1017.50390625,
+       "coste_eur": 5424.17
       },
-      "PUMP/USD": {
-       "unidades": 1419886.0,
-       "coste_eur": 5523.75
+      "BLSM": {
+       "unidades": 166.26654052734375,
+       "coste_eur": 2998.73
       },
-      "AMLX": {
-       "unidades": 101.3982162475586,
-       "coste_eur": 3043.74
+      "GPRK": {
+       "unidades": 228.53369140625,
+       "coste_eur": 2291.62
       },
-      "HTFL": {
-       "unidades": 72.87874603271484,
-       "coste_eur": 2999.9199999999996
-      },
-      "TEM": {
-       "unidades": 48.67717742919922,
-       "coste_eur": 2620.83
-      },
-      "XNCR": {
-       "unidades": 106.092041015625,
-       "coste_eur": 2381.3799999999997
-      },
-      "FDMT": {
-       "unidades": 225.88143920898438,
-       "coste_eur": 2825.6699999999996
-      },
-      "AUGO": {
-       "unidades": 34.928466796875,
-       "coste_eur": 2510.06
-      },
-      "ODTX": {
-       "unidades": 101.35916900634766,
-       "coste_eur": 2129.0099999999998
+      "SID": {
+       "unidades": 2284.167236328125,
+       "coste_eur": 2365.35
       }
      },
-     "costes_acumulados": 429.0550231933594,
+     "costes_acumulados": 579.9774169921875,
      "ordenes_pendientes": [
       {
-       "symbol": "GC=F",
-       "lado": "venta"
-      },
-      {
-       "symbol": "GLNK",
-       "lado": "venta"
-      },
-      {
-       "symbol": "MRVI",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PRPO",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PUMP/USD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "AMLX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "HTFL",
-       "lado": "venta"
-      },
-      {
-       "symbol": "TEM",
-       "lado": "venta"
-      },
-      {
-       "symbol": "XNCR",
-       "lado": "venta"
-      },
-      {
-       "symbol": "FDMT",
-       "lado": "venta"
-      },
-      {
-       "symbol": "AUGO",
-       "lado": "venta"
-      },
-      {
-       "symbol": "ODTX",
-       "lado": "venta"
-      },
-      {
        "symbol": "HOOW",
-       "lado": "compra",
-       "importe_eur": 5425.97
+       "lado": "venta"
       },
       {
        "symbol": "CHPT",
-       "lado": "compra",
-       "importe_eur": 4325.39
+       "lado": "venta"
       },
       {
        "symbol": "DFDV",
-       "lado": "compra",
-       "importe_eur": 4969.8
+       "lado": "venta"
       },
       {
        "symbol": "UNI/USD",
-       "lado": "compra",
-       "importe_eur": 5425.97
+       "lado": "venta"
       },
       {
        "symbol": "BLSM",
-       "lado": "compra",
-       "importe_eur": 3000.53
+       "lado": "venta"
       },
       {
        "symbol": "GPRK",
-       "lado": "compra",
-       "importe_eur": 2293.42
+       "lado": "venta"
       },
       {
        "symbol": "SID",
+       "lado": "venta"
+      },
+      {
+       "symbol": "SECZ",
        "lado": "compra",
-       "importe_eur": 2367.15
+       "importe_eur": 5190.64
+      },
+      {
+       "symbol": "GLNK",
+       "lado": "compra",
+       "importe_eur": 5397.6
+      },
+      {
+       "symbol": "PS",
+       "lado": "compra",
+       "importe_eur": 2757.93
+      },
+      {
+       "symbol": "NEAR/USD",
+       "lado": "compra",
+       "importe_eur": 5397.6
+      },
+      {
+       "symbol": "SOLT",
+       "lado": "compra",
+       "importe_eur": 5397.6
+      },
+      {
+       "symbol": "QMCO",
+       "lado": "compra",
+       "importe_eur": 2967.71
+      },
+      {
+       "symbol": "KOD",
+       "lado": "compra",
+       "importe_eur": 3843.38
       }
      ],
-     "creadas_el": "2026-09-11",
+     "creadas_el": "2026-10-02",
      "descartadas": [
       {
-       "symbol": "^BVSP",
+       "symbol": "MTLN.L",
        "lado": "compra",
-       "importe_eur": 1356.49,
+       "importe_eur": 1349.4,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "USDMXN=X",
+       "lado": "compra",
+       "importe_eur": 1349.4,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
        "symbol": "BIL",
        "lado": "compra",
-       "importe_eur": 1356.49,
+       "importe_eur": 1349.4,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "DBK.DE",
+       "symbol": "^TWII",
        "lado": "compra",
-       "importe_eur": 1356.49,
+       "importe_eur": 1349.4,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "USDTRY=X",
+       "symbol": "SB=F",
        "lado": "compra",
-       "importe_eur": 1356.49,
+       "importe_eur": 1349.4,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "CL=F",
+       "symbol": "RSKD",
        "lado": "compra",
-       "importe_eur": 1356.49,
+       "importe_eur": 1349.4,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "VEGI",
+       "symbol": "NTRA",
        "lado": "compra",
-       "importe_eur": 1368.66,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 0.0
-      },
-      {
-       "symbol": "UGP",
-       "lado": "compra",
-       "importe_eur": 1356.49,
+       "importe_eur": 1349.4,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "CERY",
+       "symbol": "ATKR",
        "lado": "compra",
-       "importe_eur": 1356.49,
+       "importe_eur": 1349.4,
        "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 0.0
+       "coste_evitado_eur": 1.8
       }
      ],
-     "ahorro_acumulado": 25.2
+     "ahorro_acumulado": 39.6
     }
    }
   },
   "medio": {
-   "ultimo_rebalanceo": "2026-09-11",
+   "ultimo_rebalanceo": "2026-10-02",
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
-     "efectivo": 3982.8737591672816,
+     "efectivo": 4909.8818359375,
      "posiciones": {
       "PLSE": {
        "unidades": 51.95274353027344,
@@ -414,232 +366,230 @@
        "unidades": 6.028480052947998,
        "coste_eur": 1999.0
       },
-      "ANGL": {
-       "unidades": 79.6227035522461,
-       "coste_eur": 1999.0
-      },
-      "USDCHF=X": {
-       "unidades": 2845.912109375,
-       "coste_eur": 1999.0
-      },
-      "SB=F": {
-       "unidades": 139.57241821289062,
-       "coste_eur": 1999.0
-      },
-      "HYPE/USD": {
-       "unidades": 40.31734085083008,
-       "coste_eur": 1999.0
-      },
-      "^IBEX": {
-       "unidades": 0.11484930664300919,
-       "coste_eur": 1999.0
-      },
-      "CBRL": {
-       "unidades": 40.382476806640625,
-       "coste_eur": 1999.0
-      },
-      "ORKA": {
-       "unidades": 20.97529411315918,
-       "coste_eur": 1999.0
-      },
       "TXG": {
        "unidades": 41.4764404296875,
-       "coste_eur": 1999.0
-      },
-      "COAG": {
-       "unidades": 42.203304290771484,
-       "coste_eur": 1999.0
-      },
-      "SNOY": {
-       "unidades": 199.8881378173828,
-       "coste_eur": 1999.0
-      },
-      "BFLY": {
-       "unidades": 265.12579345703125,
        "coste_eur": 1999.0
       },
       "CDNA": {
        "unidades": 51.00709915161133,
        "coste_eur": 1999.0
       },
-      "CLYM": {
-       "unidades": 142.2705841064453,
-       "coste_eur": 1999.0
+      "CRAK": {
+       "unidades": 20.863744735717773,
+       "coste_eur": 1180.25
       },
-      "NTAP": {
-       "unidades": 11.14704418182373,
-       "coste_eur": 1999.0
+      "BUUU": {
+       "unidades": 114.12012481689453,
+       "coste_eur": 3870.25
       },
-      "RRGB": {
-       "unidades": 227.9977264404297,
-       "coste_eur": 1999.0
+      "ZEC/USD": {
+       "unidades": 5.131171703338623,
+       "coste_eur": 4723.99
       },
-      "PAYS": {
-       "unidades": 177.29270935058594,
-       "coste_eur": 1999.0
+      "ABN.AS": {
+       "unidades": 27.2564754486084,
+       "coste_eur": 1180.25
+      },
+      "MGRT": {
+       "unidades": 45.446205139160156,
+       "coste_eur": 4723.99
+      },
+      "MPC": {
+       "unidades": 3.4098472595214844,
+       "coste_eur": 1180.25
+      },
+      "HZO": {
+       "unidades": 41.911293029785156,
+       "coste_eur": 1888.41
+      },
+      "RNG": {
+       "unidades": 33.677024841308594,
+       "coste_eur": 2038.02
+      },
+      "SMTI": {
+       "unidades": 61.2520866394043,
+       "coste_eur": 1845.19
+      },
+      "LFST": {
+       "unidades": 135.34852600097656,
+       "coste_eur": 1524.61
+      },
+      "HGER": {
+       "unidades": 37.816619873046875,
+       "coste_eur": 1180.25
       }
      },
-     "costes_acumulados": 61.50322378011063,
+     "costes_acumulados": 155.08901977539062,
      "ordenes_pendientes": [
       {
-       "symbol": "ANGL",
+       "symbol": "PLSE",
        "lado": "venta"
       },
       {
-       "symbol": "USDCHF=X",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SB=F",
-       "lado": "venta"
-      },
-      {
-       "symbol": "HYPE/USD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "^IBEX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CBRL",
-       "lado": "venta"
-      },
-      {
-       "symbol": "ORKA",
-       "lado": "venta"
-      },
-      {
-       "symbol": "COAG",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SNOY",
-       "lado": "venta"
-      },
-      {
-       "symbol": "BFLY",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CLYM",
-       "lado": "venta"
-      },
-      {
-       "symbol": "NTAP",
-       "lado": "venta"
-      },
-      {
-       "symbol": "RRGB",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PAYS",
+       "symbol": "BWET",
        "lado": "venta"
       },
       {
        "symbol": "CRAK",
-       "lado": "compra",
-       "importe_eur": 1181.25
+       "lado": "venta"
       },
       {
        "symbol": "BUUU",
-       "lado": "compra",
-       "importe_eur": 3871.25
-      },
-      {
-       "symbol": "ATAI",
-       "lado": "compra",
-       "importe_eur": 2426.79
-      },
-      {
-       "symbol": "ZEC/USD",
-       "lado": "compra",
-       "importe_eur": 4724.99
+       "lado": "venta"
       },
       {
        "symbol": "ABN.AS",
-       "lado": "compra",
-       "importe_eur": 1181.25
+       "lado": "venta"
       },
       {
        "symbol": "MGRT",
-       "lado": "compra",
-       "importe_eur": 4724.99
+       "lado": "venta"
       },
       {
        "symbol": "MPC",
-       "lado": "compra",
-       "importe_eur": 1181.25
-      },
-      {
-       "symbol": "HZO",
-       "lado": "compra",
-       "importe_eur": 1889.41
+       "lado": "venta"
       },
       {
        "symbol": "RNG",
-       "lado": "compra",
-       "importe_eur": 2039.02
+       "lado": "venta"
       },
       {
        "symbol": "SMTI",
-       "lado": "compra",
-       "importe_eur": 1846.19
+       "lado": "venta"
       },
       {
        "symbol": "LFST",
-       "lado": "compra",
-       "importe_eur": 1525.61
+       "lado": "venta"
       },
       {
        "symbol": "HGER",
+       "lado": "venta"
+      },
+      {
+       "symbol": "PFIX",
        "lado": "compra",
-       "importe_eur": 1181.25
+       "importe_eur": 1199.09
+      },
+      {
+       "symbol": "CDNA",
+       "lado": "compra",
+       "importe_eur": 1094.72
+      },
+      {
+       "symbol": "TXG",
+       "lado": "compra",
+       "importe_eur": 1074.12
+      },
+      {
+       "symbol": "PUMP/USD",
+       "lado": "compra",
+       "importe_eur": 4796.35
+      },
+      {
+       "symbol": "SHELL.AS",
+       "lado": "compra",
+       "importe_eur": 1199.09
+      },
+      {
+       "symbol": "BOAT",
+       "lado": "compra",
+       "importe_eur": 1199.09
+      },
+      {
+       "symbol": "QMCO",
+       "lado": "compra",
+       "importe_eur": 4568.08
+      },
+      {
+       "symbol": "RCEL",
+       "lado": "compra",
+       "importe_eur": 3863.31
+      },
+      {
+       "symbol": "HBB",
+       "lado": "compra",
+       "importe_eur": 2143.75
+      },
+      {
+       "symbol": "MSBT",
+       "lado": "compra",
+       "importe_eur": 1199.09
+      },
+      {
+       "symbol": "ARKG",
+       "lado": "compra",
+       "importe_eur": 1199.09
+      },
+      {
+       "symbol": "CBZ",
+       "lado": "compra",
+       "importe_eur": 2146.42
+      },
+      {
+       "symbol": "PGEN",
+       "lado": "compra",
+       "importe_eur": 3151.12
+      },
+      {
+       "symbol": "TWST",
+       "lado": "compra",
+       "importe_eur": 3066.7
+      },
+      {
+       "symbol": "KRT",
+       "lado": "compra",
+       "importe_eur": 1519.47
       }
      ],
-     "creadas_el": "2026-09-11",
+     "creadas_el": "2026-10-02",
      "descartadas": [
+      {
+       "symbol": "ZEC/USD",
+       "lado": "venta",
+       "importe_eur": 4723.99,
+       "motivo": "el candidato no supera el coste del cambio",
+       "coste_evitado_eur": 49.24
+      },
       {
        "symbol": "BIL",
        "lado": "compra",
-       "importe_eur": 1181.25,
+       "importe_eur": 1199.09,
        "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 1.71
+       "coste_evitado_eur": 1.72
       },
       {
        "symbol": "USDTRY=X",
        "lado": "compra",
-       "importe_eur": 1181.25,
+       "importe_eur": 1199.09,
        "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 1.59
+       "coste_evitado_eur": 1.6
       },
       {
-       "symbol": "^ATX",
+       "symbol": "^TWII",
        "lado": "compra",
-       "importe_eur": 1181.25,
+       "importe_eur": 1199.09,
        "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 2.18
+       "coste_evitado_eur": 2.2
       },
       {
        "symbol": "BNO",
        "lado": "compra",
-       "importe_eur": 1181.25,
+       "importe_eur": 1199.09,
        "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 2.18
+       "coste_evitado_eur": 2.2
       },
       {
-       "symbol": "PLSE",
+       "symbol": "HZO",
        "lado": "ajuste",
-       "importe_eur": 564.51,
+       "importe_eur": 647.34,
        "motivo": "ajuste por debajo del mínimo rentable",
        "coste_evitado_eur": 1.0
       }
      ],
-     "ahorro_acumulado": 8.66
+     "ahorro_acumulado": 66.62
     },
     "etoro": {
-     "efectivo": 3962.5319579795328,
+     "efectivo": 11073.9765625,
      "posiciones": {
       "PLSE": {
        "unidades": 51.68496322631836,
@@ -649,244 +599,208 @@
        "unidades": 6.000738620758057,
        "coste_eur": 1990.0
       },
-      "ANGL": {
-       "unidades": 79.18065643310547,
-       "coste_eur": 1988.2
-      },
-      "USDCHF=X": {
-       "unidades": 2829.82958984375,
-       "coste_eur": 1988.2
-      },
-      "SB=F": {
-       "unidades": 138.78370666503906,
-       "coste_eur": 1988.2
-      },
-      "HYPE/USD": {
-       "unidades": 39.92076873779297,
-       "coste_eur": 1988.2
-      },
-      "^IBEX": {
-       "unidades": 0.11420028656721115,
-       "coste_eur": 1988.2
-      },
-      "CBRL": {
-       "unidades": 40.174339294433594,
-       "coste_eur": 1988.2
-      },
-      "ORKA": {
-       "unidades": 20.8671817779541,
-       "coste_eur": 1988.2
-      },
       "TXG": {
        "unidades": 41.262664794921875,
-       "coste_eur": 1988.2
-      },
-      "COAG": {
-       "unidades": 41.98577880859375,
-       "coste_eur": 1988.2
-      },
-      "SNOY": {
-       "unidades": 198.96829223632812,
-       "coste_eur": 1990.0
-      },
-      "BFLY": {
-       "unidades": 263.75927734375,
        "coste_eur": 1988.2
       },
       "CDNA": {
        "unidades": 50.744197845458984,
        "coste_eur": 1988.2
       },
-      "CLYM": {
-       "unidades": 141.5372772216797,
-       "coste_eur": 1988.2
+      "BUUU": {
+       "unidades": 113.49948120117188,
+       "coste_eur": 3848.24
       },
-      "NTAP": {
-       "unidades": 11.08958911895752,
-       "coste_eur": 1988.2
+      "ZEC/USD": {
+       "unidades": 5.079436779022217,
+       "coste_eur": 4697.3
       },
-      "RRGB": {
-       "unidades": 226.8225555419922,
-       "coste_eur": 1988.2
+      "MGRT": {
+       "unidades": 45.200721740722656,
+       "coste_eur": 4697.3
       },
-      "PAYS": {
-       "unidades": 176.37890625,
-       "coste_eur": 1988.2
+      "HZO": {
+       "unidades": 41.67424011230469,
+       "coste_eur": 1877.26
+      },
+      "RNG": {
+       "unidades": 33.48759841918945,
+       "coste_eur": 2026.05
+      },
+      "SMTI": {
+       "unidades": 60.904808044433594,
+       "coste_eur": 1834.27
       }
      },
-     "costes_acumulados": 278.2431533179779,
+     "costes_acumulados": 404.9034118652344,
      "ordenes_pendientes": [
       {
-       "symbol": "ANGL",
+       "symbol": "PLSE",
        "lado": "venta"
       },
       {
-       "symbol": "USDCHF=X",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SB=F",
-       "lado": "venta"
-      },
-      {
-       "symbol": "HYPE/USD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "^IBEX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CBRL",
-       "lado": "venta"
-      },
-      {
-       "symbol": "ORKA",
-       "lado": "venta"
-      },
-      {
-       "symbol": "COAG",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SNOY",
-       "lado": "venta"
-      },
-      {
-       "symbol": "BFLY",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CLYM",
-       "lado": "venta"
-      },
-      {
-       "symbol": "NTAP",
-       "lado": "venta"
-      },
-      {
-       "symbol": "RRGB",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PAYS",
+       "symbol": "BWET",
        "lado": "venta"
       },
       {
        "symbol": "BUUU",
-       "lado": "compra",
-       "importe_eur": 3850.04
-      },
-      {
-       "symbol": "ATAI",
-       "lado": "compra",
-       "importe_eur": 2413.49
-      },
-      {
-       "symbol": "ZEC/USD",
-       "lado": "compra",
-       "importe_eur": 4699.1
+       "lado": "venta"
       },
       {
        "symbol": "MGRT",
-       "lado": "compra",
-       "importe_eur": 4699.1
-      },
-      {
-       "symbol": "HZO",
-       "lado": "compra",
-       "importe_eur": 1879.06
+       "lado": "venta"
       },
       {
        "symbol": "RNG",
-       "lado": "compra",
-       "importe_eur": 2027.85
+       "lado": "venta"
       },
       {
        "symbol": "SMTI",
+       "lado": "venta"
+      },
+      {
+       "symbol": "PUMP/USD",
        "lado": "compra",
-       "importe_eur": 1836.07
+       "importe_eur": 4768.26
+      },
+      {
+       "symbol": "QMCO",
+       "lado": "compra",
+       "importe_eur": 4541.34
+      },
+      {
+       "symbol": "RCEL",
+       "lado": "compra",
+       "importe_eur": 3840.69
+      },
+      {
+       "symbol": "HBB",
+       "lado": "compra",
+       "importe_eur": 2131.19
+      },
+      {
+       "symbol": "CBZ",
+       "lado": "compra",
+       "importe_eur": 2133.85
+      },
+      {
+       "symbol": "PGEN",
+       "lado": "compra",
+       "importe_eur": 3132.67
+      },
+      {
+       "symbol": "TWST",
+       "lado": "compra",
+       "importe_eur": 3048.74
       }
      ],
-     "creadas_el": "2026-09-11",
+     "creadas_el": "2026-10-02",
      "descartadas": [
       {
-       "symbol": "CRAK",
+       "symbol": "ZEC/USD",
+       "lado": "venta",
+       "importe_eur": 4697.3,
+       "motivo": "el candidato no supera el coste del cambio",
+       "coste_evitado_eur": 92.85
+      },
+      {
+       "symbol": "PFIX",
        "lado": "compra",
-       "importe_eur": 1174.77,
+       "importe_eur": 1192.07,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 0.0
       },
       {
-       "symbol": "BIL",
-       "lado": "compra",
-       "importe_eur": 1174.77,
-       "motivo": "posición demasiado pequeña para su comisión",
+       "symbol": "CDNA",
+       "lado": "ajuste",
+       "importe_eur": 1087.41,
+       "motivo": "ajuste por debajo del mínimo rentable",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "ABN.AS",
+       "symbol": "TXG",
+       "lado": "ajuste",
+       "importe_eur": 1066.93,
+       "motivo": "ajuste por debajo del mínimo rentable",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "BIL",
        "lado": "compra",
-       "importe_eur": 1174.77,
+       "importe_eur": 1192.07,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
        "symbol": "USDTRY=X",
        "lado": "compra",
-       "importe_eur": 1174.77,
+       "importe_eur": 1192.07,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "^ATX",
+       "symbol": "^TWII",
        "lado": "compra",
-       "importe_eur": 1174.77,
+       "importe_eur": 1192.07,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "SHELL.AS",
+       "lado": "compra",
+       "importe_eur": 1192.07,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
        "symbol": "BNO",
        "lado": "compra",
-       "importe_eur": 1174.77,
+       "importe_eur": 1192.07,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "MPC",
+       "symbol": "BOAT",
        "lado": "compra",
-       "importe_eur": 1174.77,
+       "importe_eur": 1192.07,
        "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
+       "coste_evitado_eur": 0.0
       },
       {
-       "symbol": "PLSE",
+       "symbol": "HZO",
        "lado": "ajuste",
-       "importe_eur": 561.26,
+       "importe_eur": 643.64,
        "motivo": "ajuste por debajo del mínimo rentable",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "LFST",
+       "symbol": "MSBT",
        "lado": "compra",
-       "importe_eur": 1517.25,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
-      },
-      {
-       "symbol": "HGER",
-       "lado": "compra",
-       "importe_eur": 1174.77,
+       "importe_eur": 1192.07,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 0.0
+      },
+      {
+       "symbol": "ARKG",
+       "lado": "compra",
+       "importe_eur": 1192.07,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 0.0
+      },
+      {
+       "symbol": "KRT",
+       "lado": "compra",
+       "importe_eur": 1510.57,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
       }
      ],
-     "ahorro_acumulado": 14.4
+     "ahorro_acumulado": 123.45
     }
    }
   },
   "largo": {
-   "ultimo_rebalanceo": "2026-08-14",
+   "ultimo_rebalanceo": "2026-10-02",
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
@@ -966,8 +880,173 @@
       }
      },
      "costes_acumulados": 61.514235711333086,
-     "ordenes_pendientes": [],
-     "creadas_el": null
+     "ordenes_pendientes": [
+      {
+       "symbol": "ATEX",
+       "lado": "venta"
+      },
+      {
+       "symbol": "SYRE",
+       "lado": "venta"
+      },
+      {
+       "symbol": "BWET",
+       "lado": "venta"
+      },
+      {
+       "symbol": "ZEC/USD",
+       "lado": "venta"
+      },
+      {
+       "symbol": "^N225",
+       "lado": "venta"
+      },
+      {
+       "symbol": "BIL",
+       "lado": "venta"
+      },
+      {
+       "symbol": "USO",
+       "lado": "venta"
+      },
+      {
+       "symbol": "USDJPY=X",
+       "lado": "venta"
+      },
+      {
+       "symbol": "DNTH",
+       "lado": "venta"
+      },
+      {
+       "symbol": "NESR",
+       "lado": "venta"
+      },
+      {
+       "symbol": "CHPS",
+       "lado": "venta"
+      },
+      {
+       "symbol": "DFTX",
+       "lado": "venta"
+      },
+      {
+       "symbol": "ORKA",
+       "lado": "venta"
+      },
+      {
+       "symbol": "SPHR",
+       "lado": "venta"
+      },
+      {
+       "symbol": "TWST",
+       "lado": "venta"
+      },
+      {
+       "symbol": "VVV/USD",
+       "lado": "compra",
+       "importe_eur": 8413.65
+      },
+      {
+       "symbol": "ECO",
+       "lado": "compra",
+       "importe_eur": 2103.41
+      },
+      {
+       "symbol": "INSW",
+       "lado": "compra",
+       "importe_eur": 2103.41
+      },
+      {
+       "symbol": "MB.MI",
+       "lado": "compra",
+       "importe_eur": 2103.41
+      },
+      {
+       "symbol": "VLO",
+       "lado": "compra",
+       "importe_eur": 2103.41
+      },
+      {
+       "symbol": "CLMT",
+       "lado": "compra",
+       "importe_eur": 2103.41
+      },
+      {
+       "symbol": "ILMN",
+       "lado": "compra",
+       "importe_eur": 2103.41
+      },
+      {
+       "symbol": "GH",
+       "lado": "compra",
+       "importe_eur": 2103.41
+      },
+      {
+       "symbol": "DELL",
+       "lado": "compra",
+       "importe_eur": 2103.41
+      }
+     ],
+     "creadas_el": "2026-10-02",
+     "descartadas": [
+      {
+       "symbol": "USDTRY=X",
+       "lado": "compra",
+       "importe_eur": 2103.41,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 2.05
+      },
+      {
+       "symbol": "CRAK",
+       "lado": "compra",
+       "importe_eur": 2103.41,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.84
+      },
+      {
+       "symbol": "^TWII",
+       "lado": "compra",
+       "importe_eur": 2103.41,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 3.1
+      },
+      {
+       "symbol": "SHV",
+       "lado": "compra",
+       "importe_eur": 2103.41,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 2.26
+      },
+      {
+       "symbol": "BNO",
+       "lado": "compra",
+       "importe_eur": 2103.41,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 3.1
+      },
+      {
+       "symbol": "BOAT",
+       "lado": "compra",
+       "importe_eur": 2103.41,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.84
+      },
+      {
+       "symbol": "VLUE",
+       "lado": "compra",
+       "importe_eur": 2103.41,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.84
+      },
+      {
+       "symbol": "IDNA",
+       "lado": "compra",
+       "importe_eur": 2103.41,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.84
+      }
+     ],
+     "ahorro_acumulado": 17.87
     },
     "etoro": {
      "efectivo": 3977.1313834745197,
@@ -1046,537 +1125,616 @@
       }
      },
      "costes_acumulados": 278.25045668240756,
-     "ordenes_pendientes": [],
-     "creadas_el": null
+     "ordenes_pendientes": [
+      {
+       "symbol": "ATEX",
+       "lado": "venta"
+      },
+      {
+       "symbol": "SYRE",
+       "lado": "venta"
+      },
+      {
+       "symbol": "BWET",
+       "lado": "venta"
+      },
+      {
+       "symbol": "ZEC/USD",
+       "lado": "venta"
+      },
+      {
+       "symbol": "^N225",
+       "lado": "venta"
+      },
+      {
+       "symbol": "BIL",
+       "lado": "venta"
+      },
+      {
+       "symbol": "USO",
+       "lado": "venta"
+      },
+      {
+       "symbol": "USDJPY=X",
+       "lado": "venta"
+      },
+      {
+       "symbol": "DNTH",
+       "lado": "venta"
+      },
+      {
+       "symbol": "NESR",
+       "lado": "venta"
+      },
+      {
+       "symbol": "CHPS",
+       "lado": "venta"
+      },
+      {
+       "symbol": "DFTX",
+       "lado": "venta"
+      },
+      {
+       "symbol": "ORKA",
+       "lado": "venta"
+      },
+      {
+       "symbol": "SPHR",
+       "lado": "venta"
+      },
+      {
+       "symbol": "TWST",
+       "lado": "venta"
+      },
+      {
+       "symbol": "VVV/USD",
+       "lado": "compra",
+       "importe_eur": 8365.81
+      },
+      {
+       "symbol": "ECO",
+       "lado": "compra",
+       "importe_eur": 2091.45
+      },
+      {
+       "symbol": "INSW",
+       "lado": "compra",
+       "importe_eur": 2091.45
+      },
+      {
+       "symbol": "MB.MI",
+       "lado": "compra",
+       "importe_eur": 2091.45
+      },
+      {
+       "symbol": "VLO",
+       "lado": "compra",
+       "importe_eur": 2091.45
+      },
+      {
+       "symbol": "CLMT",
+       "lado": "compra",
+       "importe_eur": 2091.45
+      },
+      {
+       "symbol": "ILMN",
+       "lado": "compra",
+       "importe_eur": 2091.45
+      },
+      {
+       "symbol": "GH",
+       "lado": "compra",
+       "importe_eur": 2091.45
+      },
+      {
+       "symbol": "DELL",
+       "lado": "compra",
+       "importe_eur": 2091.45
+      }
+     ],
+     "creadas_el": "2026-10-02",
+     "descartadas": [
+      {
+       "symbol": "USDTRY=X",
+       "lado": "compra",
+       "importe_eur": 2091.45,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 3.37
+      },
+      {
+       "symbol": "CRAK",
+       "lado": "compra",
+       "importe_eur": 2091.45,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.05
+      },
+      {
+       "symbol": "^TWII",
+       "lado": "compra",
+       "importe_eur": 2091.45,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 4.41
+      },
+      {
+       "symbol": "SHV",
+       "lado": "compra",
+       "importe_eur": 2091.45,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 3.37
+      },
+      {
+       "symbol": "BNO",
+       "lado": "compra",
+       "importe_eur": 2091.45,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 4.41
+      },
+      {
+       "symbol": "BOAT",
+       "lado": "compra",
+       "importe_eur": 2091.45,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.05
+      },
+      {
+       "symbol": "VLUE",
+       "lado": "compra",
+       "importe_eur": 2091.45,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.05
+      },
+      {
+       "symbol": "IDNA",
+       "lado": "compra",
+       "importe_eur": 2091.45,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.05
+      }
+     ],
+     "ahorro_acumulado": 19.76
     }
    }
   },
   "combinada": {
-   "ultimo_rebalanceo": "2026-09-11",
+   "ultimo_rebalanceo": "2026-10-02",
    "pesos_evidencia": {
     "pesos": {
-     "corto": 0.59375,
-     "medio": 0.40625,
+     "corto": 0.620253164556962,
+     "medio": 0.379746835443038,
      "largo": 0.0
     },
-    "nota": "por evidencia de la validación (corto 59% · medio 41%)"
+    "nota": "por evidencia de la validación (corto 62% · medio 38%)"
    },
    "brokers": {
     "trade_republic": {
-     "efectivo": 5979.374509167282,
+     "efectivo": 3901.26025390625,
      "posiciones": {
-      "ATEX": {
-       "unidades": 25.239049911499023,
-       "coste_eur": 1999.0
-      },
-      "SYRE": {
-       "unidades": 22.458683013916016,
-       "coste_eur": 1999.0
-      },
-      "BWET": {
-       "unidades": 6.028480052947998,
-       "coste_eur": 1999.0
-      },
       "ZEC/USD": {
-       "unidades": 4.740774154663086,
-       "coste_eur": 1999.0
-      },
-      "^N225": {
-       "unidades": 0.03355473652482033,
-       "coste_eur": 1999.0
+       "unidades": 8.05853271484375,
+       "coste_eur": 5053.48
       },
       "BIL": {
        "unidades": 25.259376525878906,
        "coste_eur": 1999.0
       },
-      "USO": {
-       "unidades": 18.157901763916016,
-       "coste_eur": 1999.0
+      "HOOW": {
+       "unidades": 147.2349853515625,
+       "coste_eur": 3422.07
       },
-      "USDJPY=X": {
-       "unidades": 14.52331256866455,
-       "coste_eur": 1999.0
+      "CHPT": {
+       "unidades": 231.39964294433594,
+       "coste_eur": 1773.66
       },
-      "DNTH": {
-       "unidades": 20.047666549682617,
-       "coste_eur": 1999.0
+      "DFDV": {
+       "unidades": 560.3838500976562,
+       "coste_eur": 2374.99
       },
-      "RVMD": {
-       "unidades": 11.331716537475586,
-       "coste_eur": 1999.0
+      "UNI/USD": {
+       "unidades": 952.2119750976562,
+       "coste_eur": 5053.48
       },
-      "NESR": {
-       "unidades": 62.7380485534668,
-       "coste_eur": 1999.0
+      "DBK.DE": {
+       "unidades": 36.373802185058594,
+       "coste_eur": 1262.62
       },
-      "CDNA": {
-       "unidades": 51.00709915161133,
-       "coste_eur": 1999.0
+      "VEGI": {
+       "unidades": 30.567956924438477,
+       "coste_eur": 1262.62
       },
-      "CHPS": {
-       "unidades": 26.244958877563477,
-       "coste_eur": 1999.0
+      "BLSM": {
+       "unidades": 69.98929595947266,
+       "coste_eur": 1262.62
       },
-      "DFTX": {
-       "unidades": 54.7842903137207,
-       "coste_eur": 1999.0
+      "GPRK": {
+       "unidades": 125.88436126708984,
+       "coste_eur": 1262.62
       },
-      "TXG": {
-       "unidades": 41.4764404296875,
-       "coste_eur": 1999.0
+      "CRAK": {
+       "unidades": 22.31983184814453,
+       "coste_eur": 1262.62
       },
-      "BXC": {
-       "unidades": 27.004987716674805,
-       "coste_eur": 1999.0
+      "BUUU": {
+       "unidades": 125.84159851074219,
+       "coste_eur": 4267.77
       },
-      "AYA": {
-       "unidades": 88.91911315917969,
-       "coste_eur": 1999.0
+      "ABN.AS": {
+       "unidades": 29.158714294433594,
+       "coste_eur": 1262.62
+      },
+      "MGRT": {
+       "unidades": 48.61599349975586,
+       "coste_eur": 5053.48
+      },
+      "MPC": {
+       "unidades": 3.6478214263916016,
+       "coste_eur": 1262.62
       }
      },
-     "costes_acumulados": 63.303628870442665,
+     "costes_acumulados": 171.63279724121094,
      "ordenes_pendientes": [
       {
-       "symbol": "ATEX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SYRE",
-       "lado": "venta"
-      },
-      {
-       "symbol": "BWET",
-       "lado": "venta"
-      },
-      {
-       "symbol": "^N225",
-       "lado": "venta"
-      },
-      {
-       "symbol": "USO",
-       "lado": "venta"
-      },
-      {
-       "symbol": "USDJPY=X",
-       "lado": "venta"
-      },
-      {
-       "symbol": "DNTH",
-       "lado": "venta"
-      },
-      {
-       "symbol": "RVMD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "NESR",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CDNA",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CHPS",
-       "lado": "venta"
-      },
-      {
-       "symbol": "DFTX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "TXG",
-       "lado": "venta"
-      },
-      {
-       "symbol": "BXC",
-       "lado": "venta"
-      },
-      {
-       "symbol": "AYA",
+       "symbol": "ZEC/USD",
        "lado": "venta"
       },
       {
        "symbol": "HOOW",
-       "lado": "compra",
-       "importe_eur": 3423.07
+       "lado": "venta"
       },
       {
        "symbol": "CHPT",
-       "lado": "compra",
-       "importe_eur": 1774.66
+       "lado": "venta"
       },
       {
        "symbol": "DFDV",
-       "lado": "compra",
-       "importe_eur": 2375.99
+       "lado": "venta"
       },
       {
        "symbol": "UNI/USD",
-       "lado": "compra",
-       "importe_eur": 5054.48
+       "lado": "venta"
       },
       {
        "symbol": "DBK.DE",
-       "lado": "compra",
-       "importe_eur": 1263.62
+       "lado": "venta"
       },
       {
        "symbol": "VEGI",
-       "lado": "compra",
-       "importe_eur": 1263.62
+       "lado": "venta"
       },
       {
        "symbol": "BLSM",
-       "lado": "compra",
-       "importe_eur": 1263.62
+       "lado": "venta"
       },
       {
        "symbol": "GPRK",
-       "lado": "compra",
-       "importe_eur": 1263.62
+       "lado": "venta"
       },
       {
        "symbol": "CRAK",
-       "lado": "compra",
-       "importe_eur": 1263.62
+       "lado": "venta"
       },
       {
        "symbol": "BUUU",
-       "lado": "compra",
-       "importe_eur": 4268.77
-      },
-      {
-       "symbol": "ATAI",
-       "lado": "compra",
-       "importe_eur": 2136.68
-      },
-      {
-       "symbol": "ZEC/USD",
-       "lado": "compra",
-       "importe_eur": 3055.48
+       "lado": "venta"
       },
       {
        "symbol": "ABN.AS",
-       "lado": "compra",
-       "importe_eur": 1263.62
+       "lado": "venta"
       },
       {
        "symbol": "MGRT",
-       "lado": "compra",
-       "importe_eur": 5054.48
+       "lado": "venta"
       },
       {
        "symbol": "MPC",
+       "lado": "venta"
+      },
+      {
+       "symbol": "SECZ",
        "lado": "compra",
-       "importe_eur": 1263.62
+       "importe_eur": 1241.55
+      },
+      {
+       "symbol": "GLNK",
+       "lado": "compra",
+       "importe_eur": 4479.03
+      },
+      {
+       "symbol": "PS",
+       "lado": "compra",
+       "importe_eur": 3650.95
+      },
+      {
+       "symbol": "NEAR/USD",
+       "lado": "compra",
+       "importe_eur": 4966.21
+      },
+      {
+       "symbol": "MTLN.L",
+       "lado": "compra",
+       "importe_eur": 1403.88
+      },
+      {
+       "symbol": "SOLT",
+       "lado": "compra",
+       "importe_eur": 4966.21
+      },
+      {
+       "symbol": "RSKD",
+       "lado": "compra",
+       "importe_eur": 1582.1
+      },
+      {
+       "symbol": "QMCO",
+       "lado": "compra",
+       "importe_eur": 4489.38
+      },
+      {
+       "symbol": "PFIX",
+       "lado": "compra",
+       "importe_eur": 1241.55
+      },
+      {
+       "symbol": "CDNA",
+       "lado": "compra",
+       "importe_eur": 2830.92
+      },
+      {
+       "symbol": "TXG",
+       "lado": "compra",
+       "importe_eur": 2627.35
+      },
+      {
+       "symbol": "PUMP/USD",
+       "lado": "compra",
+       "importe_eur": 4966.21
+      },
+      {
+       "symbol": "SHELL.AS",
+       "lado": "compra",
+       "importe_eur": 1241.55
       }
      ],
-     "creadas_el": "2026-09-11",
+     "creadas_el": "2026-10-02",
      "descartadas": [
       {
-       "symbol": "^BVSP",
+       "symbol": "USDMXN=X",
        "lado": "compra",
-       "importe_eur": 1263.62,
+       "importe_eur": 1241.55,
        "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 2.26
+       "coste_evitado_eur": 1.62
       },
       {
        "symbol": "BIL",
        "lado": "ajuste",
-       "importe_eur": 735.38,
+       "importe_eur": 757.45,
        "motivo": "ajuste por debajo del mínimo rentable",
        "coste_evitado_eur": 1.0
       },
       {
+       "symbol": "^TWII",
+       "lado": "compra",
+       "importe_eur": 1241.55,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 2.24
+      },
+      {
+       "symbol": "SB=F",
+       "lado": "compra",
+       "importe_eur": 1241.55,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 2.24
+      },
+      {
        "symbol": "USDTRY=X",
        "lado": "compra",
-       "importe_eur": 1263.62,
+       "importe_eur": 1241.55,
        "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 1.63
+       "coste_evitado_eur": 1.62
       },
       {
-       "symbol": "CL=F",
+       "symbol": "BNO",
        "lado": "compra",
-       "importe_eur": 1263.62,
+       "importe_eur": 1241.55,
        "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 2.26
+       "coste_evitado_eur": 2.24
       },
       {
-       "symbol": "^ATX",
+       "symbol": "BOAT",
        "lado": "compra",
-       "importe_eur": 1263.62,
+       "importe_eur": 1241.55,
        "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 2.26
+       "coste_evitado_eur": 1.5
       }
      ],
-     "ahorro_acumulado": 9.41
+     "ahorro_acumulado": 21.87
     },
     "etoro": {
-     "efectivo": 5949.239457979533,
+     "efectivo": 14453.7333984375,
      "posiciones": {
-      "ATEX": {
-       "unidades": 25.10896110534668,
-       "coste_eur": 1988.2
-      },
-      "SYRE": {
-       "unidades": 22.342926025390625,
-       "coste_eur": 1988.2
-      },
-      "BWET": {
-       "unidades": 6.000738620758057,
-       "coste_eur": 1990.0
-      },
       "ZEC/USD": {
-       "unidades": 4.694142818450928,
-       "coste_eur": 1988.2
-      },
-      "^N225": {
-       "unidades": 0.03336511552333832,
-       "coste_eur": 1988.2
+       "unidades": 7.976998805999756,
+       "coste_eur": 5024.08
       },
       "BIL": {
        "unidades": 25.119142532348633,
        "coste_eur": 1988.2
       },
-      "USO": {
-       "unidades": 18.05529022216797,
-       "coste_eur": 1988.2
+      "HOOW": {
+       "unidades": 146.42996215820312,
+       "coste_eur": 3403.7
       },
-      "USDJPY=X": {
-       "unidades": 14.441238403320312,
-       "coste_eur": 1988.2
+      "DFDV": {
+       "unidades": 557.1630249023438,
+       "coste_eur": 2360.75
       },
-      "DNTH": {
-       "unidades": 19.9443359375,
-       "coste_eur": 1988.2
+      "UNI/USD": {
+       "unidades": 942.4522094726562,
+       "coste_eur": 5024.08
       },
-      "RVMD": {
-       "unidades": 11.273310661315918,
-       "coste_eur": 1988.2
+      "BUUU": {
+       "unidades": 125.13687896728516,
+       "coste_eur": 4242.8099999999995
       },
-      "NESR": {
-       "unidades": 62.41468048095703,
-       "coste_eur": 1988.2
-      },
-      "CDNA": {
-       "unidades": 50.744197845458984,
-       "coste_eur": 1988.2
-      },
-      "CHPS": {
-       "unidades": 26.124183654785156,
-       "coste_eur": 1990.0
-      },
-      "DFTX": {
-       "unidades": 54.501914978027344,
-       "coste_eur": 1988.2
-      },
-      "TXG": {
-       "unidades": 41.262664794921875,
-       "coste_eur": 1988.2
-      },
-      "BXC": {
-       "unidades": 26.86579704284668,
-       "coste_eur": 1988.2
-      },
-      "AYA": {
-       "unidades": 88.46080017089844,
-       "coste_eur": 1988.2
+      "MGRT": {
+       "unidades": 48.34523010253906,
+       "coste_eur": 5024.08
       }
      },
-     "costes_acumulados": 279.7365505347748,
+     "costes_acumulados": 415.0352783203125,
      "ordenes_pendientes": [
       {
-       "symbol": "ATEX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SYRE",
-       "lado": "venta"
-      },
-      {
-       "symbol": "BWET",
-       "lado": "venta"
-      },
-      {
-       "symbol": "^N225",
-       "lado": "venta"
-      },
-      {
-       "symbol": "USO",
-       "lado": "venta"
-      },
-      {
-       "symbol": "USDJPY=X",
-       "lado": "venta"
-      },
-      {
-       "symbol": "DNTH",
-       "lado": "venta"
-      },
-      {
-       "symbol": "RVMD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "NESR",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CDNA",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CHPS",
-       "lado": "venta"
-      },
-      {
-       "symbol": "DFTX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "TXG",
-       "lado": "venta"
-      },
-      {
-       "symbol": "BXC",
-       "lado": "venta"
-      },
-      {
-       "symbol": "AYA",
+       "symbol": "ZEC/USD",
        "lado": "venta"
       },
       {
        "symbol": "HOOW",
-       "lado": "compra",
-       "importe_eur": 3403.7
+       "lado": "venta"
       },
       {
        "symbol": "DFDV",
-       "lado": "compra",
-       "importe_eur": 2362.55
+       "lado": "venta"
       },
       {
        "symbol": "UNI/USD",
-       "lado": "compra",
-       "importe_eur": 5025.88
+       "lado": "venta"
       },
       {
        "symbol": "BUUU",
-       "lado": "compra",
-       "importe_eur": 4244.61
-      },
-      {
-       "symbol": "ATAI",
-       "lado": "compra",
-       "importe_eur": 2124.6
-      },
-      {
-       "symbol": "ZEC/USD",
-       "lado": "compra",
-       "importe_eur": 3037.68
+       "lado": "venta"
       },
       {
        "symbol": "MGRT",
+       "lado": "venta"
+      },
+      {
+       "symbol": "GLNK",
        "lado": "compra",
-       "importe_eur": 5025.88
+       "importe_eur": 4451.98
+      },
+      {
+       "symbol": "PS",
+       "lado": "compra",
+       "importe_eur": 3628.9
+      },
+      {
+       "symbol": "NEAR/USD",
+       "lado": "compra",
+       "importe_eur": 4936.21
+      },
+      {
+       "symbol": "SOLT",
+       "lado": "compra",
+       "importe_eur": 4936.21
+      },
+      {
+       "symbol": "QMCO",
+       "lado": "compra",
+       "importe_eur": 4462.27
+      },
+      {
+       "symbol": "CDNA",
+       "lado": "compra",
+       "importe_eur": 2813.82
+      },
+      {
+       "symbol": "TXG",
+       "lado": "compra",
+       "importe_eur": 2611.48
+      },
+      {
+       "symbol": "PUMP/USD",
+       "lado": "compra",
+       "importe_eur": 4936.21
       }
      ],
-     "creadas_el": "2026-09-11",
+     "creadas_el": "2026-10-02",
      "descartadas": [
       {
-       "symbol": "CHPT",
+       "symbol": "SECZ",
        "lado": "compra",
-       "importe_eur": 1764.62,
+       "importe_eur": 1234.05,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "^BVSP",
+       "symbol": "MTLN.L",
        "lado": "compra",
-       "importe_eur": 1256.47,
+       "importe_eur": 1395.4,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "USDMXN=X",
+       "lado": "compra",
+       "importe_eur": 1234.05,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
        "symbol": "BIL",
        "lado": "ajuste",
-       "importe_eur": 731.73,
+       "importe_eur": 754.15,
        "motivo": "ajuste por debajo del mínimo rentable",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "DBK.DE",
+       "symbol": "^TWII",
        "lado": "compra",
-       "importe_eur": 1256.47,
+       "importe_eur": 1234.05,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "SB=F",
+       "lado": "compra",
+       "importe_eur": 1234.05,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "RSKD",
+       "lado": "compra",
+       "importe_eur": 1572.54,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "PFIX",
+       "lado": "compra",
+       "importe_eur": 1234.05,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 0.0
       },
       {
        "symbol": "USDTRY=X",
        "lado": "compra",
-       "importe_eur": 1256.47,
+       "importe_eur": 1234.05,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "CL=F",
+       "symbol": "SHELL.AS",
        "lado": "compra",
-       "importe_eur": 1256.47,
+       "importe_eur": 1234.05,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "VEGI",
+       "symbol": "BNO",
        "lado": "compra",
-       "importe_eur": 1256.47,
+       "importe_eur": 1234.05,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "BOAT",
+       "lado": "compra",
+       "importe_eur": 1234.05,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 0.0
-      },
-      {
-       "symbol": "BLSM",
-       "lado": "compra",
-       "importe_eur": 1256.47,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
-      },
-      {
-       "symbol": "GPRK",
-       "lado": "compra",
-       "importe_eur": 1256.47,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
-      },
-      {
-       "symbol": "CRAK",
-       "lado": "compra",
-       "importe_eur": 1256.47,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 0.0
-      },
-      {
-       "symbol": "ABN.AS",
-       "lado": "compra",
-       "importe_eur": 1256.47,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
-      },
-      {
-       "symbol": "^ATX",
-       "lado": "compra",
-       "importe_eur": 1256.47,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
-      },
-      {
-       "symbol": "MPC",
-       "lado": "compra",
-       "importe_eur": 1256.47,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
       }
      ],
-     "ahorro_acumulado": 19.8
+     "ahorro_acumulado": 37.8
     }
    }
   }
