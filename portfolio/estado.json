@@ -1,136 +1,63 @@
 {
  "capital_inicial": 40000.0,
  "inicio": "2026-08-14",
- "ultima_fecha": "2026-10-05",
+ "ultima_fecha": "2026-10-06",
  "escenarios": {
   "corto": {
    "ultimo_rebalanceo": "2026-10-05",
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
-     "efectivo": 6313.6484375,
+     "efectivo": 2645.8623046875,
      "posiciones": {
-      "DBK.DE": {
-       "unidades": 39.30302047729492,
-       "coste_eur": 1364.3
-      },
-      "SECZ": {
-       "unidades": 437.689208984375,
-       "coste_eur": 5219.06
-      },
       "GLNK": {
        "unidades": 488.449951171875,
        "coste_eur": 5427.2
       },
-      "PS": {
-       "unidades": 59.09878158569336,
-       "coste_eur": 2772.56
-      },
       "NEAR/USD": {
        "unidades": 1236.9093017578125,
-       "coste_eur": 5427.2
-      },
-      "SOLT": {
-       "unidades": 77.82823944091797,
        "coste_eur": 5427.2
       },
       "RSKD": {
        "unidades": 195.51651000976562,
        "coste_eur": 1356.05
       },
-      "QMCO": {
-       "unidades": 97.5667953491211,
-       "coste_eur": 2983.54
+      "MX": {
+       "unidades": 1439.6207275390625,
+       "coste_eur": 4546.72
       },
-      "KOD": {
-       "unidades": 46.79827880859375,
-       "coste_eur": 3864.17
+      "TWLO": {
+       "unidades": 10.299266815185547,
+       "coste_eur": 2776.36
       },
-      "NTRA": {
-       "unidades": 3.716681718826294,
-       "coste_eur": 1356.05
+      "ENA/USD": {
+       "unidades": 26383.2890625,
+       "coste_eur": 5893.03
       },
-      "ATKR": {
-       "unidades": 16.09528923034668,
-       "coste_eur": 1356.05
+      "LTRX": {
+       "unidades": 506.74346923828125,
+       "coste_eur": 3237.04
+      },
+      "DNA": {
+       "unidades": 319.8611145019531,
+       "coste_eur": 4303.38
+      },
+      "HBB": {
+       "unidades": 69.27655792236328,
+       "coste_eur": 2272.62
+      },
+      "PFIX": {
+       "unidades": 44.60554885864258,
+       "coste_eur": 2684.87
+      },
+      "CRCT": {
+       "unidades": 300.2246398925781,
+       "coste_eur": 1743.71
       }
      },
-     "costes_acumulados": 403.9385681152344,
-     "ordenes_pendientes": [
-      {
-       "symbol": "DBK.DE",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SECZ",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PS",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SOLT",
-       "lado": "venta"
-      },
-      {
-       "symbol": "QMCO",
-       "lado": "venta"
-      },
-      {
-       "symbol": "KOD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "NTRA",
-       "lado": "venta"
-      },
-      {
-       "symbol": "ATKR",
-       "lado": "venta"
-      },
-      {
-       "symbol": "MX",
-       "lado": "compra",
-       "importe_eur": 4547.72
-      },
-      {
-       "symbol": "TWLO",
-       "lado": "compra",
-       "importe_eur": 2777.36
-      },
-      {
-       "symbol": "ENA/USD",
-       "lado": "compra",
-       "importe_eur": 5894.03
-      },
-      {
-       "symbol": "LTRX",
-       "lado": "compra",
-       "importe_eur": 3238.04
-      },
-      {
-       "symbol": "DNA",
-       "lado": "compra",
-       "importe_eur": 4304.38
-      },
-      {
-       "symbol": "HBB",
-       "lado": "compra",
-       "importe_eur": 2273.62
-      },
-      {
-       "symbol": "PFIX",
-       "lado": "compra",
-       "importe_eur": 2685.87
-      },
-      {
-       "symbol": "CRCT",
-       "lado": "compra",
-       "importe_eur": 1744.71
-      }
-     ],
-     "creadas_el": "2026-10-05",
+     "costes_acumulados": 480.1456298828125,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "NEAR/USD",
@@ -185,101 +112,52 @@
      "ahorro_acumulado": 95.83
     },
     "etoro": {
-     "efectivo": 11390.474609375,
+     "efectivo": 3847.178955078125,
      "posiciones": {
-      "SECZ": {
-       "unidades": 435.26361083984375,
-       "coste_eur": 5188.84
-      },
       "GLNK": {
        "unidades": 485.73736572265625,
        "coste_eur": 5397.6
-      },
-      "PS": {
-       "unidades": 58.763240814208984,
-       "coste_eur": 2756.1299999999997
       },
       "NEAR/USD": {
        "unidades": 1224.27099609375,
        "coste_eur": 5395.8
       },
-      "SOLT": {
-       "unidades": 77.39601135253906,
-       "coste_eur": 5397.6
+      "MX": {
+       "unidades": 1419.302490234375,
+       "coste_eur": 4481.429999999999
       },
-      "QMCO": {
-       "unidades": 97.01449584960938,
-       "coste_eur": 2965.91
+      "TWLO": {
+       "unidades": 10.152749061584473,
+       "coste_eur": 2736.18
       },
-      "KOD": {
-       "unidades": 46.536319732666016,
-       "coste_eur": 3841.58
+      "ENA/USD": {
+       "unidades": 25889.552734375,
+       "coste_eur": 5808.639999999999
+      },
+      "LTRX": {
+       "unidades": 499.5544738769531,
+       "coste_eur": 3190.3199999999997
+      },
+      "RSKD": {
+       "unidades": 264.9023132324219,
+       "coste_eur": 1866.6000000000001
+      },
+      "DNA": {
+       "unidades": 315.3434753417969,
+       "coste_eur": 4241.54
+      },
+      "HBB": {
+       "unidades": 68.2861557006836,
+       "coste_eur": 2239.5699999999997
+      },
+      "PFIX": {
+       "unidades": 43.984947204589844,
+       "coste_eur": 2647.78
       }
      },
-     "costes_acumulados": 753.1942749023438,
-     "ordenes_pendientes": [
-      {
-       "symbol": "SECZ",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PS",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SOLT",
-       "lado": "venta"
-      },
-      {
-       "symbol": "QMCO",
-       "lado": "venta"
-      },
-      {
-       "symbol": "KOD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "MX",
-       "lado": "compra",
-       "importe_eur": 4483.23
-      },
-      {
-       "symbol": "TWLO",
-       "lado": "compra",
-       "importe_eur": 2737.98
-      },
-      {
-       "symbol": "ENA/USD",
-       "lado": "compra",
-       "importe_eur": 5810.44
-      },
-      {
-       "symbol": "LTRX",
-       "lado": "compra",
-       "importe_eur": 3192.12
-      },
-      {
-       "symbol": "RSKD",
-       "lado": "compra",
-       "importe_eur": 1868.4
-      },
-      {
-       "symbol": "DNA",
-       "lado": "compra",
-       "importe_eur": 4243.34
-      },
-      {
-       "symbol": "HBB",
-       "lado": "compra",
-       "importe_eur": 2241.37
-      },
-      {
-       "symbol": "PFIX",
-       "lado": "compra",
-       "importe_eur": 2647.78
-      }
-     ],
-     "creadas_el": "2026-10-05",
+     "costes_acumulados": 848.2026977539062,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "NEAR/USD",
