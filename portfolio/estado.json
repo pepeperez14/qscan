@@ -1,150 +1,67 @@
 {
  "capital_inicial": 40000.0,
  "inicio": "2026-08-14",
- "ultima_fecha": "2026-10-12",
+ "ultima_fecha": "2026-10-13",
  "escenarios": {
   "corto": {
    "ultimo_rebalanceo": "2026-10-12",
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
-     "efectivo": 2645.8623046875,
+     "efectivo": 4842.00927734375,
      "posiciones": {
-      "GLNK": {
-       "unidades": 488.449951171875,
-       "coste_eur": 5427.2
-      },
-      "NEAR/USD": {
-       "unidades": 1236.9093017578125,
-       "coste_eur": 5427.2
-      },
-      "RSKD": {
-       "unidades": 195.51651000976562,
-       "coste_eur": 1356.05
-      },
-      "MX": {
-       "unidades": 1439.6207275390625,
-       "coste_eur": 4546.72
-      },
-      "TWLO": {
-       "unidades": 10.299266815185547,
-       "coste_eur": 2776.36
-      },
-      "ENA/USD": {
-       "unidades": 26383.2890625,
-       "coste_eur": 5893.03
-      },
-      "LTRX": {
-       "unidades": 506.74346923828125,
-       "coste_eur": 3237.04
-      },
       "DNA": {
        "unidades": 319.8611145019531,
        "coste_eur": 4303.38
-      },
-      "HBB": {
-       "unidades": 69.27655792236328,
-       "coste_eur": 2272.62
       },
       "PFIX": {
        "unidades": 44.60554885864258,
        "coste_eur": 2684.87
       },
-      "CRCT": {
-       "unidades": 300.2246398925781,
-       "coste_eur": 1743.71
+      "PACB": {
+       "unidades": 1968.9539794921875,
+       "coste_eur": 3654.76
+      },
+      "RXO": {
+       "unidades": 108.62044525146484,
+       "coste_eur": 2786.65
+      },
+      "PUMP/USD": {
+       "unidades": 1221507.25,
+       "coste_eur": 5459.26
+      },
+      "QTEX": {
+       "unidades": 4184.251953125,
+       "coste_eur": 5459.26
+      },
+      "PTC": {
+       "unidades": 9.381101608276367,
+       "coste_eur": 1635.91
+      },
+      "ITGR": {
+       "unidades": 12.011842727661133,
+       "coste_eur": 1364.06
+      },
+      "TRUT": {
+       "unidades": 46.43425750732422,
+       "coste_eur": 1401.05
+      },
+      "HACK": {
+       "unidades": 12.07296085357666,
+       "coste_eur": 1365.11
+      },
+      "IBRX": {
+       "unidades": 369.1976623535156,
+       "coste_eur": 3310.64
+      },
+      "JAKK": {
+       "unidades": 54.483516693115234,
+       "coste_eur": 1364.06
       }
      },
-     "costes_acumulados": 480.1456298828125,
-     "ordenes_pendientes": [
-      {
-       "symbol": "GLNK",
-       "lado": "venta"
-      },
-      {
-       "symbol": "NEAR/USD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "RSKD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "MX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "TWLO",
-       "lado": "venta"
-      },
-      {
-       "symbol": "ENA/USD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "LTRX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "HBB",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CRCT",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PACB",
-       "lado": "compra",
-       "importe_eur": 3655.76
-      },
-      {
-       "symbol": "RXO",
-       "lado": "compra",
-       "importe_eur": 2787.65
-      },
-      {
-       "symbol": "PUMP/USD",
-       "lado": "compra",
-       "importe_eur": 5460.26
-      },
-      {
-       "symbol": "QTEX",
-       "lado": "compra",
-       "importe_eur": 5460.26
-      },
-      {
-       "symbol": "PTC",
-       "lado": "compra",
-       "importe_eur": 1636.91
-      },
-      {
-       "symbol": "ITGR",
-       "lado": "compra",
-       "importe_eur": 1365.06
-      },
-      {
-       "symbol": "TRUT",
-       "lado": "compra",
-       "importe_eur": 1402.05
-      },
-      {
-       "symbol": "HACK",
-       "lado": "compra",
-       "importe_eur": 1366.11
-      },
-      {
-       "symbol": "IBRX",
-       "lado": "compra",
-       "importe_eur": 3311.64
-      },
-      {
-       "symbol": "JAKK",
-       "lado": "compra",
-       "importe_eur": 1365.06
-      }
-     ],
-     "creadas_el": "2026-10-12",
+     "costes_acumulados": 607.5193481445312,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "SB=F",
@@ -171,110 +88,40 @@
      "ahorro_acumulado": 102.39
     },
     "etoro": {
-     "efectivo": 3847.178955078125,
+     "efectivo": 11801.4775390625,
      "posiciones": {
-      "GLNK": {
-       "unidades": 485.73736572265625,
-       "coste_eur": 5397.6
-      },
-      "NEAR/USD": {
-       "unidades": 1224.27099609375,
-       "coste_eur": 5395.8
-      },
-      "MX": {
-       "unidades": 1419.302490234375,
-       "coste_eur": 4481.429999999999
-      },
-      "TWLO": {
-       "unidades": 10.152749061584473,
-       "coste_eur": 2736.18
-      },
-      "ENA/USD": {
-       "unidades": 25889.552734375,
-       "coste_eur": 5808.639999999999
-      },
-      "LTRX": {
-       "unidades": 499.5544738769531,
-       "coste_eur": 3190.3199999999997
-      },
-      "RSKD": {
-       "unidades": 264.9023132324219,
-       "coste_eur": 1866.6000000000001
-      },
       "DNA": {
        "unidades": 315.3434753417969,
        "coste_eur": 4241.54
       },
-      "HBB": {
-       "unidades": 68.2861557006836,
-       "coste_eur": 2239.5699999999997
-      },
       "PFIX": {
        "unidades": 43.984947204589844,
        "coste_eur": 2647.78
+      },
+      "PACB": {
+       "unidades": 1947.4329833984375,
+       "coste_eur": 3613.91
+      },
+      "RXO": {
+       "unidades": 107.42568969726562,
+       "coste_eur": 2755.31
+      },
+      "PUMP/USD": {
+       "unidades": 1202559.0,
+       "coste_eur": 5398.639999999999
+      },
+      "QTEX": {
+       "unidades": 4138.82373046875,
+       "coste_eur": 5398.639999999999
+      },
+      "IBRX": {
+       "unidades": 365.15496826171875,
+       "coste_eur": 3273.5699999999997
       }
      },
-     "costes_acumulados": 848.2026977539062,
-     "ordenes_pendientes": [
-      {
-       "symbol": "GLNK",
-       "lado": "venta"
-      },
-      {
-       "symbol": "NEAR/USD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "MX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "TWLO",
-       "lado": "venta"
-      },
-      {
-       "symbol": "ENA/USD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "LTRX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "RSKD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "HBB",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PACB",
-       "lado": "compra",
-       "importe_eur": 3615.71
-      },
-      {
-       "symbol": "RXO",
-       "lado": "compra",
-       "importe_eur": 2757.11
-      },
-      {
-       "symbol": "PUMP/USD",
-       "lado": "compra",
-       "importe_eur": 5400.44
-      },
-      {
-       "symbol": "QTEX",
-       "lado": "compra",
-       "importe_eur": 5400.44
-      },
-      {
-       "symbol": "IBRX",
-       "lado": "compra",
-       "importe_eur": 3275.37
-      }
-     ],
-     "creadas_el": "2026-10-12",
+     "costes_acumulados": 1035.573974609375,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "SB=F",
