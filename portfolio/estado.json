@@ -1,10 +1,10 @@
 {
  "capital_inicial": 40000.0,
  "inicio": "2026-08-14",
- "ultima_fecha": "2026-10-16",
+ "ultima_fecha": "2026-10-19",
  "escenarios": {
   "corto": {
-   "ultimo_rebalanceo": "2026-10-12",
+   "ultimo_rebalanceo": "2026-10-19",
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
@@ -60,32 +60,128 @@
       }
      },
      "costes_acumulados": 607.5193481445312,
-     "ordenes_pendientes": [],
-     "creadas_el": null,
-     "descartadas": [
+     "ordenes_pendientes": [
       {
-       "symbol": "SB=F",
-       "lado": "compra",
-       "importe_eur": 1365.06,
-       "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 2.37
+       "symbol": "DNA",
+       "lado": "venta"
       },
       {
-       "symbol": "^TWII",
-       "lado": "compra",
-       "importe_eur": 1365.06,
-       "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 2.37
+       "symbol": "PFIX",
+       "lado": "venta"
       },
       {
-       "symbol": "BIL",
+       "symbol": "PACB",
+       "lado": "venta"
+      },
+      {
+       "symbol": "PUMP/USD",
+       "lado": "venta"
+      },
+      {
+       "symbol": "ITGR",
+       "lado": "venta"
+      },
+      {
+       "symbol": "TRUT",
+       "lado": "venta"
+      },
+      {
+       "symbol": "HACK",
+       "lado": "venta"
+      },
+      {
+       "symbol": "IBRX",
+       "lado": "venta"
+      },
+      {
+       "symbol": "JAKK",
+       "lado": "venta"
+      },
+      {
+       "symbol": "CFFI",
        "lado": "compra",
-       "importe_eur": 1365.06,
-       "motivo": "alfa esperado por debajo del coste de entrada",
-       "coste_evitado_eur": 1.82
+       "importe_eur": 1896.8
+      },
+      {
+       "symbol": "RISR",
+       "lado": "compra",
+       "importe_eur": 1278.73
+      },
+      {
+       "symbol": "NEAR/USD",
+       "lado": "compra",
+       "importe_eur": 5114.94
+      },
+      {
+       "symbol": "MKTX",
+       "lado": "compra",
+       "importe_eur": 1924.36
+      },
+      {
+       "symbol": "CVI",
+       "lado": "compra",
+       "importe_eur": 2829.39
+      },
+      {
+       "symbol": "RXO",
+       "lado": "compra",
+       "importe_eur": 1042.86
+      },
+      {
+       "symbol": "IMCV",
+       "lado": "compra",
+       "importe_eur": 1278.73
+      },
+      {
+       "symbol": "SEIQ",
+       "lado": "compra",
+       "importe_eur": 1278.73
+      },
+      {
+       "symbol": "SG",
+       "lado": "compra",
+       "importe_eur": 3603.34
       }
      ],
-     "ahorro_acumulado": 102.39
+     "creadas_el": "2026-10-19",
+     "descartadas": [
+      {
+       "symbol": "CANE",
+       "lado": "compra",
+       "importe_eur": 1278.73,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 2.28
+      },
+      {
+       "symbol": "PTC",
+       "lado": "ajuste",
+       "importe_eur": 975.14,
+       "motivo": "ajuste por debajo del mínimo rentable",
+       "coste_evitado_eur": 1.0
+      },
+      {
+       "symbol": "USDMXN=X",
+       "lado": "compra",
+       "importe_eur": 1278.73,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.64
+      },
+      {
+       "symbol": "^BVSP",
+       "lado": "compra",
+       "importe_eur": 1278.73,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 2.28
+      },
+      {
+       "symbol": "BWX",
+       "lado": "compra",
+       "importe_eur": 1278.73,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.77
+      }
+     ],
+     "ahorro_acumulado": 111.36
     },
     "etoro": {
      "efectivo": 11801.4775390625,
@@ -120,67 +216,121 @@
       }
      },
      "costes_acumulados": 1035.573974609375,
-     "ordenes_pendientes": [],
-     "creadas_el": null,
-     "descartadas": [
+     "ordenes_pendientes": [
       {
-       "symbol": "SB=F",
-       "lado": "compra",
-       "importe_eur": 1350.11,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
+       "symbol": "DNA",
+       "lado": "venta"
       },
       {
-       "symbol": "^TWII",
-       "lado": "compra",
-       "importe_eur": 1350.11,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
+       "symbol": "PFIX",
+       "lado": "venta"
       },
       {
-       "symbol": "BIL",
+       "symbol": "PACB",
+       "lado": "venta"
+      },
+      {
+       "symbol": "IBRX",
+       "lado": "venta"
+      },
+      {
+       "symbol": "CFFI",
        "lado": "compra",
-       "importe_eur": 1350.11,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
+       "importe_eur": 1881.57
       },
       {
        "symbol": "PTC",
        "lado": "compra",
-       "importe_eur": 1618.98,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
+       "importe_eur": 2590.09
       },
       {
-       "symbol": "ITGR",
+       "symbol": "NEAR/USD",
        "lado": "compra",
-       "importe_eur": 1350.11,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
+       "importe_eur": 5073.87
       },
       {
-       "symbol": "TRUT",
+       "symbol": "MKTX",
        "lado": "compra",
-       "importe_eur": 1386.7,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 0.0
+       "importe_eur": 1908.91
       },
       {
-       "symbol": "HACK",
+       "symbol": "CVI",
        "lado": "compra",
-       "importe_eur": 1351.14,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 0.0
+       "importe_eur": 2806.67
       },
       {
-       "symbol": "JAKK",
+       "symbol": "SG",
        "lado": "compra",
-       "importe_eur": 1350.11,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
+       "importe_eur": 3574.41
       }
      ],
-     "ahorro_acumulado": 165.52
+     "creadas_el": "2026-10-19",
+     "descartadas": [
+      {
+       "symbol": "PUMP/USD",
+       "lado": "venta",
+       "importe_eur": 5398.639999999999,
+       "motivo": "el candidato no supera el coste del cambio",
+       "coste_evitado_eur": 106.17
+      },
+      {
+       "symbol": "CANE",
+       "lado": "compra",
+       "importe_eur": 1268.47,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "USDMXN=X",
+       "lado": "compra",
+       "importe_eur": 1268.47,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "RISR",
+       "lado": "compra",
+       "importe_eur": 1268.47,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 0.0
+      },
+      {
+       "symbol": "^BVSP",
+       "lado": "compra",
+       "importe_eur": 1268.47,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "BWX",
+       "lado": "compra",
+       "importe_eur": 1268.47,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "RXO",
+       "lado": "ajuste",
+       "importe_eur": 1043.45,
+       "motivo": "ajuste por debajo del mínimo rentable",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "IMCV",
+       "lado": "compra",
+       "importe_eur": 1268.47,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 0.0
+      },
+      {
+       "symbol": "SEIQ",
+       "lado": "compra",
+       "importe_eur": 1268.47,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 0.0
+      }
+     ],
+     "ahorro_acumulado": 280.69
     }
    }
   },
