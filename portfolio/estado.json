@@ -1,34 +1,18 @@
 {
  "capital_inicial": 40000.0,
  "inicio": "2026-08-14",
- "ultima_fecha": "2026-10-19",
+ "ultima_fecha": "2026-10-20",
  "escenarios": {
   "corto": {
    "ultimo_rebalanceo": "2026-10-19",
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
-     "efectivo": 4842.00927734375,
+     "efectivo": 5938.615234375,
      "posiciones": {
-      "DNA": {
-       "unidades": 319.8611145019531,
-       "coste_eur": 4303.38
-      },
-      "PFIX": {
-       "unidades": 44.60554885864258,
-       "coste_eur": 2684.87
-      },
-      "PACB": {
-       "unidades": 1968.9539794921875,
-       "coste_eur": 3654.76
-      },
       "RXO": {
-       "unidades": 108.62044525146484,
-       "coste_eur": 2786.65
-      },
-      "PUMP/USD": {
-       "unidades": 1221507.25,
-       "coste_eur": 5459.26
+       "unidades": 150.0559539794922,
+       "coste_eur": 3828.51
       },
       "QTEX": {
        "unidades": 4184.251953125,
@@ -38,112 +22,42 @@
        "unidades": 9.381101608276367,
        "coste_eur": 1635.91
       },
-      "ITGR": {
-       "unidades": 12.011842727661133,
-       "coste_eur": 1364.06
+      "CFFI": {
+       "unidades": 20.820152282714844,
+       "coste_eur": 1895.8
       },
-      "TRUT": {
-       "unidades": 46.43425750732422,
-       "coste_eur": 1401.05
+      "RISR": {
+       "unidades": 38.36375045776367,
+       "coste_eur": 1277.73
       },
-      "HACK": {
-       "unidades": 12.07296085357666,
-       "coste_eur": 1365.11
+      "NEAR/USD": {
+       "unidades": 1165.0103759765625,
+       "coste_eur": 5113.94
       },
-      "IBRX": {
-       "unidades": 369.1976623535156,
-       "coste_eur": 3310.64
+      "MKTX": {
+       "unidades": 13.10146427154541,
+       "coste_eur": 1923.36
       },
-      "JAKK": {
-       "unidades": 54.483516693115234,
-       "coste_eur": 1364.06
+      "CVI": {
+       "unidades": 52.79623794555664,
+       "coste_eur": 2828.39
+      },
+      "IMCV": {
+       "unidades": 14.929676055908203,
+       "coste_eur": 1277.73
+      },
+      "SEIQ": {
+       "unidades": 33.4072380065918,
+       "coste_eur": 1277.73
+      },
+      "SG": {
+       "unidades": 396.7844543457031,
+       "coste_eur": 3602.34
       }
      },
-     "costes_acumulados": 607.5193481445312,
-     "ordenes_pendientes": [
-      {
-       "symbol": "DNA",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PFIX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PACB",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PUMP/USD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "ITGR",
-       "lado": "venta"
-      },
-      {
-       "symbol": "TRUT",
-       "lado": "venta"
-      },
-      {
-       "symbol": "HACK",
-       "lado": "venta"
-      },
-      {
-       "symbol": "IBRX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "JAKK",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CFFI",
-       "lado": "compra",
-       "importe_eur": 1896.8
-      },
-      {
-       "symbol": "RISR",
-       "lado": "compra",
-       "importe_eur": 1278.73
-      },
-      {
-       "symbol": "NEAR/USD",
-       "lado": "compra",
-       "importe_eur": 5114.94
-      },
-      {
-       "symbol": "MKTX",
-       "lado": "compra",
-       "importe_eur": 1924.36
-      },
-      {
-       "symbol": "CVI",
-       "lado": "compra",
-       "importe_eur": 2829.39
-      },
-      {
-       "symbol": "RXO",
-       "lado": "compra",
-       "importe_eur": 1042.86
-      },
-      {
-       "symbol": "IMCV",
-       "lado": "compra",
-       "importe_eur": 1278.73
-      },
-      {
-       "symbol": "SEIQ",
-       "lado": "compra",
-       "importe_eur": 1278.73
-      },
-      {
-       "symbol": "SG",
-       "lado": "compra",
-       "importe_eur": 3603.34
-      }
-     ],
-     "creadas_el": "2026-10-19",
+     "costes_acumulados": 696.001953125,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "CANE",
@@ -184,20 +98,8 @@
      "ahorro_acumulado": 111.36
     },
     "etoro": {
-     "efectivo": 11801.4775390625,
+     "efectivo": 4994.3173828125,
      "posiciones": {
-      "DNA": {
-       "unidades": 315.3434753417969,
-       "coste_eur": 4241.54
-      },
-      "PFIX": {
-       "unidades": 43.984947204589844,
-       "coste_eur": 2647.78
-      },
-      "PACB": {
-       "unidades": 1947.4329833984375,
-       "coste_eur": 3613.91
-      },
       "RXO": {
        "unidades": 107.42568969726562,
        "coste_eur": 2755.31
@@ -210,61 +112,34 @@
        "unidades": 4138.82373046875,
        "coste_eur": 5398.639999999999
       },
-      "IBRX": {
-       "unidades": 365.15496826171875,
-       "coste_eur": 3273.5699999999997
+      "CFFI": {
+       "unidades": 20.649263381958008,
+       "coste_eur": 1879.77
+      },
+      "PTC": {
+       "unidades": 15.029118537902832,
+       "coste_eur": 2588.29
+      },
+      "NEAR/USD": {
+       "unidades": 1150.3211669921875,
+       "coste_eur": 5072.07
+      },
+      "MKTX": {
+       "unidades": 12.9940185546875,
+       "coste_eur": 1907.1100000000001
+      },
+      "CVI": {
+       "unidades": 52.37028121948242,
+       "coste_eur": 2804.87
+      },
+      "SG": {
+       "unidades": 393.6081237792969,
+       "coste_eur": 3572.6099999999997
       }
      },
-     "costes_acumulados": 1035.573974609375,
-     "ordenes_pendientes": [
-      {
-       "symbol": "DNA",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PFIX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PACB",
-       "lado": "venta"
-      },
-      {
-       "symbol": "IBRX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CFFI",
-       "lado": "compra",
-       "importe_eur": 1881.57
-      },
-      {
-       "symbol": "PTC",
-       "lado": "compra",
-       "importe_eur": 2590.09
-      },
-      {
-       "symbol": "NEAR/USD",
-       "lado": "compra",
-       "importe_eur": 5073.87
-      },
-      {
-       "symbol": "MKTX",
-       "lado": "compra",
-       "importe_eur": 1908.91
-      },
-      {
-       "symbol": "CVI",
-       "lado": "compra",
-       "importe_eur": 2806.67
-      },
-      {
-       "symbol": "SG",
-       "lado": "compra",
-       "importe_eur": 3574.41
-      }
-     ],
-     "creadas_el": "2026-10-19",
+     "costes_acumulados": 1111.39794921875,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "PUMP/USD",
