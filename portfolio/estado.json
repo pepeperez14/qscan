@@ -1,154 +1,63 @@
 {
  "capital_inicial": 40000.0,
  "inicio": "2026-08-14",
- "ultima_fecha": "2026-10-26",
+ "ultima_fecha": "2026-10-27",
  "escenarios": {
   "corto": {
    "ultimo_rebalanceo": "2026-10-26",
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
-     "efectivo": 5938.615234375,
+     "efectivo": 850.935546875,
      "posiciones": {
-      "RXO": {
-       "unidades": 150.0559539794922,
-       "coste_eur": 3828.51
-      },
-      "QTEX": {
-       "unidades": 4184.251953125,
-       "coste_eur": 5459.26
-      },
-      "PTC": {
-       "unidades": 9.381101608276367,
-       "coste_eur": 1635.91
-      },
-      "CFFI": {
-       "unidades": 20.820152282714844,
-       "coste_eur": 1895.8
-      },
-      "RISR": {
-       "unidades": 38.36375045776367,
-       "coste_eur": 1277.73
-      },
       "NEAR/USD": {
        "unidades": 1165.0103759765625,
        "coste_eur": 5113.94
       },
-      "MKTX": {
-       "unidades": 13.10146427154541,
-       "coste_eur": 1923.36
+      "DCBO": {
+       "unidades": 156.71063232421875,
+       "coste_eur": 4277.97
       },
-      "CVI": {
-       "unidades": 52.79623794555664,
-       "coste_eur": 2828.39
+      "HPK": {
+       "unidades": 424.5813293457031,
+       "coste_eur": 4277.97
       },
-      "IMCV": {
-       "unidades": 14.929676055908203,
-       "coste_eur": 1277.73
+      "QVAL": {
+       "unidades": 35.0411262512207,
+       "coste_eur": 1992.16
       },
-      "SEIQ": {
-       "unidades": 33.4072380065918,
-       "coste_eur": 1277.73
+      "PAYC": {
+       "unidades": 12.895513534545898,
+       "coste_eur": 3087.18
       },
-      "SG": {
-       "unidades": 396.7844543457031,
-       "coste_eur": 3602.34
+      "VEEV": {
+       "unidades": 10.437045097351074,
+       "coste_eur": 2949.18
+      },
+      "INTA": {
+       "unidades": 97.310791015625,
+       "coste_eur": 4057.0
+      },
+      "BLKB": {
+       "unidades": 63.34225082397461,
+       "coste_eur": 3079.34
+      },
+      "RSPS": {
+       "unidades": 76.4337158203125,
+       "coste_eur": 2119.33
+      },
+      "ISHG": {
+       "unidades": 16.14651870727539,
+       "coste_eur": 1068.74
+      },
+      "REPX": {
+       "unidades": 59.86427307128906,
+       "coste_eur": 2833.59
       }
      },
-     "costes_acumulados": 696.001953125,
-     "ordenes_pendientes": [
-      {
-       "symbol": "RXO",
-       "lado": "venta"
-      },
-      {
-       "symbol": "QTEX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PTC",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CFFI",
-       "lado": "venta"
-      },
-      {
-       "symbol": "RISR",
-       "lado": "venta"
-      },
-      {
-       "symbol": "MKTX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CVI",
-       "lado": "venta"
-      },
-      {
-       "symbol": "IMCV",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SEIQ",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SG",
-       "lado": "venta"
-      },
-      {
-       "symbol": "DCBO",
-       "lado": "compra",
-       "importe_eur": 4278.97
-      },
-      {
-       "symbol": "HPK",
-       "lado": "compra",
-       "importe_eur": 4278.97
-      },
-      {
-       "symbol": "QVAL",
-       "lado": "compra",
-       "importe_eur": 1993.16
-      },
-      {
-       "symbol": "PAYC",
-       "lado": "compra",
-       "importe_eur": 3088.18
-      },
-      {
-       "symbol": "VEEV",
-       "lado": "compra",
-       "importe_eur": 2950.18
-      },
-      {
-       "symbol": "INTA",
-       "lado": "compra",
-       "importe_eur": 4058.0
-      },
-      {
-       "symbol": "BLKB",
-       "lado": "compra",
-       "importe_eur": 3080.34
-      },
-      {
-       "symbol": "RSPS",
-       "lado": "compra",
-       "importe_eur": 2120.33
-      },
-      {
-       "symbol": "ISHG",
-       "lado": "compra",
-       "importe_eur": 1069.74
-      },
-      {
-       "symbol": "REPX",
-       "lado": "compra",
-       "importe_eur": 2834.59
-      }
-     ],
-     "creadas_el": "2026-10-26",
+     "costes_acumulados": 753.6478271484375,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "NEAR/USD",
@@ -196,126 +105,52 @@
      "ahorro_acumulado": 156.43
     },
     "etoro": {
-     "efectivo": 4994.3173828125,
+     "efectivo": 1839.650390625,
      "posiciones": {
-      "RXO": {
-       "unidades": 107.42568969726562,
-       "coste_eur": 2755.31
-      },
-      "PUMP/USD": {
-       "unidades": 1202559.0,
-       "coste_eur": 5398.639999999999
-      },
-      "QTEX": {
-       "unidades": 4138.82373046875,
-       "coste_eur": 5398.639999999999
-      },
-      "CFFI": {
-       "unidades": 20.649263381958008,
-       "coste_eur": 1879.77
-      },
-      "PTC": {
-       "unidades": 15.029118537902832,
-       "coste_eur": 2588.29
-      },
       "NEAR/USD": {
        "unidades": 1150.3211669921875,
        "coste_eur": 5072.07
       },
-      "MKTX": {
-       "unidades": 12.9940185546875,
-       "coste_eur": 1907.1100000000001
+      "DCBO": {
+       "unidades": 154.43185424804688,
+       "coste_eur": 4214.71
       },
-      "CVI": {
-       "unidades": 52.37028121948242,
-       "coste_eur": 2804.87
+      "HPK": {
+       "unidades": 418.4073791503906,
+       "coste_eur": 4214.71
       },
-      "SG": {
-       "unidades": 393.6081237792969,
-       "coste_eur": 3572.6099999999997
+      "QVAL": {
+       "unidades": 34.54341125488281,
+       "coste_eur": 1964.06
+      },
+      "PAYC": {
+       "unidades": 12.707042694091797,
+       "coste_eur": 3041.2999999999997
+      },
+      "VEEV": {
+       "unidades": 10.2843599319458,
+       "coste_eur": 2905.31
+      },
+      "INTA": {
+       "unidades": 95.89462280273438,
+       "coste_eur": 3996.96
+      },
+      "BLKB": {
+       "unidades": 62.41634750366211,
+       "coste_eur": 3033.5699999999997
+      },
+      "RSPS": {
+       "unidades": 75.34603118896484,
+       "coste_eur": 2089.38
+      },
+      "REPX": {
+       "unidades": 58.987876892089844,
+       "coste_eur": 2791.41
       }
      },
-     "costes_acumulados": 1111.39794921875,
-     "ordenes_pendientes": [
-      {
-       "symbol": "RXO",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PUMP/USD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "QTEX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CFFI",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PTC",
-       "lado": "venta"
-      },
-      {
-       "symbol": "MKTX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CVI",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SG",
-       "lado": "venta"
-      },
-      {
-       "symbol": "DCBO",
-       "lado": "compra",
-       "importe_eur": 4216.51
-      },
-      {
-       "symbol": "HPK",
-       "lado": "compra",
-       "importe_eur": 4216.51
-      },
-      {
-       "symbol": "QVAL",
-       "lado": "compra",
-       "importe_eur": 1964.06
-      },
-      {
-       "symbol": "PAYC",
-       "lado": "compra",
-       "importe_eur": 3043.1
-      },
-      {
-       "symbol": "VEEV",
-       "lado": "compra",
-       "importe_eur": 2907.11
-      },
-      {
-       "symbol": "INTA",
-       "lado": "compra",
-       "importe_eur": 3998.76
-      },
-      {
-       "symbol": "BLKB",
-       "lado": "compra",
-       "importe_eur": 3035.37
-      },
-      {
-       "symbol": "RSPS",
-       "lado": "compra",
-       "importe_eur": 2089.38
-      },
-      {
-       "symbol": "REPX",
-       "lado": "compra",
-       "importe_eur": 2793.21
-      }
-     ],
-     "creadas_el": "2026-10-26",
+     "costes_acumulados": 1206.56201171875,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "NEAR/USD",
