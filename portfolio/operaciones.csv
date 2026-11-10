@@ -742,3 +742,5 @@ fecha,escenario,broker,symbol,lado,importe_eur,coste_eur,motivo,precio,unidades
 2026-11-03,combinada,etoro,ZEC/USD,compra,4339.94,1.8,,,
 2026-11-03,combinada,etoro,BHYP,compra,2429.72,0.0,,,
 2026-11-03,combinada,etoro,RCEL,compra,3624.13,1.8,,,
+2026-11-09,medio,trade_republic,CBZ,venta,2167.965187521436,2.6279448492780353,sin precio: activo retirado del universo,54.97999954223633,44.14936447143555
+2026-11-09,medio,etoro,CBZ,venta,2154.726582556959,2.878802692624792,sin precio: activo retirado del universo,54.97999954223633,43.885196685791016
