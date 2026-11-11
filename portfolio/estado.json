@@ -1,149 +1,59 @@
 {
  "capital_inicial": 40000.0,
  "inicio": "2026-08-14",
- "ultima_fecha": "2026-11-09",
+ "ultima_fecha": "2026-11-10",
  "escenarios": {
   "corto": {
    "ultimo_rebalanceo": "2026-11-09",
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
-     "efectivo": 3414.600341796875,
+     "efectivo": 1418.6630859375,
      "posiciones": {
-      "QVAL": {
-       "unidades": 35.0411262512207,
-       "coste_eur": 1992.16
-      },
-      "BRZE": {
-       "unidades": 105.87901306152344,
-       "coste_eur": 4328.44
-      },
-      "SGRY": {
-       "unidades": 167.5613250732422,
-       "coste_eur": 3474.48
-      },
-      "ENOR": {
-       "unidades": 59.85938262939453,
-       "coste_eur": 1972.2
-      },
       "XMR/USD": {
        "unidades": 7.976036548614502,
        "coste_eur": 4328.44
       },
-      "HURN": {
-       "unidades": 19.15880584716797,
-       "coste_eur": 3290.53
+      "KBWP": {
+       "unidades": 21.355712890625,
+       "coste_eur": 2677.37
       },
-      "CART": {
-       "unidades": 45.07468795776367,
-       "coste_eur": 2325.54
+      "ADT": {
+       "unidades": 342.88494873046875,
+       "coste_eur": 3027.06
       },
-      "RRC": {
-       "unidades": 40.691009521484375,
-       "coste_eur": 1961.84
+      "GDYN": {
+       "unidades": 334.8276062011719,
+       "coste_eur": 3911.38
       },
-      "WST": {
-       "unidades": 4.379613399505615,
-       "coste_eur": 1595.37
+      "COAG": {
+       "unidades": 109.40988159179688,
+       "coste_eur": 3911.38
       },
-      "HALO": {
-       "unidades": 16.5635986328125,
-       "coste_eur": 1900.04
+      "FCN": {
+       "unidades": 12.610116958618164,
+       "coste_eur": 2177.13
       },
-      "AVPT": {
-       "unidades": 146.3072509765625,
-       "coste_eur": 2154.64
+      "MAX": {
+       "unidades": 276.3678894042969,
+       "coste_eur": 3472.45
+      },
+      "TAIL": {
+       "unidades": 118.991455078125,
+       "coste_eur": 1073.45
+      },
+      "PBPH": {
+       "unidades": 76.17908477783203,
+       "coste_eur": 2141.82
+      },
+      "TDOC": {
+       "unidades": 495.62054443359375,
+       "coste_eur": 3911.38
       }
      },
-     "costes_acumulados": 850.147705078125,
-     "ordenes_pendientes": [
-      {
-       "symbol": "QVAL",
-       "lado": "venta"
-      },
-      {
-       "symbol": "BRZE",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SGRY",
-       "lado": "venta"
-      },
-      {
-       "symbol": "ENOR",
-       "lado": "venta"
-      },
-      {
-       "symbol": "HURN",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CART",
-       "lado": "venta"
-      },
-      {
-       "symbol": "RRC",
-       "lado": "venta"
-      },
-      {
-       "symbol": "WST",
-       "lado": "venta"
-      },
-      {
-       "symbol": "HALO",
-       "lado": "venta"
-      },
-      {
-       "symbol": "AVPT",
-       "lado": "venta"
-      },
-      {
-       "symbol": "KBWP",
-       "lado": "compra",
-       "importe_eur": 2678.37
-      },
-      {
-       "symbol": "ADT",
-       "lado": "compra",
-       "importe_eur": 3028.06
-      },
-      {
-       "symbol": "GDYN",
-       "lado": "compra",
-       "importe_eur": 3912.38
-      },
-      {
-       "symbol": "COAG",
-       "lado": "compra",
-       "importe_eur": 3912.38
-      },
-      {
-       "symbol": "FCN",
-       "lado": "compra",
-       "importe_eur": 2178.13
-      },
-      {
-       "symbol": "MAX",
-       "lado": "compra",
-       "importe_eur": 3473.45
-      },
-      {
-       "symbol": "TAIL",
-       "lado": "compra",
-       "importe_eur": 1074.45
-      },
-      {
-       "symbol": "PBPH",
-       "lado": "compra",
-       "importe_eur": 2142.82
-      },
-      {
-       "symbol": "TDOC",
-       "lado": "compra",
-       "importe_eur": 3912.38
-      }
-     ],
-     "creadas_el": "2026-11-09",
+     "costes_acumulados": 903.6987915039062,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "XMR/USD",
@@ -198,137 +108,48 @@
      "ahorro_acumulado": 197.67
     },
     "etoro": {
-     "efectivo": 984.499755859375,
+     "efectivo": 2374.0888671875,
      "posiciones": {
-      "NEAR/USD": {
-       "unidades": 1150.3211669921875,
-       "coste_eur": 5072.07
-      },
-      "QVAL": {
-       "unidades": 34.54341125488281,
-       "coste_eur": 1964.06
-      },
-      "BRZE": {
-       "unidades": 104.19715881347656,
-       "coste_eur": 4258.62
-      },
-      "SGRY": {
-       "unidades": 164.89218139648438,
-       "coste_eur": 3418.2799999999997
-      },
-      "ENOR": {
-       "unidades": 58.92928695678711,
-       "coste_eur": 1941.75
-      },
       "XMR/USD": {
        "unidades": 7.812398433685303,
        "coste_eur": 4258.62
       },
-      "HURN": {
-       "unidades": 18.85335350036621,
-       "coste_eur": 3237.2599999999998
+      "KBWP": {
+       "unidades": 20.85741424560547,
+       "coste_eur": 2615.16
       },
-      "CART": {
-       "unidades": 44.35136032104492,
-       "coste_eur": 2287.6499999999996
+      "ADT": {
+       "unidades": 334.7834777832031,
+       "coste_eur": 2954.7999999999997
       },
-      "RRC": {
-       "unidades": 40.03541946411133,
-       "coste_eur": 1929.75
+      "GDYN": {
+       "unidades": 326.9361877441406,
+       "coste_eur": 3818.24
       },
-      "HALO": {
-       "unidades": 16.296552658081055,
-       "coste_eur": 1868.94
+      "COAG": {
+       "unidades": 106.83123779296875,
+       "coste_eur": 3818.24
       },
-      "AVPT": {
-       "unidades": 143.95504760742188,
-       "coste_eur": 2119.47
+      "FCN": {
+       "unidades": 12.310846328735352,
+       "coste_eur": 2124.93
+      },
+      "MAX": {
+       "unidades": 269.8477478027344,
+       "coste_eur": 3389.68
+      },
+      "PBPH": {
+       "unidades": 74.4085693359375,
+       "coste_eur": 2092.25
+      },
+      "TDOC": {
+       "unidades": 483.9394226074219,
+       "coste_eur": 3818.24
       }
      },
-     "costes_acumulados": 1296.416015625,
-     "ordenes_pendientes": [
-      {
-       "symbol": "NEAR/USD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "QVAL",
-       "lado": "venta"
-      },
-      {
-       "symbol": "BRZE",
-       "lado": "venta"
-      },
-      {
-       "symbol": "SGRY",
-       "lado": "venta"
-      },
-      {
-       "symbol": "ENOR",
-       "lado": "venta"
-      },
-      {
-       "symbol": "HURN",
-       "lado": "venta"
-      },
-      {
-       "symbol": "CART",
-       "lado": "venta"
-      },
-      {
-       "symbol": "RRC",
-       "lado": "venta"
-      },
-      {
-       "symbol": "HALO",
-       "lado": "venta"
-      },
-      {
-       "symbol": "AVPT",
-       "lado": "venta"
-      },
-      {
-       "symbol": "KBWP",
-       "lado": "compra",
-       "importe_eur": 2615.16
-      },
-      {
-       "symbol": "ADT",
-       "lado": "compra",
-       "importe_eur": 2956.6
-      },
-      {
-       "symbol": "GDYN",
-       "lado": "compra",
-       "importe_eur": 3820.04
-      },
-      {
-       "symbol": "COAG",
-       "lado": "compra",
-       "importe_eur": 3820.04
-      },
-      {
-       "symbol": "FCN",
-       "lado": "compra",
-       "importe_eur": 2126.73
-      },
-      {
-       "symbol": "MAX",
-       "lado": "compra",
-       "importe_eur": 3391.48
-      },
-      {
-       "symbol": "PBPH",
-       "lado": "compra",
-       "importe_eur": 2092.25
-      },
-      {
-       "symbol": "TDOC",
-       "lado": "compra",
-       "importe_eur": 3820.04
-      }
-     ],
-     "creadas_el": "2026-11-09",
+     "costes_acumulados": 1380.3798828125,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "XMR/USD",
