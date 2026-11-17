@@ -1,10 +1,10 @@
 {
  "capital_inicial": 40000.0,
  "inicio": "2026-08-14",
- "ultima_fecha": "2026-11-13",
+ "ultima_fecha": "2026-11-16",
  "escenarios": {
   "corto": {
-   "ultimo_rebalanceo": "2026-11-09",
+   "ultimo_rebalanceo": "2026-11-16",
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
@@ -52,60 +52,141 @@
       }
      },
      "costes_acumulados": 903.6987915039062,
-     "ordenes_pendientes": [],
-     "creadas_el": null,
-     "descartadas": [
+     "ordenes_pendientes": [
       {
        "symbol": "XMR/USD",
-       "lado": "venta",
-       "importe_eur": 4328.44,
-       "motivo": "el candidato no supera el coste del cambio",
-       "coste_evitado_eur": 26.89
+       "lado": "venta"
       },
       {
-       "symbol": "^VIX",
+       "symbol": "KBWP",
+       "lado": "venta"
+      },
+      {
+       "symbol": "ADT",
+       "lado": "venta"
+      },
+      {
+       "symbol": "GDYN",
+       "lado": "venta"
+      },
+      {
+       "symbol": "COAG",
+       "lado": "venta"
+      },
+      {
+       "symbol": "FCN",
+       "lado": "venta"
+      },
+      {
+       "symbol": "MAX",
+       "lado": "venta"
+      },
+      {
+       "symbol": "TAIL",
+       "lado": "venta"
+      },
+      {
+       "symbol": "PBPH",
+       "lado": "venta"
+      },
+      {
+       "symbol": "TDOC",
+       "lado": "venta"
+      },
+      {
+       "symbol": "PERI",
        "lado": "compra",
-       "importe_eur": 978.09,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.0
+       "importe_eur": 3772.08
+      },
+      {
+       "symbol": "HEI.DE",
+       "lado": "compra",
+       "importe_eur": 1103.1
+      },
+      {
+       "symbol": "DCTH",
+       "lado": "compra",
+       "importe_eur": 4044.63
+      },
+      {
+       "symbol": "TBI",
+       "lado": "compra",
+       "importe_eur": 4044.63
+      },
+      {
+       "symbol": "LBTYA",
+       "lado": "compra",
+       "importe_eur": 2908.51
+      },
+      {
+       "symbol": "DDI",
+       "lado": "compra",
+       "importe_eur": 2555.43
+      },
+      {
+       "symbol": "LYEL",
+       "lado": "compra",
+       "importe_eur": 4044.63
+      },
+      {
+       "symbol": "IYC",
+       "lado": "compra",
+       "importe_eur": 2582.11
+      }
+     ],
+     "creadas_el": "2026-11-16",
+     "descartadas": [
+      {
+       "symbol": "USDG/USD",
+       "lado": "compra",
+       "importe_eur": 1011.16,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 6.06
+      },
+      {
+       "symbol": "BKMI",
+       "lado": "compra",
+       "importe_eur": 1011.16,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.4
+      },
+      {
+       "symbol": "BIL",
+       "lado": "compra",
+       "importe_eur": 1011.16,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.61
+      },
+      {
+       "symbol": "UNG",
+       "lado": "compra",
+       "importe_eur": 1011.16,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 2.01
       },
       {
        "symbol": "USDBRL=X",
        "lado": "compra",
-       "importe_eur": 978.09,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.0
+       "importe_eur": 1011.16,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.51
       },
       {
-       "symbol": "GBP/USD",
+       "symbol": "^BSESN",
        "lado": "compra",
-       "importe_eur": 978.09,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.0
+       "importe_eur": 1011.16,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 2.01
       },
       {
-       "symbol": "TIP",
+       "symbol": "NYM",
        "lado": "compra",
-       "importe_eur": 978.09,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.0
-      },
-      {
-       "symbol": "WEAT",
-       "lado": "compra",
-       "importe_eur": 978.09,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.0
-      },
-      {
-       "symbol": "LDRT",
-       "lado": "compra",
-       "importe_eur": 978.09,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.0
+       "importe_eur": 1011.16,
+       "motivo": "alfa esperado por debajo del coste de entrada",
+       "coste_evitado_eur": 1.4
       }
      ],
-     "ahorro_acumulado": 197.67
+     "ahorro_acumulado": 213.67
     },
     "etoro": {
      "efectivo": 2374.0888671875,
@@ -148,8 +229,76 @@
       }
      },
      "costes_acumulados": 1380.3798828125,
-     "ordenes_pendientes": [],
-     "creadas_el": null,
+     "ordenes_pendientes": [
+      {
+       "symbol": "KBWP",
+       "lado": "venta"
+      },
+      {
+       "symbol": "ADT",
+       "lado": "venta"
+      },
+      {
+       "symbol": "GDYN",
+       "lado": "venta"
+      },
+      {
+       "symbol": "COAG",
+       "lado": "venta"
+      },
+      {
+       "symbol": "FCN",
+       "lado": "venta"
+      },
+      {
+       "symbol": "MAX",
+       "lado": "venta"
+      },
+      {
+       "symbol": "PBPH",
+       "lado": "venta"
+      },
+      {
+       "symbol": "TDOC",
+       "lado": "venta"
+      },
+      {
+       "symbol": "PERI",
+       "lado": "compra",
+       "importe_eur": 3675.8
+      },
+      {
+       "symbol": "DCTH",
+       "lado": "compra",
+       "importe_eur": 3941.39
+      },
+      {
+       "symbol": "TBI",
+       "lado": "compra",
+       "importe_eur": 3941.39
+      },
+      {
+       "symbol": "LBTYA",
+       "lado": "compra",
+       "importe_eur": 2834.26
+      },
+      {
+       "symbol": "DDI",
+       "lado": "compra",
+       "importe_eur": 2490.2
+      },
+      {
+       "symbol": "LYEL",
+       "lado": "compra",
+       "importe_eur": 3941.39
+      },
+      {
+       "symbol": "IYC",
+       "lado": "compra",
+       "importe_eur": 2516.2
+      }
+     ],
+     "creadas_el": "2026-11-16",
      "descartadas": [
       {
        "symbol": "XMR/USD",
@@ -159,56 +308,63 @@
        "coste_evitado_eur": 46.19
       },
       {
-       "symbol": "^VIX",
+       "symbol": "HEI.DE",
        "lado": "compra",
-       "importe_eur": 955.01,
+       "importe_eur": 1074.95,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "USDG/USD",
+       "lado": "compra",
+       "importe_eur": 985.35,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "BKMI",
+       "lado": "compra",
+       "importe_eur": 985.35,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 0.0
+      },
+      {
+       "symbol": "BIL",
+       "lado": "compra",
+       "importe_eur": 985.35,
+       "motivo": "posición demasiado pequeña para su comisión",
+       "coste_evitado_eur": 1.8
+      },
+      {
+       "symbol": "UNG",
+       "lado": "compra",
+       "importe_eur": 985.35,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
        "symbol": "USDBRL=X",
        "lado": "compra",
-       "importe_eur": 955.01,
+       "importe_eur": 985.35,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "GBP/USD",
+       "symbol": "^BSESN",
        "lado": "compra",
-       "importe_eur": 955.01,
+       "importe_eur": 985.35,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 1.8
       },
       {
-       "symbol": "TIP",
+       "symbol": "NYM",
        "lado": "compra",
-       "importe_eur": 955.01,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
-      },
-      {
-       "symbol": "WEAT",
-       "lado": "compra",
-       "importe_eur": 955.01,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 1.8
-      },
-      {
-       "symbol": "TAIL",
-       "lado": "compra",
-       "importe_eur": 1049.1,
-       "motivo": "posición demasiado pequeña para su comisión",
-       "coste_evitado_eur": 0.0
-      },
-      {
-       "symbol": "LDRT",
-       "lado": "compra",
-       "importe_eur": 955.01,
+       "importe_eur": 985.35,
        "motivo": "posición demasiado pequeña para su comisión",
        "coste_evitado_eur": 0.0
       }
      ],
-     "ahorro_acumulado": 508.17
+     "ahorro_acumulado": 565.16
     }
    }
   },
