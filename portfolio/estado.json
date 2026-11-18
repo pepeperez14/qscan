@@ -1,140 +1,51 @@
 {
  "capital_inicial": 40000.0,
  "inicio": "2026-08-14",
- "ultima_fecha": "2026-11-16",
+ "ultima_fecha": "2026-11-17",
  "escenarios": {
   "corto": {
    "ultimo_rebalanceo": "2026-11-16",
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
-     "efectivo": 1418.6630859375,
+     "efectivo": 6866.20703125,
      "posiciones": {
-      "XMR/USD": {
-       "unidades": 7.976036548614502,
-       "coste_eur": 4328.44
+      "PERI": {
+       "unidades": 374.3811950683594,
+       "coste_eur": 3771.08
       },
-      "KBWP": {
-       "unidades": 21.355712890625,
-       "coste_eur": 2677.37
+      "HEI.DE": {
+       "unidades": 6.25880241394043,
+       "coste_eur": 1102.1
       },
-      "ADT": {
-       "unidades": 342.88494873046875,
-       "coste_eur": 3027.06
+      "DCTH": {
+       "unidades": 223.3131103515625,
+       "coste_eur": 4043.63
       },
-      "GDYN": {
-       "unidades": 334.8276062011719,
-       "coste_eur": 3911.38
+      "TBI": {
+       "unidades": 372.18853759765625,
+       "coste_eur": 4043.63
       },
-      "COAG": {
-       "unidades": 109.40988159179688,
-       "coste_eur": 3911.38
+      "LBTYA": {
+       "unidades": 303.73956298828125,
+       "coste_eur": 2907.51
       },
-      "FCN": {
-       "unidades": 12.610116958618164,
-       "coste_eur": 2177.13
+      "DDI": {
+       "unidades": 179.26608276367188,
+       "coste_eur": 2554.43
       },
-      "MAX": {
-       "unidades": 276.3678894042969,
-       "coste_eur": 3472.45
+      "LYEL": {
+       "unidades": 304.7963562011719,
+       "coste_eur": 4043.63
       },
-      "TAIL": {
-       "unidades": 118.991455078125,
-       "coste_eur": 1073.45
-      },
-      "PBPH": {
-       "unidades": 76.17908477783203,
-       "coste_eur": 2141.82
-      },
-      "TDOC": {
-       "unidades": 495.62054443359375,
-       "coste_eur": 3911.38
+      "IYC": {
+       "unidades": 27.50165367126465,
+       "coste_eur": 2581.11
       }
      },
-     "costes_acumulados": 903.6987915039062,
-     "ordenes_pendientes": [
-      {
-       "symbol": "XMR/USD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "KBWP",
-       "lado": "venta"
-      },
-      {
-       "symbol": "ADT",
-       "lado": "venta"
-      },
-      {
-       "symbol": "GDYN",
-       "lado": "venta"
-      },
-      {
-       "symbol": "COAG",
-       "lado": "venta"
-      },
-      {
-       "symbol": "FCN",
-       "lado": "venta"
-      },
-      {
-       "symbol": "MAX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "TAIL",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PBPH",
-       "lado": "venta"
-      },
-      {
-       "symbol": "TDOC",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PERI",
-       "lado": "compra",
-       "importe_eur": 3772.08
-      },
-      {
-       "symbol": "HEI.DE",
-       "lado": "compra",
-       "importe_eur": 1103.1
-      },
-      {
-       "symbol": "DCTH",
-       "lado": "compra",
-       "importe_eur": 4044.63
-      },
-      {
-       "symbol": "TBI",
-       "lado": "compra",
-       "importe_eur": 4044.63
-      },
-      {
-       "symbol": "LBTYA",
-       "lado": "compra",
-       "importe_eur": 2908.51
-      },
-      {
-       "symbol": "DDI",
-       "lado": "compra",
-       "importe_eur": 2555.43
-      },
-      {
-       "symbol": "LYEL",
-       "lado": "compra",
-       "importe_eur": 4044.63
-      },
-      {
-       "symbol": "IYC",
-       "lado": "compra",
-       "importe_eur": 2582.11
-      }
-     ],
-     "creadas_el": "2026-11-16",
+     "costes_acumulados": 975.2979125976562,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "USDG/USD",
@@ -189,116 +100,44 @@
      "ahorro_acumulado": 213.67
     },
     "etoro": {
-     "efectivo": 2374.0888671875,
+     "efectivo": 4281.513671875,
      "posiciones": {
       "XMR/USD": {
        "unidades": 7.812398433685303,
        "coste_eur": 4258.62
       },
-      "KBWP": {
-       "unidades": 20.85741424560547,
-       "coste_eur": 2615.16
+      "PERI": {
+       "unidades": 364.83453369140625,
+       "coste_eur": 3674.0
       },
-      "ADT": {
-       "unidades": 334.7834777832031,
-       "coste_eur": 2954.7999999999997
+      "DCTH": {
+       "unidades": 217.62179565429688,
+       "coste_eur": 3939.5899999999997
       },
-      "GDYN": {
-       "unidades": 326.9361877441406,
-       "coste_eur": 3818.24
+      "TBI": {
+       "unidades": 362.70294189453125,
+       "coste_eur": 3939.5899999999997
       },
-      "COAG": {
-       "unidades": 106.83123779296875,
-       "coste_eur": 3818.24
+      "LBTYA": {
+       "unidades": 295.97320556640625,
+       "coste_eur": 2832.46
       },
-      "FCN": {
-       "unidades": 12.310846328735352,
-       "coste_eur": 2124.93
+      "DDI": {
+       "unidades": 174.6758270263672,
+       "coste_eur": 2488.3999999999996
       },
-      "MAX": {
-       "unidades": 269.8477478027344,
-       "coste_eur": 3389.68
+      "LYEL": {
+       "unidades": 297.0283508300781,
+       "coste_eur": 3939.5899999999997
       },
-      "PBPH": {
-       "unidades": 74.4085693359375,
-       "coste_eur": 2092.25
-      },
-      "TDOC": {
-       "unidades": 483.9394226074219,
-       "coste_eur": 3818.24
+      "IYC": {
+       "unidades": 26.807357788085938,
+       "coste_eur": 2516.2
       }
      },
-     "costes_acumulados": 1380.3798828125,
-     "ordenes_pendientes": [
-      {
-       "symbol": "KBWP",
-       "lado": "venta"
-      },
-      {
-       "symbol": "ADT",
-       "lado": "venta"
-      },
-      {
-       "symbol": "GDYN",
-       "lado": "venta"
-      },
-      {
-       "symbol": "COAG",
-       "lado": "venta"
-      },
-      {
-       "symbol": "FCN",
-       "lado": "venta"
-      },
-      {
-       "symbol": "MAX",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PBPH",
-       "lado": "venta"
-      },
-      {
-       "symbol": "TDOC",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PERI",
-       "lado": "compra",
-       "importe_eur": 3675.8
-      },
-      {
-       "symbol": "DCTH",
-       "lado": "compra",
-       "importe_eur": 3941.39
-      },
-      {
-       "symbol": "TBI",
-       "lado": "compra",
-       "importe_eur": 3941.39
-      },
-      {
-       "symbol": "LBTYA",
-       "lado": "compra",
-       "importe_eur": 2834.26
-      },
-      {
-       "symbol": "DDI",
-       "lado": "compra",
-       "importe_eur": 2490.2
-      },
-      {
-       "symbol": "LYEL",
-       "lado": "compra",
-       "importe_eur": 3941.39
-      },
-      {
-       "symbol": "IYC",
-       "lado": "compra",
-       "importe_eur": 2516.2
-      }
-     ],
-     "creadas_el": "2026-11-16",
+     "costes_acumulados": 1426.274658203125,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "XMR/USD",
