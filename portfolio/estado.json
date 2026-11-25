@@ -1,124 +1,51 @@
 {
  "capital_inicial": 40000.0,
  "inicio": "2026-08-14",
- "ultima_fecha": "2026-11-23",
+ "ultima_fecha": "2026-11-24",
  "escenarios": {
   "corto": {
    "ultimo_rebalanceo": "2026-11-23",
    "pesos_evidencia": null,
    "brokers": {
     "trade_republic": {
-     "efectivo": 6866.20703125,
+     "efectivo": 7323.3681640625,
      "posiciones": {
-      "PERI": {
-       "unidades": 374.3811950683594,
-       "coste_eur": 3771.08
+      "BILL": {
+       "unidades": 73.45941925048828,
+       "coste_eur": 4155.54
       },
-      "HEI.DE": {
-       "unidades": 6.25880241394043,
-       "coste_eur": 1102.1
+      "LFTO": {
+       "unidades": 197.5363006591797,
+       "coste_eur": 4155.54
       },
-      "DCTH": {
-       "unidades": 223.3131103515625,
-       "coste_eur": 4043.63
+      "CBOX": {
+       "unidades": 12.055378913879395,
+       "coste_eur": 1133.37
       },
-      "TBI": {
-       "unidades": 372.18853759765625,
-       "coste_eur": 4043.63
+      "BAYN.DE": {
+       "unidades": 23.337764739990234,
+       "coste_eur": 1232.85
       },
-      "LBTYA": {
-       "unidades": 303.73956298828125,
-       "coste_eur": 2907.51
+      "PGNY": {
+       "unidades": 127.26911163330078,
+       "coste_eur": 4155.54
       },
-      "DDI": {
-       "unidades": 179.26608276367188,
-       "coste_eur": 2554.43
+      "LBTYK": {
+       "unidades": 364.61749267578125,
+       "coste_eur": 3281.58
       },
-      "LYEL": {
-       "unidades": 304.7963562011719,
-       "coste_eur": 4043.63
+      "RLI": {
+       "unidades": 34.418678283691406,
+       "coste_eur": 2247.65
       },
-      "IYC": {
-       "unidades": 27.50165367126465,
-       "coste_eur": 2581.11
+      "TRUP": {
+       "unidades": 125.65042114257812,
+       "coste_eur": 3962.05
       }
      },
-     "costes_acumulados": 975.2979125976562,
-     "ordenes_pendientes": [
-      {
-       "symbol": "PERI",
-       "lado": "venta"
-      },
-      {
-       "symbol": "HEI.DE",
-       "lado": "venta"
-      },
-      {
-       "symbol": "DCTH",
-       "lado": "venta"
-      },
-      {
-       "symbol": "TBI",
-       "lado": "venta"
-      },
-      {
-       "symbol": "LBTYA",
-       "lado": "venta"
-      },
-      {
-       "symbol": "DDI",
-       "lado": "venta"
-      },
-      {
-       "symbol": "LYEL",
-       "lado": "venta"
-      },
-      {
-       "symbol": "IYC",
-       "lado": "venta"
-      },
-      {
-       "symbol": "BILL",
-       "lado": "compra",
-       "importe_eur": 4156.54
-      },
-      {
-       "symbol": "LFTO",
-       "lado": "compra",
-       "importe_eur": 4156.54
-      },
-      {
-       "symbol": "CBOX",
-       "lado": "compra",
-       "importe_eur": 1134.37
-      },
-      {
-       "symbol": "BAYN.DE",
-       "lado": "compra",
-       "importe_eur": 1233.85
-      },
-      {
-       "symbol": "PGNY",
-       "lado": "compra",
-       "importe_eur": 4156.54
-      },
-      {
-       "symbol": "LBTYK",
-       "lado": "compra",
-       "importe_eur": 3282.58
-      },
-      {
-       "symbol": "RLI",
-       "lado": "compra",
-       "importe_eur": 2248.65
-      },
-      {
-       "symbol": "TRUP",
-       "lado": "compra",
-       "importe_eur": 3963.05
-      }
-     ],
-     "creadas_el": "2026-11-23",
+     "costes_acumulados": 1026.2520751953125,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "^VIX",
@@ -173,107 +100,36 @@
      "ahorro_acumulado": 229.93
     },
     "etoro": {
-     "efectivo": 4281.513671875,
+     "efectivo": 9401.68359375,
      "posiciones": {
-      "XMR/USD": {
-       "unidades": 7.812398433685303,
-       "coste_eur": 4258.62
+      "BILL": {
+       "unidades": 71.52003479003906,
+       "coste_eur": 4044.8199999999997
       },
-      "PERI": {
-       "unidades": 364.83453369140625,
-       "coste_eur": 3674.0
+      "LFTO": {
+       "unidades": 192.32119750976562,
+       "coste_eur": 4044.8199999999997
       },
-      "DCTH": {
-       "unidades": 217.62179565429688,
-       "coste_eur": 3939.5899999999997
+      "PGNY": {
+       "unidades": 123.90909576416016,
+       "coste_eur": 4044.8199999999997
       },
-      "TBI": {
-       "unidades": 362.70294189453125,
-       "coste_eur": 3939.5899999999997
+      "LBTYK": {
+       "unidades": 354.9717712402344,
+       "coste_eur": 3193.97
       },
-      "LBTYA": {
-       "unidades": 295.97320556640625,
-       "coste_eur": 2832.46
+      "RLI": {
+       "unidades": 33.5042724609375,
+       "coste_eur": 2187.39
       },
-      "DDI": {
-       "unidades": 174.6758270263672,
-       "coste_eur": 2488.3999999999996
-      },
-      "LYEL": {
-       "unidades": 297.0283508300781,
-       "coste_eur": 3939.5899999999997
-      },
-      "IYC": {
-       "unidades": 26.807357788085938,
-       "coste_eur": 2516.2
+      "TRUP": {
+       "unidades": 122.33171081542969,
+       "coste_eur": 3856.4399999999996
       }
      },
-     "costes_acumulados": 1426.274658203125,
-     "ordenes_pendientes": [
-      {
-       "symbol": "XMR/USD",
-       "lado": "venta"
-      },
-      {
-       "symbol": "PERI",
-       "lado": "venta"
-      },
-      {
-       "symbol": "DCTH",
-       "lado": "venta"
-      },
-      {
-       "symbol": "TBI",
-       "lado": "venta"
-      },
-      {
-       "symbol": "LBTYA",
-       "lado": "venta"
-      },
-      {
-       "symbol": "DDI",
-       "lado": "venta"
-      },
-      {
-       "symbol": "LYEL",
-       "lado": "venta"
-      },
-      {
-       "symbol": "IYC",
-       "lado": "venta"
-      },
-      {
-       "symbol": "BILL",
-       "lado": "compra",
-       "importe_eur": 4046.62
-      },
-      {
-       "symbol": "LFTO",
-       "lado": "compra",
-       "importe_eur": 4046.62
-      },
-      {
-       "symbol": "PGNY",
-       "lado": "compra",
-       "importe_eur": 4046.62
-      },
-      {
-       "symbol": "LBTYK",
-       "lado": "compra",
-       "importe_eur": 3195.77
-      },
-      {
-       "symbol": "RLI",
-       "lado": "compra",
-       "importe_eur": 2189.19
-      },
-      {
-       "symbol": "TRUP",
-       "lado": "compra",
-       "importe_eur": 3858.24
-      }
-     ],
-     "creadas_el": "2026-11-23",
+     "costes_acumulados": 1504.9637451171875,
+     "ordenes_pendientes": [],
+     "creadas_el": null,
      "descartadas": [
       {
        "symbol": "^VIX",
